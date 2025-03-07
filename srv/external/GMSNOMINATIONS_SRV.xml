@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0"
+    xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+    xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+    xmlns:sap="http://www.sap.com/Protocols/SAPData">
+    <edmx:Reference Uri="http://20.84.53.18:8001/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="http://20.84.53.18:8001/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CAPABILITIES',Version='0001',SAP__Origin='')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="http://20.84.53.18:8001/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="http://20.84.53.18:8001/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_AGGREGATION',Version='0001',SAP__Origin='')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="Org.OData.Aggregation.V1" Alias="Aggregation"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="http://20.84.53.18:8001/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_PERSONALDATA',Version='0001',SAP__Origin='')/$value"
+        xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.PersonalData.v1" Alias="PersonalData"/>
+    </edmx:Reference>
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema Namespace="GMS.NOMINATIONS_SRV" xml:lang="en" sap:schema-version="1"
+            xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+            <EntityType Name="znom_head" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Vbeln"/>
+                </Key>
+                <Property Name="Gasday" Type="Edm.DateTime" Precision="7" sap:unicode="false" sap:label="Gas Day" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Vbeln" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Sales Document" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <NavigationProperty Name="nomi_toitem" Relationship="GMS.NOMINATIONS_SRV.nomi_toitem" FromRole="FromRole_nomi_toitem" ToRole="ToRole_nomi_toitem"/>
+            </EntityType>
+            <EntityType Name="nomi_Save" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Gasday"/>
+                    <PropertyRef Name="Vbeln"/>
+                </Key>
+                <Property Name="Gasday" Type="Edm.DateTime" Nullable="false" Precision="7" sap:unicode="false" sap:label="Gas Day" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Vbeln" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Sales Document" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ItemNo" Type="Edm.String" MaxLength="6" sap:unicode="false" sap:label="Item" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="NomItem" Type="Edm.String" MaxLength="5" sap:unicode="false" sap:label="Nomination Item" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Versn" Type="Edm.String" MaxLength="3" sap:unicode="false" sap:label="Version" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="DeliveryPoint" Type="Edm.String" MaxLength="10" sap:unicode="false" sap:label="Delivery Point" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="RedelivryPoint" Type="Edm.String" MaxLength="20" sap:unicode="false" sap:label="Redelivery Point" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ValidTo" Type="Edm.Time" Precision="0" sap:unicode="false" sap:label="Time To" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ValidFrom" Type="Edm.Time" Precision="0" sap:unicode="false" sap:label="Time From" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Material" Type="Edm.String" MaxLength="40" sap:unicode="false" sap:label="Material" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Timestamp" Type="Edm.DateTime" Precision="0" sap:unicode="false" sap:label="Time Stamp" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Nomtk" Type="Edm.String" MaxLength="20" sap:unicode="false" sap:label="Nomination key" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Kunnr" Type="Edm.String" MaxLength="10" sap:unicode="false" sap:label="Sold-To Party" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Auart" Type="Edm.String" MaxLength="4" sap:unicode="false" sap:label="Sales Doc. Type" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Ddcq" Type="Edm.Decimal" Precision="13" Scale="3" sap:unicode="false" sap:unit="Uom1" sap:label="Daily ContractQty" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Rdcq" Type="Edm.Decimal" Precision="13" Scale="3" sap:unicode="false" sap:unit="Uom1" sap:label="RDCQ" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Uom1" Type="Edm.String" MaxLength="3" sap:unicode="false" sap:label="Unit of Measure" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false" sap:semantics="unit-of-measure"/>
+                <Property Name="Pdnq" Type="Edm.Decimal" Precision="13" Scale="3" sap:unicode="false" sap:unit="Uom1" sap:label="DNQ" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Event" Type="Edm.String" MaxLength="40" sap:unicode="false" sap:label="Event Type" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Adnq" Type="Edm.Decimal" Precision="13" Scale="3" sap:unicode="false" sap:unit="Uom1" sap:label="Approved DNQ" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Rpdnq" Type="Edm.Decimal" Precision="13" Scale="3" sap:unicode="false" sap:unit="Uom1" sap:label="RePublish DNQ" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Znomtk" Type="Edm.String" MaxLength="10" sap:unicode="false" sap:label="Nomination Number" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Src" Type="Edm.String" MaxLength="3" sap:unicode="false" sap:label="Source" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Remarks" Type="Edm.String" MaxLength="255" sap:unicode="false" sap:label="Long comment" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Flag" Type="Edm.String" MaxLength="6" sap:unicode="false" sap:label="Nom. Flag" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Action" Type="Edm.String" MaxLength="1" sap:unicode="false" sap:label="Action" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Path" Type="Edm.String" MaxLength="20" sap:unicode="false" sap:label="Path" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="CustGrp" Type="Edm.String" MaxLength="10" sap:unicode="false" sap:label="Customer Group" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="SrvProfile" Type="Edm.String" MaxLength="20" sap:unicode="false" sap:label="Service Profile" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Createdby" Type="Edm.String" MaxLength="15" sap:unicode="false" sap:label="Created By" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Createddate" Type="Edm.DateTime" Precision="7" sap:unicode="false" sap:label="Created Date" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Createdtime" Type="Edm.Time" Precision="0" sap:unicode="false" sap:label="Created Time" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Changedby" Type="Edm.String" MaxLength="15" sap:unicode="false" sap:label="Changed By" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Changeddate" Type="Edm.DateTime" Precision="7" sap:unicode="false" sap:label="Change Date" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Changedtime" Type="Edm.Time" Precision="0" sap:unicode="false" sap:label="Change Time" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="xGMSxCREATENOMINATIONType" sap:label="Create Nomination Data" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Gasday"/>
+                    <PropertyRef Name="Vbeln"/>
+                    <PropertyRef Name="ItemNo"/>
+                    <PropertyRef Name="NomItem"/>
+                    <PropertyRef Name="Versn"/>
+                    <PropertyRef Name="DeliveryPoint"/>
+                    <PropertyRef Name="RedelivryPoint"/>
+                </Key>
+                <Property Name="Gasday" Type="Edm.DateTime" Nullable="false" Precision="0" sap:display-format="Date" sap:label="Gas Day" sap:quickinfo="Gas Day Date"/>
+                <Property Name="Vbeln" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Sales document" sap:quickinfo="Sales Document"/>
+                <Property Name="ItemNo" Type="Edm.String" Nullable="false" MaxLength="6" sap:display-format="NonNegative" sap:label="Sales Document Item"/>
+                <Property Name="NomItem" Type="Edm.String" Nullable="false" MaxLength="5" sap:display-format="UpperCase" sap:label="" sap:quickinfo="Nomination Item"/>
+                <Property Name="Versn" Type="Edm.String" Nullable="false" MaxLength="3" sap:display-format="UpperCase" sap:label="Version"/>
+                <Property Name="DeliveryPoint" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Delivery Point"/>
+                <Property Name="RedelivryPoint" Type="Edm.String" Nullable="false" MaxLength="20" sap:display-format="UpperCase" sap:label="Redelivery Point" sap:quickinfo="Re-Delivery Ponit"/>
+                <Property Name="ValidTo" Type="Edm.Time" Precision="0" sap:label="Time To" sap:quickinfo="Nomination Time"/>
+                <Property Name="ValidFrom" Type="Edm.Time" Precision="0" sap:label="" sap:quickinfo="Time From"/>
+                <Property Name="Material" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Material" sap:quickinfo="Material Number"/>
+                <Property Name="Timestamp" Type="Edm.DateTimeOffset" Precision="0" sap:label="Short Time Stamp" sap:quickinfo="UTC Time Stamp in Short Form (YYYYMMDDhhmmss)"/>
+                <Property Name="Nomtk" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Nomination key" sap:quickinfo="Nomination (technical) Key"/>
+                <Property Name="Kunnr" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Sold-To Party"/>
+                <Property Name="Auart" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Sales Document Type"/>
+                <Property Name="Ddcq" Type="Edm.Decimal" Precision="13" Scale="3" sap:label="Daily ContractQty" sap:quickinfo="DCQ"/>
+                <Property Name="Rdcq" Type="Edm.Decimal" Precision="13" Scale="3" sap:label="" sap:quickinfo="RDCQ"/>
+                <Property Name="Uom1" Type="Edm.String" MaxLength="3"/>
+                <Property Name="Pdnq" Type="Edm.Decimal" Precision="13" Scale="3" sap:label="DNQ" sap:quickinfo="daily nomination Quantity"/>
+                <Property Name="Event" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Event Type" sap:quickinfo="Nomination Event"/>
+                <Property Name="Adnq" Type="Edm.Decimal" Precision="13" Scale="3" sap:label="Approved DNQ"/>
+                <Property Name="Rpdnq" Type="Edm.Decimal" Precision="13" Scale="3" sap:label="RePublish DNQ" sap:quickinfo="Re-Publish DNQ"/>
+                <Property Name="Znomtk" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Nomination Number"/>
+                <Property Name="Src" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Source"/>
+                <Property Name="Remarks" Type="Edm.String" MaxLength="255" sap:display-format="UpperCase" sap:label="Long comment" sap:quickinfo="iSeries: Long comment of a table, view or table field"/>
+                <Property Name="Flag" Type="Edm.String" MaxLength="6" sap:display-format="UpperCase" sap:label="Nomination Flag" sap:quickinfo="flag for customer nomination"/>
+                <Property Name="Action" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Action"/>
+                <Property Name="Path" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Path"/>
+                <Property Name="CustGrp" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Customer Group"/>
+                <Property Name="SrvProfile" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Service Profile"/>
+                <Property Name="Createdby" Type="Edm.String" MaxLength="15" sap:display-format="UpperCase" sap:label="Created By"/>
+                <Property Name="Createddate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Created Date"/>
+                <Property Name="Createdtime" Type="Edm.Time" Precision="0" sap:label="Created Time"/>
+                <Property Name="Changedby" Type="Edm.String" MaxLength="15" sap:display-format="UpperCase" sap:label="Changed By"/>
+                <Property Name="Changeddate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Change Date" sap:quickinfo="Changed Date"/>
+                <Property Name="Changedtime" Type="Edm.Time" Precision="0" sap:label="Change Time" sap:quickinfo="Changed Time"/>
+            </EntityType>
+            <EntityType Name="xGMSxFETCHNOMINATIONType" sap:label="Fetch Nomination" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="DocNo"/>
+                    <PropertyRef Name="Item"/>
+                    <PropertyRef Name="Delivery_Point"/>
+                    <PropertyRef Name="Redelivery_Point"/>
+                    <PropertyRef Name="Material"/>
+                    <PropertyRef Name="Delivery_Dcq"/>
+                    <PropertyRef Name="Redelivery_Dcq"/>
+                    <PropertyRef Name="Valid_Form"/>
+                    <PropertyRef Name="Valid_To"/>
+                </Key>
+                <Property Name="DocNo" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="DocumentNo" sap:quickinfo="Document Number"/>
+                <Property Name="Item" Type="Edm.String" Nullable="false" MaxLength="6" sap:display-format="NonNegative" sap:label="Sales Document Item"/>
+                <Property Name="Delivery_Point" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Delivery Point"/>
+                <Property Name="Redelivery_Point" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Redelivery Point"/>
+                <Property Name="Material" Type="Edm.String" Nullable="false" MaxLength="40" sap:display-format="UpperCase" sap:label="Material" sap:quickinfo="Material Number"/>
+                <Property Name="Delivery_Dcq" Type="Edm.String" Nullable="false" MaxLength="30" sap:display-format="UpperCase" sap:label="Delivery DCQ"/>
+                <Property Name="Redelivery_Dcq" Type="Edm.String" Nullable="false" MaxLength="30" sap:display-format="UpperCase" sap:label="ReDelivery DCQ" sap:quickinfo="Redelivery DCQ"/>
+                <Property Name="Valid_Form" Type="Edm.DateTime" Nullable="false" Precision="0" sap:display-format="Date" sap:label="Valid From"/>
+                <Property Name="Valid_To" Type="Edm.DateTime" Nullable="false" Precision="0" sap:display-format="Date" sap:label="Valid To"/>
+                <Property Name="UOM" Type="Edm.String" MaxLength="3" sap:label="Target Quantity UoM" sap:semantics="unit-of-measure"/>
+                <Property Name="ContractDescription" Type="Edm.String" MaxLength="40" sap:label="Contract Name"/>
+                <Property Name="Calculated_Value" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Calculated Value"/>
+                <Property Name="Contracttype" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Document Type"/>
+                <Property Name="Clause_Code" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Service Parameter"/>
+                <Property Name="SoldToParty" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Sold-To Party"/>
+            </EntityType>
+            <Association Name="nomi_toitem" sap:content-version="1">
+                <End Type="GMS.NOMINATIONS_SRV.znom_head" Multiplicity="1" Role="FromRole_nomi_toitem"/>
+                <End Type="GMS.NOMINATIONS_SRV.nomi_Save" Multiplicity="*" Role="ToRole_nomi_toitem"/>
+                <ReferentialConstraint>
+                    <Principal Role="FromRole_nomi_toitem">
+                        <PropertyRef Name="Vbeln"/>
+                    </Principal>
+                    <Dependent Role="ToRole_nomi_toitem">
+                        <PropertyRef Name="Vbeln"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <EntityContainer Name="GMS_NOMINATIONS_SRV_Entities" m:IsDefaultEntityContainer="true" sap:message-scope-supported="true" sap:supported-formats="atom json xlsx">
+                <EntitySet Name="xGMSxCREATENOMINATION" EntityType="GMS.NOMINATIONS_SRV.xGMSxCREATENOMINATIONType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                <EntitySet Name="xGMSxFETCHNOMINATION" EntityType="GMS.NOMINATIONS_SRV.xGMSxFETCHNOMINATIONType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                <EntitySet Name="znom_headSet" EntityType="GMS.NOMINATIONS_SRV.znom_head" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <EntitySet Name="nomi_SaveSet" EntityType="GMS.NOMINATIONS_SRV.nomi_Save" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>
+                <AssociationSet Name="nomi_toitemSet" Association="GMS.NOMINATIONS_SRV.nomi_toitem" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="znom_headSet" Role="FromRole_nomi_toitem"/>
+                    <End EntitySet="nomi_SaveSet" Role="ToRole_nomi_toitem"/>
+                </AssociationSet>
+            </EntityContainer>
+            <Annotations Target="GMS.NOMINATIONS_SRV.GMS_NOMINATIONS_SRV_Entities"
+                xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Aggregation.ApplySupported">
+                    <Record>
+                        <PropertyValue Property="Transformations">
+                            <Collection>
+                                <String>aggregate</String>
+                                <String>groupby</String>
+                                <String>filter</String>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="Rollup" EnumMember="None"/>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <atom:link rel="self" href="http://20.84.53.18:8001/sap/opu/odata/gms/NOMINATIONS_SRV/$metadata"
+                xmlns:atom="http://www.w3.org/2005/Atom"/>
+                <atom:link rel="latest-version" href="http://20.84.53.18:8001/sap/opu/odata/gms/NOMINATIONS_SRV/$metadata"
+                    xmlns:atom="http://www.w3.org/2005/Atom"/>
+                </Schema>
+            </edmx:DataServices>
+        </edmx:Edmx>

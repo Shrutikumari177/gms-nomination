@@ -1,0 +1,84 @@
+<mvc:View xmlns:tnt="sap.tnt"
+    controllerName="com.ingenx.nomination.salesnomination.controller.systemNom"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:layout="sap.ui.layout">
+
+    <Page id="automationPage" showHeader="false">
+        
+        <tnt:ToolHeader id="toolHeader">
+            <Title text="System Nomination" level="H1"/>
+        </tnt:ToolHeader>
+       
+        <content>
+            <ScrollContainer width="100%" height="100%" fitContainer="true" vertical="true">
+                <VBox alignItems="Center" width="100%" height="100%" class="sapUiContentPadding">
+                    <form:SimpleForm
+                        id="dailyNominationForm"
+                        layout="ResponsiveGridLayout"
+                        class="sapUiSmallMargin"
+                        labelSpanL="3" labelSpanM="3" labelSpanS="12">
+                        
+                        <form:content>
+                            <Label text="Select Customer" />
+                            <Input id="customerInput" value="{/selectedCustomer}" 
+                                showValueHelp="true" 
+                                valueHelpRequest="onValueHelpCustomer" />
+                            
+                            <Label text="Select Contract" />
+                            <Input id="contractInput" value="{selectedContract>/Vbeln}" 
+                                showValueHelp="true" 
+                                valueHelpRequest="onValueHelpContract" />
+
+                            <Label text="Select Material" />
+                            <Input id="materialInput" value="{modelData>/Material}"  
+                                showValueHelp="true" 
+                                valueHelpRequest="onValueHelpMaterial"/>
+                            
+                            <Label text="" />
+
+                            <!-- Static Fields -->
+                            <VBox id="_IDGenVBox11" width="100%">
+                                <List id="displayitems" width="100%">
+                                    <items>
+                                        <DisplayListItem id="contract" label="Contract ID" value="{modelData>/Vbeln}" />
+                                    </items>
+                                    <items>
+                                        <DisplayListItem id="mat" label="Material" value="{modelData>/Material}" />
+                                    </items>
+                                    <items>
+                                        <DisplayListItem id="conDes" label="Contract Description" value="{modelData>/ContractDescription}" />
+                                    </items>
+                                </List>
+                                <List id="dynamicFieldLists" showNoData="false" items="{modelData>/dynamicFields}">
+                                    <items>
+                                        <DisplayListItem id="minMaxDcq" label="{modelData>label}" value="{modelData>value}" />
+                                    </items>
+                                </List>
+                            </VBox>
+
+                            <!-- Dynamic Fields -->
+                            <Label text="DNQ" />
+                            <Input id="dnqInput" placeholder="Enter DNQ" editable="true"/>
+
+                            <Label text="Valid From" />
+                            <DatePicker id="validFromPicker" />
+
+                            <Label text="Valid To" />
+                            <DatePicker id="validToPicker" />
+                        </form:content>
+                    </form:SimpleForm>
+
+                    <!-- Buttons in HBox -->
+                    <HBox class="sapUiSmallMarginTop myHBox" height="50%" width="10%">
+                        <Button text="Submit" type="Emphasized" press="onSubmit" />
+                       
+                        <Button text="Cancel" press="onCancel" />
+                    </HBox>
+                </VBox>
+            </ScrollContainer> 
+        </content>
+    </Page>
+</mvc:View>

@@ -1,0 +1,112 @@
+{
+  "name": "iGMS_NOMINATION",
+  "version": "1.0.0",
+  "description": "A simple CAP project.",
+  "repository": "<Add your repository here>",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@cap-js/hana": "^1",
+    "@sap-cloud-sdk/connectivity": "^3.24.0",
+    "@sap-cloud-sdk/http-client": "^3.24.0",
+    "@sap-cloud-sdk/resilience": "^3.24.0",
+    "@sap/cds": "^8.5.1",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "@cap-js/cds-types": "^0.7.0",
+    "@cap-js/sqlite": "^1"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "watch-salesnomination": "cds watch --open salesnomination/webapp/index.html?sap-ui-xx-viewCache=false"
+  },
+  "cds": {
+    "sql": {
+      "native_hana_associations": false
+    },
+    "requires": {
+      "connectivity": true,
+      "destinations": true,
+      "GMS_CONFIG": {
+        "kind": "odata",
+        "model": "srv/external/GMS_CONFIG",
+        "credentials": {
+          "destination": "GMS_CONFIG_SRV"
+        }
+      },
+      "GMSNOMCP_GMS_SRV": {
+        "kind": "odata-v2",
+        "model": "srv/external/GMSNOMCP_GMS_SRV",
+        "[production]": {
+          "credentials": {
+            "destination": "Ingenx_OData_SAP",
+            "path": "/sap/opu/odata/gms/NOMCP_GMS_SRV"
+          }
+        },
+        "[development]": {
+          "credentials": {
+            "destination": "SandboxPO",
+            "path": "/sap/opu/odata/gms/NOMCP_GMS_SRV"
+          }
+        },
+        "csrf": true,
+        "csrfInBatch": true
+      },
+      "ZCREATE_CONTRACT_SRV": {
+        "kind": "odata-v2",
+        "model": "srv/external/ZCREATE_CONTRACT_SRV",
+        "[production]": {
+          "credentials": {
+            "destination": "Ingenx_OData_SAP",
+            "path": "/sap/opu/odata/sap/ZCREATE_CONTRACT_SRV"
+          }
+        },
+        "[development]": {
+          "credentials": {
+            "destination": "SandboxPO",
+            "path": "/sap/opu/odata/sap/ZCREATE_CONTRACT_SRV"
+          }
+        },
+        "csrf": true,
+        "csrfInBatch": true
+      },
+      "ZNOM_CREATE_SRV": {
+        "kind": "odata-v2",
+        "model": "srv/external/ZNOM_CREATE_SRV",
+        "[production]": {
+          "credentials": {
+            "destination": "Ingenx_OData_SAP",
+            "path": "/sap/opu/odata/sap/ZNOM_CREATE_SRV"
+          }
+        },
+        "[development]": {
+          "credentials": {
+            "destination": "SandboxPO",
+            "path": "/sap/opu/odata/sap/ZNOM_CREATE_SRV"
+          }
+        },
+        "csrf": true,
+        "csrfInBatch": true
+      },
+      "GMSNOMINATIONS_SRV": {
+        "kind": "odata-v2",
+        "model": "srv/external/GMSNOMINATIONS_SRV",
+        "[production]": {
+          "credentials": {
+            "destination": "Ingenx_OData_SAP",
+            "path": "/sap/opu/odata/gms/NOMINATIONS_SRV"
+          }
+        },
+        "[development]": {
+          "credentials": {
+            "destination": "SandboxPO",
+            "path": "/sap/opu/odata/gms/NOMINATIONS_SRV"
+          }
+        },
+        "csrf": true,
+        "csrfInBatch": true
+      }
+    }
+  }
+}

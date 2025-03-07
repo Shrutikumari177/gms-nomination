@@ -1,0 +1,1289 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+    <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+    <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
+    <edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/>
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema Namespace="configServices" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <Annotation Term="Core.Links">
+        <Collection>
+          <Record>
+            <PropertyValue Property="rel" String="author"/>
+            <PropertyValue Property="href" String="https://cap.cloud.sap"/>
+          </Record>
+        </Collection>
+      </Annotation>
+      <EntityContainer Name="EntityContainer">
+        <EntitySet Name="ServiceProfileMaster" EntityType="configServices.ServiceProfileMaster"/>
+        <EntitySet Name="FieldMapping" EntityType="configServices.FieldMapping"/>
+        <EntitySet Name="TableMappings" EntityType="configServices.TableMappings"/>
+        <EntitySet Name="EzIdTable" EntityType="configServices.EzIdTable"/>
+        <EntitySet Name="AddiFunction" EntityType="configServices.AddiFunction"/>
+        <EntitySet Name="transportAgreementDetail" EntityType="configServices.transportAgreementDetail"/>
+        <EntitySet Name="pathAndFuelMapping" EntityType="configServices.pathAndFuelMapping"/>
+        <EntitySet Name="serviceParametersItems" EntityType="configServices.serviceParametersItems"/>
+        <EntitySet Name="serviceProfileParametersItems" EntityType="configServices.serviceProfileParametersItems"/>
+        <EntitySet Name="DocumentNoProfileMapping" EntityType="configServices.DocumentNoProfileMapping"/>
+        <EntitySet Name="AllocationProfile" EntityType="configServices.AllocationProfile"/>
+        <EntitySet Name="AllocationLocation" EntityType="configServices.AllocationLocation"/>
+        <EntitySet Name="AllocationRuleOnLocation" EntityType="configServices.AllocationRuleOnLocation"/>
+        <EntitySet Name="serviceParameterNode" EntityType="configServices.serviceParameterNode"/>
+        <EntitySet Name="HeaderItem_Config" EntityType="configServices.HeaderItem_Config"/>
+        <EntitySet Name="penalties" EntityType="configServices.penalties"/>
+        <EntitySet Name="TransportConfig" EntityType="configServices.TransportConfig"/>
+        <EntitySet Name="xGMSxContractType" EntityType="configServices.xGMSxContractType"/>
+        <EntitySet Name="xGMSxLocPoint" EntityType="configServices.xGMSxLocPoint"/>
+        <EntitySet Name="xGMSxLocPoint_Map" EntityType="configServices.xGMSxLocPoint_Map"/>
+        <EntitySet Name="xGMSxLocPoint_RDP" EntityType="configServices.xGMSxLocPoint_RDP"/>
+        <EntitySet Name="xGMSxLocPoint_DP" EntityType="configServices.xGMSxLocPoint_DP"/>
+        <EntitySet Name="xGMSxInterconnect" EntityType="configServices.xGMSxInterconnect"/>
+        <EntitySet Name="xGMSxLocMatnr" EntityType="configServices.xGMSxLocMatnr"/>
+        <EntitySet Name="Interconnect_pointSet" EntityType="configServices.Interconnect_pointSet"/>
+        <EntitySet Name="xGMSxEXCHGTYPEVH" EntityType="configServices.xGMSxEXCHGTYPEVH"/>
+        <EntitySet Name="EZReporstIdsSet" EntityType="configServices.EZReporstIdsSet"/>
+        <EntitySet Name="EzIDMapSet" EntityType="configServices.EzIDMapSet">
+          <NavigationPropertyBinding Path="VCIDTableMapNav" Target="TableMapSet"/>
+        </EntitySet>
+        <EntitySet Name="EzTableSet" EntityType="configServices.EzTableSet"/>
+        <EntitySet Name="xGMSxFieldType" EntityType="configServices.xGMSxFieldType"/>
+        <EntitySet Name="xGMSxGETTABLEFIELDS" EntityType="configServices.xGMSxGETTABLEFIELDS"/>
+        <EntitySet Name="TableMapSet" EntityType="configServices.TableMapSet"/>
+        <EntitySet Name="DynamicTableSet" EntityType="configServices.DynamicTableSet"/>
+        <EntitySet Name="DynamicHelpSet" EntityType="configServices.DynamicHelpSet"/>
+        <EntitySet Name="FieldDataSet" EntityType="configServices.FieldDataSet"/>
+        <EntitySet Name="FieldMapSet" EntityType="configServices.FieldMapSet"/>
+        <EntitySet Name="FieldTypeSet" EntityType="configServices.FieldTypeSet"/>
+        <EntitySet Name="FillterMapSet" EntityType="configServices.FillterMapSet"/>
+        <EntitySet Name="GetFilterDataSet" EntityType="configServices.GetFilterDataSet"/>
+        <EntitySet Name="RawDummySet" EntityType="configServices.RawDummySet"/>
+        <EntitySet Name="RawstringSet" EntityType="configServices.RawstringSet"/>
+        <FunctionImport Name="uniqueDelLocorAllocMapRule" Function="configServices.uniqueDelLocorAllocMapRule"/>
+        <FunctionImport Name="getPenalityRelevant" Function="configServices.getPenalityRelevant"/>
+      </EntityContainer>
+      <EntityType Name="ServiceProfileMaster">
+        <Key>
+          <PropertyRef Name="ID"/>
+          <PropertyRef Name="serviceProfileName"/>
+        </Key>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ID" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="serviceProfileName" Type="Edm.String" Nullable="false"/>
+        <Property Name="serviceProfileDesc" Type="Edm.String"/>
+        <Property Name="field1" Type="Edm.String"/>
+        <Property Name="field2" Type="Edm.String"/>
+        <Property Name="field3" Type="Edm.String"/>
+        <Property Name="field4" Type="Edm.String"/>
+        <Property Name="field5" Type="Edm.String"/>
+      </EntityType>
+      <EntityType Name="FieldMapping">
+        <Key>
+          <PropertyRef Name="ID"/>
+          <PropertyRef Name="EzID"/>
+          <PropertyRef Name="Field"/>
+        </Key>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="Snum" Type="Edm.String"/>
+        <Property Name="EzID" Type="Edm.String" Nullable="false"/>
+        <Property Name="Table" Type="Edm.String"/>
+        <Property Name="SubProcessId" Type="Edm.String"/>
+        <Property Name="Field" Type="Edm.String" Nullable="false"/>
+        <Property Name="FieldType" Type="Edm.String"/>
+        <Property Name="FieldID" Type="Edm.String"/>
+        <Property Name="FieldDesc" Type="Edm.String"/>
+        <Property Name="selected" Type="Edm.Boolean"/>
+        <Property Name="display" Type="Edm.Boolean"/>
+        <Property Name="mandatory" Type="Edm.Boolean"/>
+        <Property Name="filterfield" Type="Edm.Boolean"/>
+        <Property Name="Operation" Type="Edm.String"/>
+        <Property Name="DefaultVal" Type="Edm.String"/>
+        <Property Name="MappedTable" Type="Edm.String"/>
+        <Property Name="MappedField" Type="Edm.String"/>
+        <Property Name="AddiFunction" Type="Edm.String"/>
+        <Property Name="Formula" Type="Edm.String"/>
+      </EntityType>
+      <EntityType Name="TableMappings">
+        <Key>
+          <PropertyRef Name="Snum"/>
+          <PropertyRef Name="EzID"/>
+          <PropertyRef Name="Table"/>
+        </Key>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="Snum" Type="Edm.String" Nullable="false"/>
+        <Property Name="EzID" Type="Edm.String" Nullable="false"/>
+        <Property Name="Table" Type="Edm.String" Nullable="false"/>
+        <Property Name="SubProcessId" Type="Edm.String"/>
+        <Property Name="TableDesc" Type="Edm.String"/>
+      </EntityType>
+      <EntityType Name="EzIdTable">
+        <Key>
+          <PropertyRef Name="EzID"/>
+        </Key>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="EzID" Type="Edm.String" Nullable="false"/>
+        <Property Name="EzIdDescription" Type="Edm.String"/>
+      </EntityType>
+      <EntityType Name="AddiFunction">
+        <Key>
+          <PropertyRef Name="Function"/>
+        </Key>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="Function" Type="Edm.String" Nullable="false"/>
+        <Property Name="FunctionDesc" Type="Edm.String"/>
+      </EntityType>
+      <EntityType Name="transportAgreementDetail">
+        <Key>
+          <PropertyRef Name="salesNumber"/>
+        </Key>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="salesNumber" Type="Edm.String" Nullable="false"/>
+        <Property Name="purchaseNumber" Type="Edm.String"/>
+        <Property Name="exchangeNumber" Type="Edm.String"/>
+      </EntityType>
+      <EntityType Name="pathAndFuelMapping">
+        <Key>
+          <PropertyRef Name="DeliveryPoint"/>
+          <PropertyRef Name="ReDeliveryPoint"/>
+        </Key>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="DeliveryPoint" Type="Edm.String" Nullable="false"/>
+        <Property Name="DpTsSystem" Type="Edm.String"/>
+        <Property Name="ReDeliveryPoint" Type="Edm.String" Nullable="false"/>
+        <Property Name="RDpTsSystem" Type="Edm.String"/>
+        <Property Name="InterconnectPath" Type="Edm.String"/>
+        <Property Name="Interconnect" Type="Edm.String"/>
+        <Property Name="path" Type="Edm.String"/>
+        <Property Name="FuelPercentage" Type="Edm.Decimal" Scale="variable"/>
+      </EntityType>
+      <EntityType Name="serviceParametersItems">
+        <Key>
+          <PropertyRef Name="ID"/>
+          <PropertyRef Name="serviceParameter"/>
+        </Key>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ID" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="serviceParameter" Type="Edm.String" Nullable="false"/>
+        <Property Name="serviceParameterDesc" Type="Edm.String"/>
+        <Property Name="serviceParameterType" Type="Edm.String"/>
+        <Property Name="serviceParameterlength" Type="Edm.Int32"/>
+        <Property Name="List" Type="Collection(Edm.String)" Nullable="true"/>
+        <Property Name="ParentId" Type="Edm.String"/>
+        <Property Name="Level" Type="Edm.String"/>
+      </EntityType>
+      <EntityType Name="serviceProfileParametersItems">
+        <Key>
+          <PropertyRef Name="serviceProfileName"/>
+          <PropertyRef Name="ID"/>
+          <PropertyRef Name="serviceParameter"/>
+        </Key>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="checkedParameter" Type="Edm.Boolean"/>
+        <Property Name="serviceProfileName" Type="Edm.String" Nullable="false"/>
+        <Property Name="serviceProfileDesc" Type="Edm.String"/>
+        <Property Name="ProfileId" Type="Edm.String"/>
+        <Property Name="ID" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="serviceParameter" Type="Edm.String" Nullable="false"/>
+        <Property Name="serviceParameterDesc" Type="Edm.String"/>
+        <Property Name="serviceParameterType" Type="Edm.String"/>
+        <Property Name="serviceParameterlength" Type="Edm.Int32"/>
+        <Property Name="ParentId" Type="Edm.String"/>
+        <Property Name="ContractRelevant" Type="Edm.Boolean"/>
+        <Property Name="Value_Parameter" Type="Edm.Boolean"/>
+        <Property Name="Threshold_Relevance" Type="Edm.Boolean"/>
+        <Property Name="Referrence_Relevant" Type="Edm.Boolean"/>
+        <Property Name="Nomination_Relevant" Type="Edm.Boolean"/>
+        <Property Name="Balancing_Relevant" Type="Edm.Boolean"/>
+        <Property Name="Allocation_Relevant" Type="Edm.Boolean"/>
+        <Property Name="Billing_Relevant" Type="Edm.Boolean"/>
+        <Property Name="Price_Relevant" Type="Edm.Boolean"/>
+      </EntityType>
+      <EntityType Name="DocumentNoProfileMapping">
+        <Key>
+          <PropertyRef Name="DocumentNo"/>
+          <PropertyRef Name="serviceProfileName"/>
+        </Key>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="DocumentNo" Type="Edm.String" Nullable="false"/>
+        <Property Name="DocumentDesc" Type="Edm.String"/>
+        <Property Name="ProfileId" Type="Edm.String"/>
+        <Property Name="serviceProfileName" Type="Edm.String" Nullable="false"/>
+        <Property Name="serviceProfileDesc" Type="Edm.String"/>
+        <Property Name="description" Type="Edm.String"/>
+        <Property Name="field2" Type="Edm.String"/>
+        <Property Name="field3" Type="Edm.String"/>
+        <Property Name="field4" Type="Edm.String"/>
+        <Property Name="field5" Type="Edm.String"/>
+      </EntityType>
+      <EntityType Name="AllocationProfile">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="allocationProfileName" Type="Edm.String"/>
+        <Property Name="allocationProfileDesc" Type="Edm.String"/>
+        <Property Name="allocationfield1" Type="Edm.String"/>
+        <Property Name="allocationfield2" Type="Edm.String"/>
+        <Property Name="allocationfield3" Type="Edm.String"/>
+        <Property Name="allocationfield4" Type="Edm.String"/>
+        <Property Name="allocationfield5" Type="Edm.String"/>
+      </EntityType>
+      <EntityType Name="AllocationLocation">
+        <Key>
+          <PropertyRef Name="location"/>
+        </Key>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="location" Type="Edm.String" MaxLength="50" Nullable="false"/>
+        <Property Name="schedulingReduction" Type="Edm.String" MaxLength="50"/>
+        <Property Name="technicalBalancing" Type="Edm.String" MaxLength="50"/>
+        <Property Name="buisnessBalancing" Type="Edm.String" MaxLength="50"/>
+        <Property Name="validFromAlloc" Type="Edm.Date"/>
+        <Property Name="validToAlloc" Type="Edm.Date"/>
+      </EntityType>
+      <EntityType Name="AllocationRuleOnLocation">
+        <Key>
+          <PropertyRef Name="location"/>
+        </Key>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="location" Type="Edm.String" MaxLength="50" Nullable="false"/>
+        <Property Name="schedulingReduction" Type="Edm.String" MaxLength="50"/>
+        <Property Name="technicalBalancing" Type="Edm.String" MaxLength="50"/>
+        <Property Name="buisnessBalancing" Type="Edm.String" MaxLength="50"/>
+        <Property Name="validFromAlloc" Type="Edm.Date"/>
+        <Property Name="validToAlloc" Type="Edm.Date"/>
+      </EntityType>
+      <EntityType Name="serviceParameterNode">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="parentID" Type="Edm.String"/>
+        <Property Name="nodeLevel" Type="Edm.Int32"/>
+        <Property Name="allocationID" Type="Edm.String"/>
+        <Property Name="servicetitle" Type="Edm.String"/>
+        <Property Name="rank" Type="Edm.Int32"/>
+      </EntityType>
+      <EntityType Name="HeaderItem_Config">
+        <Key>
+          <PropertyRef Name="unique"/>
+        </Key>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="unique" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="ID" Type="Edm.Int32"/>
+        <Property Name="contractType" Type="Edm.String"/>
+        <Property Name="documentType" Type="Edm.String"/>
+        <Property Name="flag" Type="Edm.Int32"/>
+        <Property Name="service_parameter" Type="Edm.String"/>
+        <Property Name="label" Type="Edm.String"/>
+        <Property Name="serviceParameterType" Type="Edm.String"/>
+        <Property Name="serviceParameterlength" Type="Edm.String"/>
+        <Property Name="mandatory" Type="Edm.Boolean"/>
+        <Property Name="visible" Type="Edm.Boolean"/>
+        <Property Name="List" Type="Collection(Edm.String)" Nullable="true"/>
+        <Property Name="parameterRelevancy" Type="Edm.String" MaxLength="20"/>
+      </EntityType>
+      <EntityType Name="penalties">
+        <Key>
+          <PropertyRef Name="profileName"/>
+          <PropertyRef Name="paneltyParmeter"/>
+          <PropertyRef Name="ezReportId"/>
+        </Key>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="profileName" Type="Edm.String" Nullable="false"/>
+        <Property Name="paneltyParmeter" Type="Edm.String" Nullable="false"/>
+        <Property Name="ezReportId" Type="Edm.String" Nullable="false"/>
+      </EntityType>
+      <EntityType Name="TransportConfig">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ID" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="documentType" Type="Collection(Edm.String)" Nullable="true"/>
+        <Property Name="side" Type="Collection(Edm.String)" Nullable="true"/>
+        <Property Name="exchangeType" Type="Edm.String"/>
+      </EntityType>
+      <EntityType Name="xGMSxContractType">
+        <Key>
+          <PropertyRef Name="Auart"/>
+          <PropertyRef Name="Kopgr"/>
+        </Key>
+        <Property Name="Auart" Type="Edm.String" MaxLength="4" Nullable="false"/>
+        <Property Name="Kopgr" Type="Edm.String" MaxLength="4" Nullable="false"/>
+        <Property Name="Description" Type="Edm.String" MaxLength="20"/>
+      </EntityType>
+      <EntityType Name="xGMSxLocPoint">
+        <Key>
+          <PropertyRef Name="Locid"/>
+        </Key>
+        <Property Name="Locid" Type="Edm.String" MaxLength="10" Nullable="false"/>
+        <Property Name="Locnam" Type="Edm.String" MaxLength="60"/>
+        <Property Name="Loctyp" Type="Edm.String" MaxLength="4"/>
+        <Property Name="LoctypText" Type="Edm.String" MaxLength="15"/>
+        <Property Name="LoctypLongText" Type="Edm.String" MaxLength="60"/>
+      </EntityType>
+      <EntityType Name="xGMSxLocPoint_Map">
+        <Key>
+          <PropertyRef Name="Pblnr"/>
+          <PropertyRef Name="Tsyst"/>
+          <PropertyRef Name="Locid"/>
+          <PropertyRef Name="Pbltyp"/>
+        </Key>
+        <Property Name="Pblnr" Type="Edm.String" MaxLength="10" Nullable="false"/>
+        <Property Name="Tsyst" Type="Edm.String" MaxLength="10" Nullable="false"/>
+        <Property Name="Locid" Type="Edm.String" MaxLength="10" Nullable="false"/>
+        <Property Name="Pbltyp" Type="Edm.String" MaxLength="4" Nullable="false"/>
+        <Property Name="Delivery_Point" Type="Edm.Boolean"/>
+        <Property Name="Redelivery_Point" Type="Edm.Boolean"/>
+        <Property Name="isDeliveryPoint" Type="Edm.String" MaxLength="3"/>
+        <Property Name="isRedeliveryPoint" Type="Edm.String" MaxLength="3"/>
+        <Property Name="isInterconnect" Type="Edm.String" MaxLength="3"/>
+      </EntityType>
+      <EntityType Name="xGMSxLocPoint_RDP">
+        <Key>
+          <PropertyRef Name="Locid"/>
+        </Key>
+        <Property Name="Locid" Type="Edm.String" MaxLength="10" Nullable="false"/>
+        <Property Name="Locnam" Type="Edm.String" MaxLength="60"/>
+        <Property Name="Loctyp" Type="Edm.String" MaxLength="4"/>
+        <Property Name="LoctypText" Type="Edm.String" MaxLength="15"/>
+        <Property Name="LoctypLongText" Type="Edm.String" MaxLength="60"/>
+      </EntityType>
+      <EntityType Name="xGMSxLocPoint_DP">
+        <Key>
+          <PropertyRef Name="Locid"/>
+        </Key>
+        <Property Name="Locid" Type="Edm.String" MaxLength="10" Nullable="false"/>
+        <Property Name="Locnam" Type="Edm.String" MaxLength="60"/>
+        <Property Name="Loctyp" Type="Edm.String" MaxLength="4"/>
+        <Property Name="LoctypText" Type="Edm.String" MaxLength="15"/>
+        <Property Name="LoctypLongText" Type="Edm.String" MaxLength="60"/>
+      </EntityType>
+      <EntityType Name="xGMSxInterconnect">
+        <Key>
+          <PropertyRef Name="Pblnr"/>
+          <PropertyRef Name="Tsyst"/>
+          <PropertyRef Name="Locid"/>
+          <PropertyRef Name="Pbltyp"/>
+        </Key>
+        <Property Name="Pblnr" Type="Edm.String" MaxLength="10" Nullable="false"/>
+        <Property Name="Tsyst" Type="Edm.String" MaxLength="10" Nullable="false"/>
+        <Property Name="Locid" Type="Edm.String" MaxLength="10" Nullable="false"/>
+        <Property Name="Pbltyp" Type="Edm.String" MaxLength="4" Nullable="false"/>
+        <Property Name="Delivery_Point" Type="Edm.Boolean"/>
+        <Property Name="Redelivery_Point" Type="Edm.Boolean"/>
+      </EntityType>
+      <EntityType Name="xGMSxLocMatnr">
+        <Key>
+          <PropertyRef Name="Locid"/>
+          <PropertyRef Name="Pmatnr"/>
+          <PropertyRef Name="Tsyst"/>
+        </Key>
+        <Property Name="Locid" Type="Edm.String" MaxLength="10" Nullable="false"/>
+        <Property Name="Pmatnr" Type="Edm.String" MaxLength="40" Nullable="false"/>
+        <Property Name="Tsyst" Type="Edm.String" MaxLength="10" Nullable="false"/>
+        <Property Name="Loctyp" Type="Edm.String" MaxLength="4"/>
+        <Property Name="Locnam" Type="Edm.String" MaxLength="60"/>
+        <Property Name="Pluom" Type="Edm.String" MaxLength="3"/>
+        <Property Name="Pmatname" Type="Edm.String" MaxLength="40"/>
+      </EntityType>
+      <EntityType Name="Interconnect_pointSet">
+        <Key>
+          <PropertyRef Name="Transport1"/>
+          <PropertyRef Name="Transport2"/>
+        </Key>
+        <Property Name="Transport1" Type="Edm.String" MaxLength="10" Nullable="false"/>
+        <Property Name="Transport2" Type="Edm.String" MaxLength="10" Nullable="false"/>
+        <Property Name="IntLoc" Type="Edm.String" MaxLength="10" Nullable="false"/>
+        <Property Name="IntLocNam" Type="Edm.String" MaxLength="60" Nullable="false"/>
+      </EntityType>
+      <EntityType Name="xGMSxEXCHGTYPEVH">
+        <Key>
+          <PropertyRef Name="Spras"/>
+          <PropertyRef Name="Exgtyp"/>
+        </Key>
+        <Property Name="Spras" Type="Edm.String" MaxLength="2" Nullable="false"/>
+        <Property Name="Exgtyp" Type="Edm.String" MaxLength="4" Nullable="false"/>
+        <Property Name="Exgtxt" Type="Edm.String" MaxLength="30"/>
+      </EntityType>
+      <EntityType Name="EZReporstIdsSet">
+        <Key>
+          <PropertyRef Name="Vcid"/>
+        </Key>
+        <Property Name="Vcid" Type="Edm.String" MaxLength="6" Nullable="false"/>
+        <Property Name="VcDesc" Type="Edm.String" MaxLength="80" Nullable="false"/>
+        <Property Name="Ernam" Type="Edm.String" MaxLength="12"/>
+        <Property Name="Erdat" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="Erzeit" Type="Edm.TimeOfDay"/>
+        <Property Name="Aenam" Type="Edm.String" MaxLength="12"/>
+        <Property Name="Aedat" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="Aezeit" Type="Edm.TimeOfDay"/>
+        <Property Name="ReqOut1" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ReqOut2" Type="Edm.String" MaxLength="255"/>
+        <Property Name="UsageFreq" Type="Edm.String" MaxLength="10"/>
+        <Property Name="NotifSubj" Type="Edm.String" MaxLength="50"/>
+        <Property Name="NotifDateFlg" Type="Edm.Boolean"/>
+      </EntityType>
+      <EntityType Name="EzIDMapSet">
+        <Key>
+          <PropertyRef Name="Operation"/>
+        </Key>
+        <Property Name="Operation" Type="Edm.String" Nullable="false"/>
+        <NavigationProperty Name="VCIDTableMapNav" Type="Collection(configServices.TableMapSet)"/>
+      </EntityType>
+      <EntityType Name="EzTableSet">
+        <Key>
+          <PropertyRef Name="name"/>
+        </Key>
+        <Property Name="name" Type="Edm.String" Nullable="false"/>
+        <Property Name="value" Type="Edm.String" Nullable="false"/>
+      </EntityType>
+      <EntityType Name="xGMSxFieldType">
+        <Key>
+          <PropertyRef Name="TableName"/>
+          <PropertyRef Name="FiledName"/>
+          <PropertyRef Name="DataElement"/>
+          <PropertyRef Name="DataType"/>
+        </Key>
+        <Property Name="TableName" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="FiledName" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="DataElement" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="DataType" Type="Edm.String" MaxLength="10" Nullable="false"/>
+      </EntityType>
+      <EntityType Name="xGMSxGETTABLEFIELDS">
+        <Key>
+          <PropertyRef Name="TableName"/>
+          <PropertyRef Name="TableFieldName"/>
+        </Key>
+        <Property Name="TableName" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="TableFieldName" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="TableShortDescription" Type="Edm.String" MaxLength="60"/>
+        <Property Name="TableFieldShortDescription" Type="Edm.String" MaxLength="60"/>
+        <Property Name="TableFieldKeyFieldIndicator" Type="Edm.Boolean"/>
+      </EntityType>
+      <EntityType Name="TableMapSet">
+        <Key>
+          <PropertyRef Name="Vcid"/>
+          <PropertyRef Name="VcprId"/>
+        </Key>
+        <Property Name="Vcid" Type="Edm.String" MaxLength="6" Nullable="false"/>
+        <Property Name="VcprId" Type="Edm.String" MaxLength="3" Nullable="false"/>
+        <Property Name="VcprTabid" Type="Edm.String" MaxLength="3" Nullable="false"/>
+        <Property Name="VcDesc" Type="Edm.String" MaxLength="80" Nullable="false"/>
+        <Property Name="VcprDesc" Type="Edm.String" MaxLength="80" Nullable="false"/>
+        <Property Name="Strname" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="Tabname" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="Ddtext" Type="Edm.String" MaxLength="60" Nullable="false"/>
+        <Property Name="Ernam" Type="Edm.String" MaxLength="12" Nullable="false"/>
+        <Property Name="Erdat" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="Erzeit" Type="Edm.TimeOfDay" Nullable="false"/>
+        <Property Name="Aenam" Type="Edm.String" MaxLength="12" Nullable="false"/>
+        <Property Name="Aedat" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="Aezeit" Type="Edm.TimeOfDay" Nullable="false"/>
+        <Property Name="Incl" Type="Edm.Boolean" Nullable="false"/>
+      </EntityType>
+      <EntityType Name="DynamicTableSet">
+        <Key>
+          <PropertyRef Name="name"/>
+          <PropertyRef Name="value"/>
+        </Key>
+        <Property Name="name" Type="Edm.String" Nullable="false"/>
+        <Property Name="value" Type="Edm.String" Nullable="false"/>
+      </EntityType>
+      <EntityType Name="DynamicHelpSet">
+        <Key>
+          <PropertyRef Name="Fieldname"/>
+          <PropertyRef Name="Recordpos"/>
+        </Key>
+        <Property Name="Fieldname" Type="Edm.String" MaxLength="60" Nullable="false"/>
+        <Property Name="Recordpos" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="Fieldval" Type="Edm.String" MaxLength="132" Nullable="false"/>
+        <Property Name="Isreturnfield" Type="Edm.String" MaxLength="1" Nullable="false"/>
+      </EntityType>
+      <EntityType Name="FieldDataSet">
+        <Key>
+          <PropertyRef Name="Data"/>
+        </Key>
+        <Property Name="Data" Type="Edm.Binary" Nullable="false"/>
+      </EntityType>
+      <EntityType Name="FieldMapSet">
+        <Key>
+          <PropertyRef Name="Vcid"/>
+          <PropertyRef Name="VcprId"/>
+        </Key>
+        <Property Name="Vcid" Type="Edm.String" MaxLength="6" Nullable="false"/>
+        <Property Name="VcprId" Type="Edm.String" MaxLength="3" Nullable="false"/>
+        <Property Name="VcprTabid" Type="Edm.String" MaxLength="3" Nullable="false"/>
+        <Property Name="VcprFldid" Type="Edm.String" MaxLength="3" Nullable="false"/>
+        <Property Name="VcDesc" Type="Edm.String" MaxLength="80" Nullable="false"/>
+        <Property Name="VcprDesc" Type="Edm.String" MaxLength="80" Nullable="false"/>
+        <Property Name="Tabname" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="Ddtext" Type="Edm.String" MaxLength="60" Nullable="false"/>
+        <Property Name="Fieldname" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="FieldDesc" Type="Edm.String" MaxLength="60" Nullable="false"/>
+        <Property Name="FieldType" Type="Edm.String" MaxLength="4" Nullable="false"/>
+        <Property Name="Operators" Type="Edm.String" MaxLength="3" Nullable="false"/>
+        <Property Name="OperationId" Type="Edm.String" MaxLength="10" Nullable="false"/>
+        <Property Name="Operation" Type="Edm.String" MaxLength="2" Nullable="false"/>
+        <Property Name="DLow" Type="Edm.String" MaxLength="40" Nullable="false"/>
+        <Property Name="DHigh" Type="Edm.String" MaxLength="40" Nullable="false"/>
+        <Property Name="OperationValue" Type="Edm.String" MaxLength="40" Nullable="false"/>
+        <Property Name="TabField" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="Routine" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="FieldLabel" Type="Edm.String" MaxLength="35" Nullable="false"/>
+        <Property Name="NoDisplay" Type="Edm.String" MaxLength="1" Nullable="false"/>
+        <Property Name="ColPosition" Type="Edm.String" MaxLength="3" Nullable="false"/>
+        <Property Name="Ernam" Type="Edm.String" MaxLength="12" Nullable="false"/>
+        <Property Name="Erdat" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="Erzeit" Type="Edm.TimeOfDay"/>
+        <Property Name="Aenam" Type="Edm.String" MaxLength="12" Nullable="false"/>
+        <Property Name="Aedat" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="Aezeit" Type="Edm.TimeOfDay"/>
+        <Property Name="Zfieldtype" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="Colorcode" Type="Edm.String" MaxLength="4" Nullable="false"/>
+        <Property Name="ColmnColorName" Type="Edm.String" MaxLength="20" Nullable="false"/>
+        <Property Name="CompFormula" Type="Edm.String" MaxLength="255" Nullable="false"/>
+        <Property Name="Sumfield" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="ConField" Type="Edm.String" MaxLength="150" Nullable="false"/>
+        <Property Name="Repeatfield" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="Sumgroup" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="Addfunc" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="LogicalFormula" Type="Edm.String" MaxLength="4" Nullable="false"/>
+        <Property Name="Tcode" Type="Edm.String" MaxLength="4" Nullable="false"/>
+        <Property Name="Lalign" Type="Edm.String" MaxLength="4" Nullable="false"/>
+        <Property Name="Ralign" Type="Edm.String" MaxLength="4" Nullable="false"/>
+        <Property Name="Calign" Type="Edm.String" MaxLength="4" Nullable="false"/>
+        <Property Name="Useinwhr" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="Useinheading" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="Aggregat" Type="Edm.String" MaxLength="7" Nullable="false"/>
+        <Property Name="Subtotcurrref" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="Subtotalquanref" Type="Edm.String" MaxLength="30" Nullable="false"/>
+      </EntityType>
+      <EntityType Name="FieldTypeSet">
+        <Key>
+          <PropertyRef Name="Tabname"/>
+          <PropertyRef Name="KeySel"/>
+        </Key>
+        <Property Name="RowPos" Type="Edm.Int32"/>
+        <Property Name="Currency" Type="Edm.String" MaxLength="5" Nullable="false"/>
+        <Property Name="ColPos" Type="Edm.Int32"/>
+        <Property Name="Cfieldname" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="Fieldname" Type="Edm.String" MaxLength="30"/>
+        <Property Name="Quantity" Type="Edm.String" MaxLength="3" Nullable="false"/>
+        <Property Name="Tabname" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="Qfieldname" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="Ifieldname" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="Round" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="Exponent" Type="Edm.String" MaxLength="3" Nullable="false"/>
+        <Property Name="KeySel" Type="Edm.String" MaxLength="1" Nullable="false"/>
+        <Property Name="Icon" Type="Edm.Boolean" Nullable="false"/>
+        <Property Name="Symbol" Type="Edm.String" MaxLength="1" Nullable="false"/>
+        <Property Name="Checkbox" Type="Edm.Boolean" Nullable="false"/>
+        <Property Name="Just" Type="Edm.String" MaxLength="1" Nullable="false"/>
+        <Property Name="Lzero" Type="Edm.Boolean" Nullable="false"/>
+        <Property Name="NoSign" Type="Edm.Boolean" Nullable="false"/>
+        <Property Name="NoZero" Type="Edm.Boolean" Nullable="false"/>
+        <Property Name="NoConvext" Type="Edm.String" MaxLength="1" Nullable="false"/>
+        <Property Name="EditMask" Type="Edm.String" MaxLength="60" Nullable="false"/>
+        <Property Name="Emphasize" Type="Edm.String" MaxLength="4" Nullable="false"/>
+        <Property Name="FixColumn" Type="Edm.Boolean" Nullable="false"/>
+        <Property Name="DoSum" Type="Edm.Boolean" Nullable="false"/>
+        <Property Name="NoSum" Type="Edm.Boolean" Nullable="false"/>
+        <Property Name="NoOut" Type="Edm.String" MaxLength="1" Nullable="false"/>
+        <Property Name="Tech" Type="Edm.Boolean" Nullable="false"/>
+        <Property Name="Outputlen" Type="Edm.String" MaxLength="6" Nullable="false"/>
+        <Property Name="Convexit" Type="Edm.String" MaxLength="5" Nullable="false"/>
+        <Property Name="Seltext" Type="Edm.String" MaxLength="40" Nullable="false"/>
+        <Property Name="Tooltip" Type="Edm.String" MaxLength="40" Nullable="false"/>
+        <Property Name="Rollname" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="Datatype" Type="Edm.String" MaxLength="10" Nullable="false"/>
+        <Property Name="Inttype" Type="Edm.String" MaxLength="1" Nullable="false"/>
+        <Property Name="Intlen" Type="Edm.String" MaxLength="6" Nullable="false"/>
+        <Property Name="Lowercase" Type="Edm.Boolean" Nullable="false"/>
+        <Property Name="Reptext" Type="Edm.String" MaxLength="55" Nullable="false"/>
+        <Property Name="HierLevel" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="Reprep" Type="Edm.String" MaxLength="1" Nullable="false"/>
+        <Property Name="Domname" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="SpGroup" Type="Edm.String" MaxLength="4" Nullable="false"/>
+        <Property Name="Hotspot" Type="Edm.String" MaxLength="1" Nullable="false"/>
+        <Property Name="Dfieldname" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="ColId" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="F4availabl" Type="Edm.Boolean" Nullable="false"/>
+        <Property Name="AutoValue" Type="Edm.String" MaxLength="1" Nullable="false"/>
+        <Property Name="Checktable" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="Valexi" Type="Edm.Boolean" Nullable="false"/>
+        <Property Name="WebField" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="HrefHndl" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="Style" Type="Edm.Binary" Nullable="false"/>
+        <Property Name="Style2" Type="Edm.Binary" Nullable="false"/>
+        <Property Name="Style3" Type="Edm.Binary" Nullable="false"/>
+        <Property Name="Style4" Type="Edm.Binary" Nullable="false"/>
+        <Property Name="DrdnHndl" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="DrdnField" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="NoMerging" Type="Edm.String" MaxLength="1" Nullable="false"/>
+        <Property Name="HFtype" Type="Edm.String" MaxLength="3" Nullable="false"/>
+        <Property Name="ColOpt" Type="Edm.String" MaxLength="1" Nullable="false"/>
+        <Property Name="NoInitCh" Type="Edm.String" MaxLength="1" Nullable="false"/>
+        <Property Name="DrdnAlias" Type="Edm.String" MaxLength="1" Nullable="false"/>
+        <Property Name="DecfloatStyle" Type="Edm.String" MaxLength="2" Nullable="false"/>
+        <Property Name="Parameter0" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="Parameter1" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="Parameter2" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="Parameter3" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="Parameter4" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="Parameter5" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="Parameter6" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="Parameter7" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="Parameter8" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="Parameter9" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="RefField" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="RefTable" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="TxtField" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="Roundfield" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="DecimalsO" Type="Edm.String" MaxLength="6" Nullable="false"/>
+        <Property Name="Decmlfield" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="DdOutlen" Type="Edm.String" MaxLength="6" Nullable="false"/>
+        <Property Name="Decimals" Type="Edm.String" MaxLength="6" Nullable="false"/>
+        <Property Name="Coltext" Type="Edm.String" MaxLength="40" Nullable="false"/>
+        <Property Name="ScrtextL" Type="Edm.String" MaxLength="40" Nullable="false"/>
+        <Property Name="ScrtextM" Type="Edm.String" MaxLength="20" Nullable="false"/>
+        <Property Name="ScrtextS" Type="Edm.String" MaxLength="10" Nullable="false"/>
+        <Property Name="Colddictxt" Type="Edm.String" MaxLength="1" Nullable="false"/>
+        <Property Name="Selddictxt" Type="Edm.String" MaxLength="1" Nullable="false"/>
+        <Property Name="Tipddictxt" Type="Edm.String" MaxLength="1" Nullable="false"/>
+        <Property Name="Edit" Type="Edm.String" MaxLength="1" Nullable="false"/>
+        <Property Name="TechCol" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="TechForm" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="TechComp" Type="Edm.Boolean" Nullable="false"/>
+        <Property Name="HierCpos" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="HColKey" Type="Edm.String" MaxLength="12" Nullable="false"/>
+        <Property Name="HSelect" Type="Edm.String" MaxLength="1" Nullable="false"/>
+        <Property Name="DdRoll" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="Dragdropid" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="Mac" Type="Edm.String" MaxLength="1" Nullable="false"/>
+        <Property Name="IndxField" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="IndxCfiel" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="IndxQfiel" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="IndxIfiel" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="IndxRound" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="IndxDecml" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="GetStyle" Type="Edm.String" MaxLength="1" Nullable="false"/>
+        <Property Name="Mark" Type="Edm.String" MaxLength="1" Nullable="false"/>
+      </EntityType>
+      <EntityType Name="FillterMapSet">
+        <Key>
+          <PropertyRef Name="Vcid"/>
+          <PropertyRef Name="Tabname"/>
+          <PropertyRef Name="Fieldname"/>
+        </Key>
+        <Property Name="Vcid" Type="Edm.String" MaxLength="6" Nullable="false"/>
+        <Property Name="VcprId" Type="Edm.String" MaxLength="3" Nullable="false"/>
+        <Property Name="VcprTabid" Type="Edm.String" MaxLength="3" Nullable="false"/>
+        <Property Name="VcprFldid" Type="Edm.String" MaxLength="3" Nullable="false"/>
+        <Property Name="VcDesc" Type="Edm.String" MaxLength="80" Nullable="false"/>
+        <Property Name="VcprDesc" Type="Edm.String" MaxLength="80" Nullable="false"/>
+        <Property Name="Tabname" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="Ddtext" Type="Edm.String" MaxLength="60" Nullable="false"/>
+        <Property Name="Fieldname" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="FieldDesc" Type="Edm.String" MaxLength="60" Nullable="false"/>
+        <Property Name="Operation" Type="Edm.String" MaxLength="2" Nullable="false"/>
+        <Property Name="DLow" Type="Edm.String" MaxLength="40" Nullable="false"/>
+        <Property Name="DHigh" Type="Edm.String" MaxLength="40" Nullable="false"/>
+        <Property Name="Mandatory" Type="Edm.String" MaxLength="1" Nullable="false"/>
+        <Property Name="Brobj" Type="Edm.String" MaxLength="10" Nullable="false"/>
+        <Property Name="Ernam" Type="Edm.String" MaxLength="12" Nullable="false"/>
+        <Property Name="Erdat" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="Erzeit" Type="Edm.TimeOfDay"/>
+        <Property Name="Aenam" Type="Edm.String" MaxLength="12" Nullable="false"/>
+        <Property Name="Aedat" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="Aezeit" Type="Edm.TimeOfDay"/>
+        <Property Name="Nodisplay" Type="Edm.String" MaxLength="1" Nullable="false"/>
+        <Property Name="Selopttext" Type="Edm.String" MaxLength="30" Nullable="false"/>
+      </EntityType>
+      <EntityType Name="GetFilterDataSet">
+        <Key>
+          <PropertyRef Name="Tabname"/>
+          <PropertyRef Name="Fieldname"/>
+        </Key>
+        <Property Name="Tabname" Type="Edm.String" MaxLength="30" Nullable="false"/>
+        <Property Name="Fieldname" Type="Edm.String" MaxLength="30" Nullable="false"/>
+      </EntityType>
+      <EntityType Name="RawDummySet">
+        <Key>
+          <PropertyRef Name="RawString"/>
+        </Key>
+        <Property Name="RawString" Type="Edm.String" Nullable="false"/>
+      </EntityType>
+      <EntityType Name="RawstringSet">
+        <Key>
+          <PropertyRef Name="Vcid"/>
+        </Key>
+        <Property Name="Vcid" Type="Edm.String" Nullable="false"/>
+        <Property Name="Vcpr_id" Type="Edm.String" Nullable="false"/>
+        <Property Name="Tabname" Type="Edm.String" Nullable="false"/>
+        <Property Name="FieldType" Type="Edm.String" Nullable="false"/>
+        <Property Name="Operation" Type="Edm.String" Nullable="false"/>
+        <Property Name="Operation_value" Type="Edm.String" Nullable="false"/>
+        <Property Name="Data" Type="Edm.Binary"/>
+        <Property Name="FieldName" Type="Edm.String"/>
+      </EntityType>
+      <ComplexType Name="return_configServices_uniqueDelLocorAllocMapRule">
+        <Property Name="Locid" Type="Edm.String"/>
+      </ComplexType>
+      <ComplexType Name="return_configServices_getPenalityRelevant">
+        <Property Name="penalityVal" Type="Edm.String"/>
+      </ComplexType>
+      <Function Name="uniqueDelLocorAllocMapRule" IsBound="false" IsComposable="false">
+        <ReturnType Type="Collection(configServices.return_configServices_uniqueDelLocorAllocMapRule)" Nullable="true"/>
+      </Function>
+      <Function Name="getPenalityRelevant" IsBound="false" IsComposable="false">
+        <Parameter Name="serviceProfileName" Type="Edm.String"/>
+        <ReturnType Type="Collection(configServices.return_configServices_getPenalityRelevant)" Nullable="true"/>
+      </Function>
+      <Annotations Target="configServices.ServiceProfileMaster/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Created On"/>
+      </Annotations>
+      <Annotations Target="configServices.ServiceProfileMaster/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Created By"/>
+      </Annotations>
+      <Annotations Target="configServices.ServiceProfileMaster/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Changed On"/>
+      </Annotations>
+      <Annotations Target="configServices.ServiceProfileMaster/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Changed By"/>
+      </Annotations>
+      <Annotations Target="configServices.FieldMapping/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Created On"/>
+      </Annotations>
+      <Annotations Target="configServices.FieldMapping/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Created By"/>
+      </Annotations>
+      <Annotations Target="configServices.FieldMapping/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Changed On"/>
+      </Annotations>
+      <Annotations Target="configServices.FieldMapping/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Changed By"/>
+      </Annotations>
+      <Annotations Target="configServices.FieldMapping/ID">
+        <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+      </Annotations>
+      <Annotations Target="configServices.TableMappings/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Created On"/>
+      </Annotations>
+      <Annotations Target="configServices.TableMappings/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Created By"/>
+      </Annotations>
+      <Annotations Target="configServices.TableMappings/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Changed On"/>
+      </Annotations>
+      <Annotations Target="configServices.TableMappings/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Changed By"/>
+      </Annotations>
+      <Annotations Target="configServices.EzIdTable/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Created On"/>
+      </Annotations>
+      <Annotations Target="configServices.EzIdTable/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Created By"/>
+      </Annotations>
+      <Annotations Target="configServices.EzIdTable/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Changed On"/>
+      </Annotations>
+      <Annotations Target="configServices.EzIdTable/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Changed By"/>
+      </Annotations>
+      <Annotations Target="configServices.AddiFunction/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Created On"/>
+      </Annotations>
+      <Annotations Target="configServices.AddiFunction/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Created By"/>
+      </Annotations>
+      <Annotations Target="configServices.AddiFunction/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Changed On"/>
+      </Annotations>
+      <Annotations Target="configServices.AddiFunction/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Changed By"/>
+      </Annotations>
+      <Annotations Target="configServices.transportAgreementDetail/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Created On"/>
+      </Annotations>
+      <Annotations Target="configServices.transportAgreementDetail/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Created By"/>
+      </Annotations>
+      <Annotations Target="configServices.transportAgreementDetail/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Changed On"/>
+      </Annotations>
+      <Annotations Target="configServices.transportAgreementDetail/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Changed By"/>
+      </Annotations>
+      <Annotations Target="configServices.pathAndFuelMapping/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Created On"/>
+      </Annotations>
+      <Annotations Target="configServices.pathAndFuelMapping/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Created By"/>
+      </Annotations>
+      <Annotations Target="configServices.pathAndFuelMapping/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Changed On"/>
+      </Annotations>
+      <Annotations Target="configServices.pathAndFuelMapping/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Changed By"/>
+      </Annotations>
+      <Annotations Target="configServices.serviceParametersItems/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Created On"/>
+      </Annotations>
+      <Annotations Target="configServices.serviceParametersItems/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Created By"/>
+      </Annotations>
+      <Annotations Target="configServices.serviceParametersItems/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Changed On"/>
+      </Annotations>
+      <Annotations Target="configServices.serviceParametersItems/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Changed By"/>
+      </Annotations>
+      <Annotations Target="configServices.serviceProfileParametersItems/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Created On"/>
+      </Annotations>
+      <Annotations Target="configServices.serviceProfileParametersItems/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Created By"/>
+      </Annotations>
+      <Annotations Target="configServices.serviceProfileParametersItems/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Changed On"/>
+      </Annotations>
+      <Annotations Target="configServices.serviceProfileParametersItems/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Changed By"/>
+      </Annotations>
+      <Annotations Target="configServices.DocumentNoProfileMapping/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Created On"/>
+      </Annotations>
+      <Annotations Target="configServices.DocumentNoProfileMapping/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Created By"/>
+      </Annotations>
+      <Annotations Target="configServices.DocumentNoProfileMapping/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Changed On"/>
+      </Annotations>
+      <Annotations Target="configServices.DocumentNoProfileMapping/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Changed By"/>
+      </Annotations>
+      <Annotations Target="configServices.AllocationProfile/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Created On"/>
+      </Annotations>
+      <Annotations Target="configServices.AllocationProfile/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Created By"/>
+      </Annotations>
+      <Annotations Target="configServices.AllocationProfile/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Changed On"/>
+      </Annotations>
+      <Annotations Target="configServices.AllocationProfile/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Changed By"/>
+      </Annotations>
+      <Annotations Target="configServices.AllocationLocation/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Created On"/>
+      </Annotations>
+      <Annotations Target="configServices.AllocationLocation/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Created By"/>
+      </Annotations>
+      <Annotations Target="configServices.AllocationLocation/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Changed On"/>
+      </Annotations>
+      <Annotations Target="configServices.AllocationLocation/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Changed By"/>
+      </Annotations>
+      <Annotations Target="configServices.AllocationRuleOnLocation/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Created On"/>
+      </Annotations>
+      <Annotations Target="configServices.AllocationRuleOnLocation/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Created By"/>
+      </Annotations>
+      <Annotations Target="configServices.AllocationRuleOnLocation/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Changed On"/>
+      </Annotations>
+      <Annotations Target="configServices.AllocationRuleOnLocation/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Changed By"/>
+      </Annotations>
+      <Annotations Target="configServices.serviceParameterNode/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Created On"/>
+      </Annotations>
+      <Annotations Target="configServices.serviceParameterNode/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Created By"/>
+      </Annotations>
+      <Annotations Target="configServices.serviceParameterNode/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Changed On"/>
+      </Annotations>
+      <Annotations Target="configServices.serviceParameterNode/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Changed By"/>
+      </Annotations>
+      <Annotations Target="configServices.serviceParameterNode/ID">
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+      </Annotations>
+      <Annotations Target="configServices.HeaderItem_Config/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Created On"/>
+      </Annotations>
+      <Annotations Target="configServices.HeaderItem_Config/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Created By"/>
+      </Annotations>
+      <Annotations Target="configServices.HeaderItem_Config/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Changed On"/>
+      </Annotations>
+      <Annotations Target="configServices.HeaderItem_Config/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Changed By"/>
+      </Annotations>
+      <Annotations Target="configServices.HeaderItem_Config/unique">
+        <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+      </Annotations>
+      <Annotations Target="configServices.penalties/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Created On"/>
+      </Annotations>
+      <Annotations Target="configServices.penalties/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Created By"/>
+      </Annotations>
+      <Annotations Target="configServices.penalties/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Changed On"/>
+      </Annotations>
+      <Annotations Target="configServices.penalties/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Changed By"/>
+      </Annotations>
+      <Annotations Target="configServices.TransportConfig/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Created On"/>
+      </Annotations>
+      <Annotations Target="configServices.TransportConfig/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Created By"/>
+      </Annotations>
+      <Annotations Target="configServices.TransportConfig/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Changed On"/>
+      </Annotations>
+      <Annotations Target="configServices.TransportConfig/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Changed By"/>
+      </Annotations>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

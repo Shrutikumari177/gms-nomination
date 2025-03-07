@@ -1,0 +1,65 @@
+/* Enter your custom styles here */
+.customValueStateText .sapMInputBaseMessage {
+  width: max-content; /* Expands based on text */
+  min-width: 150px;  /* Prevents too small width */
+  max-width: 100%;   /* Avoids overflow */
+}
+
+/* page section */
+.sapMPage>section {
+    scrollbar-width: thin !important;
+}
+.sapUiLoSplitter .sapUiLoSplitterContent{
+  scrollbar-width: thin !important;
+}
+
+.sapMScrollCont{
+  scrollbar-width: none !important;
+}
+.cellNoPadding .sapUiBlockCellContent {
+    padding: 0.25rem !important;
+  }
+
+  .cellFixedHeight .sapUiBlockCellContent {
+    min-height: 250px !important;
+    
+    
+  }
+  .cellFixedHeightNom .sapUiBlockCellContent {
+    min-height: 580px;
+    
+    border-radius: none;
+  }
+  .cellFixedHeight .sapUiBlockCellContent .sapMPanelContent {
+    padding: 0px !important;
+    
+  }
+  .sapMPanel{
+    border-radius: 0px !important;
+    
+  }
+  .simulateVbox{
+    margin: 2% !important;
+  }
+ 
+
+  #chartContainer {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    
+}
+.chartContainer{
+  z-index: 10000;
+}
+.RecastApp .RecastAppExpander, .CaiApp .CaiAppExpander{
+
+  z-index: 1;
+  
+}
+
+
+
+

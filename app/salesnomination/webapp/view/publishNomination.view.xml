@@ -1,0 +1,643 @@
+<mvc:View
+    xmlns:uxap="sap.uxap"
+    xmlns:tnt="sap.tnt"
+    controllerName="com.ingenx.nomination.salesnomination.controller.publishNomination"
+    xmlns:l="sap.ui.layout"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:viz="sap.viz.ui5.controls"
+    xmlns:viz.feeds="sap.viz.ui5.controls.common.feeds"
+    xmlns:viz.data="sap.viz.ui5.data"
+    height="100%"
+>
+    <tnt:ToolHeader
+        id="IdPubNomToolHeader"
+        class="sapUiTinyMarginBottom sapUiTinyMarginTop"
+        visible="true"
+    >
+        <Title
+            id="IdPubNomTitle"
+            textAlign="Center"
+            text="Publish Nomination"
+            wrapping="false"
+        />
+        <ToolbarSpacer id="IdPubNomToolbarSpacer" />
+    </tnt:ToolHeader>
+
+    <l:ResponsiveSplitter
+        defaultPane="IdPubNomSplitterContainer"
+        id='IdPubNomMainScrollContainer'
+    >
+        <l:PaneContainer
+            id="IdPubNomPaneContainer"
+            resize=".onRootContainerResize"
+        >
+            <l:SplitPane
+                requiredParentWidth="400"
+                id="IdPubNomFirstPane"
+             >
+                <l:layoutData>
+                    <l:SplitterLayoutData
+                        id="IdPubNomSplitterLayoutData"
+                        size="25%"
+                    />
+                </l:layoutData>
+                <Page
+                    id="IdPubNomContractsPage"
+                    title="Contracts"
+                    titleAlignment="Center"
+                    showNavButton="true"
+                    navButtonPress="onBackMat"
+                >
+                    <VBox
+                        id="IdPubNomVboxContracts"
+                        visible="true"
+                    >
+                        <Input
+                            id="IdPubNomSoldToPartyInput"
+                            width="100%"
+                            showValueHelp="true"
+                            valueHelpRequest=".soldToPartyValueHelp"
+                            value=""
+                            placeholder="Sold to party"
+                        />
+                        <Input
+                            id="IdPubNomContractDescInput"
+                            width="100%"
+                            showValueHelp="false"
+                            valueHelpRequest="onContDesc"
+                            value=""
+                            liveChange=".onContDescLiveChange"
+                            placeholder="Contract Description"
+                        />
+                        <List
+                            id="IdPubNomContractList"
+                            growing="true"
+                            growingScrollToLoad="true"
+                            growingThreshold="5"
+                            items="{path: 'newModelForContracts>/data',sorter: [{path: 'DocNo',descending: true}]}"
+                        >
+                            <ObjectListItem
+                                id="IdPubNomContractListItem"
+                                title="Contract Number: {newModelForContracts>DocNo}"
+                                type="Navigation"
+                                press="onSelectContract"
+                            >
+                                <ObjectAttribute id="IdPubNomContractDescAttr" text="Contract Desc. : {newModelForContracts>Contracttype}" />
+                            </ObjectListItem>
+                        </List>
+                    </VBox>
+                    <VBox
+                        id="IdPubNomVboxMaterials"
+                        visible="false"
+                    >
+                        <List
+                            id="IdPubNomMaterialList"
+                            growing="true"
+                            growingScrollToLoad="true"
+                            growingThreshold="7"
+                            items="{path: 'materialModel>/selectedMaterials'}"
+                        >
+                            <ObjectListItem
+                                id="IdPubNomMaterialListItem"
+                                title="Material: {materialModel>Material}"
+                                type="Navigation"
+                                press="onSelectMaterial"
+                            >
+                                <attributes>
+                                    <ObjectAttribute
+                                        id="IdPubNomRedeliveryPointsAttr"
+                                        title="Re-Delivery Points"
+                                        text="{path: 'materialModel>Redelivery_Point'}"
+                                    />
+                                    <ObjectAttribute
+                                        id="IdPubNomDeliveryPointsAttr"
+                                        title="Delivery Points"
+                                        text="{path: 'materialModel>Delivery_Point'}"
+                                        visible="false"
+                                    />
+                                </attributes>
+                            </ObjectListItem>
+                        </List>
+                    </VBox>
+                </Page>
+            </l:SplitPane>
+
+            <l:SplitPane
+                requiredParentWidth="400"
+                id="IdPubNomMiddlePane"
+             >
+                <l:layoutData>
+                    <l:SplitterLayoutData size="auto" />
+                </l:layoutData>
+                <Page
+                    title="Nomination Details"
+                    id="IdPubNomDetailsPage"
+                    titleAlignment="Center"
+                 >
+                    <Panel>
+                        <f:SimpleForm
+                            id="IdPubNomSimpleForm"
+                            editable="false"
+                            layout="ResponsiveGridLayout"
+                            class="formClass"
+                        >
+                            <f:content>
+                                <VBox id="IdPubNomStaticContent">
+                                    <List id="IdPubNomStaticList">
+                                        <DisplayListItem
+                                            id="IdPubNomContractID"
+                                            label="Contract ID:"
+                                            value="{contDataModel>/DocNo}"
+                                        />
+                                        <DisplayListItem
+                                            id="IdPubNomMaterialID"
+                                            label="Material:"
+                                            value="{contDataModel>/Material}"
+                                        />
+                                        <DisplayListItem
+                                            id="IdPubNomContractDesc"
+                                            label="Contract Desc:"
+                                            value="{contDataModel>/Contracttype}"
+                                        />
+                                    </List>
+                                    <List id="IdPubNomStaticListS" visible="false">
+                                        <DisplayListItem
+                                            id="IdPubNomContractDPDCQ"
+                                            label="DP DCQ:"
+                                            value="{contDataModel>/Delivery_Dcq}"
+                                            visible="false"
+                                        />
+                                        <DisplayListItem
+                                            id="IdPubNomContratRPDCQ"
+                                            label="RDP DCQ:"
+                                            value="{contDataModel>/Redelivery_Dcq}"
+                                            visible="false"
+                                        />
+                                    </List>
+                                </VBox>
+                                <VBox id="IdPubNomDynamicContent">
+                                    <List id="IdPubNomStaticListfinal" visible="true">
+                                        <DisplayListItem
+                                            id="IdPubNomContractRPDCQ"
+                                            label="RDP DCQ:"
+                                            value="{contDataModel>/Redelivery_Dcq}"
+                                            visible="true"
+                                        />
+                                    </List>
+
+                                    <List
+                                        id="IdPubNomDynamicFieldList"
+                                        showNoData="false"
+                                        items="{contDataModel>/data}"
+                                    >
+                                        <items>
+                                            <DisplayListItem
+                                                label="{contDataModel>Clause_Code}"
+                                                value="{contDataModel>Calculated_Value}"
+                                            />
+                                        </items>
+                                    </List>
+                                </VBox>
+                            </f:content>
+                        </f:SimpleForm>
+                    </Panel>
+                    <Bar
+                        id="IdPubNomGasDayBar"
+                        class="sapUiSmallMarginTop"
+                    >
+                        <contentLeft>
+                            <Label
+                                id="IdPubNomGasDayLabel"
+                                text="Gas Day"
+                                required="true"
+                                class="sapUiSmallMarginBegin"
+                            />
+                        </contentLeft>
+                        <contentRight>
+                            <DatePicker
+                                id="IdPubNomGasDayPicker"
+                                placeholder="Select Gas Day"
+                                valueFormat="{ YYYY-MM-dd }"
+                                minDate="{}"
+                                liveChange="onSelectedDate"
+                            />
+                        </contentRight>
+                    </Bar>
+                    <Bar
+                        id="IdPubNomTableHeaderBarForDelv"
+                        visible="false"
+                        class="sapUiSmallMarginTop"
+                    >
+                        <contentLeft>
+                            <Title
+                                id="IdPubNomTableTitleForDelv"
+                                text="Nominate Quantity For Delivery"
+                            />
+                        </contentLeft>
+                        <contentMiddle>
+                            <Label
+                                id="IdDelCummDNQ"
+                                text="Total. DNQ"
+                                design="Bold"
+                            />
+                            <Input
+                                id="IdDelCummDNQInput"
+                                value="{}"
+                                width="150px"
+                                editable="false"
+                            />
+                        </contentMiddle>
+                        <contentRight>
+                            <Button
+                                id="IdPubNomAddBtnForDelv"
+                                icon="sap-icon://add"
+                                type="Emphasized"
+                                press="onAddRowDlvPress"
+                            />
+                            <Button
+                                id="IdPubNomDeleteBtnForDelv"
+                                icon="sap-icon://delete"
+                                type="Reject"
+                                press="onDeleteRowDlvPress"
+                            />
+                        </contentRight>
+                    </Bar>
+                    <Table
+                        id="IdPubNomDelPointTable"
+                        items="{DelvModelData>/DeliveryPoints}"
+                        visible="false"
+                    >
+                        <columns>
+                            <Column id="IdPubNomDelvPointCol">
+                                <Text
+                                    id="IdPubNomDelvPointText"
+                                    text="Delivery Point"
+                                />
+                            </Column>
+                            <Column id="IdPubNomDNQCol">
+                                <Label
+                                    id="IdPubNomDNQLabel"
+                                    required="true"
+                                    text="DNQ"
+                                />
+                            </Column>
+                            <Column id="IdPubNomUOMCol">
+                                <Text
+                                    id="IdPubNomUOMText"
+                                    text="UOM"
+                                />
+                            </Column>
+                            <Column id="IdPubNomDelvFromCol">
+                                <Text
+                                    id="IdPubNomDelvFromLabel"
+                                    text="From Time"
+                                />
+                            </Column>
+                            <Column id="IdPubNomDelvToCol">
+                                <Text
+                                    id="IdPubNomDelvToLabel"
+                                    text="To Time"
+                                />
+                            </Column>
+                            <Column id="IdPubNomEventCol">
+                                <Text
+                                    id="IdPubNomEventText"
+                                    text="Event"
+                                />
+                            </Column>
+                        </columns>
+                        <ColumnListItem id="IdPubNomDelvPointItem">
+                            <cells>
+                                <Input
+                                    id="IdPubNomDelvPointInput"
+                                    editable="false"
+                                    value="{DelvModelData>DeliveryPt}"
+                                />
+                                <Input
+                                    id="IdPubNomDNQInput"
+                                    value="{DelvModelData>DNQ}"
+                                    type="Number"
+        
+                                />
+                                <Input
+                                    id="IdPubNomUOMInput"
+                                    value="{DelvModelData>UOM}"
+                                    editable="false"
+                                />
+                                <TimePicker
+                                    id="IdPubNomDelvFromTimePicker"
+                                    value="{DelvModelData>FromT}"
+                                    placeholder="HH:mm"
+                                    valueFormat="HH:mm:ss"
+                                    displayFormat="HH:mm"
+                                    change="onTimeChange"
+                                />
+                                <TimePicker
+                                    id="IdPubNomDelvToTimePicker"
+                                    value="{DelvModelData>ToT}"
+                                    placeholder="HH:mm"
+                                    valueFormat="HH:mm:ss"
+                                    displayFormat="HH:mm"
+                                    change="onTimeChange"
+                                />
+                                <Select
+                                    id="IdPubNomEventSelect"
+                                    selectedItem="{}"
+                                    forceSelection="false"
+                                    width="200px"
+                                >
+                                    
+                                    <core:ListItem
+                                        id="IdPubNomNoEventItem"
+                                        key="No-event"
+                                        text="No-event"
+                                    />
+                                    <core:ListItem
+                                        id="IdPubNomForceMajeureItem"
+                                        key="Force-Majeure"
+                                        text="Force-Majeure"
+                                    />
+                                    <core:ListItem
+                                        id="IdPubNomUnderMaintenanceItem"
+                                        key="Under-Maintenance"
+                                        text="Under-Maintenance"
+                                    />
+                                </Select>
+                            </cells>
+                        </ColumnListItem>
+                    </Table>
+                    <Bar
+                        id="IdPubNomTableHeaderBar"
+                        visible="true"
+                        class="sapUiSmallMarginTop"
+                    >
+                        <contentLeft>
+                            <Title
+                                id="IdPubNomTableTitle"
+                                text="Nominate Quantity For Re-Delivery"
+                            />
+                        </contentLeft>
+                        <contentMiddle>
+                            <Label
+                                id="IdCummDNQ"
+                                text="Total. DNQ"
+                                design="Bold"
+                            />
+                            <!-- <Input
+                                id="IdCummDNQInput"
+                                value="{}"
+                                width="150px"
+                                editable="false"
+                            /> -->
+                            <Input
+                                id="IdCummDNQInput"
+                                value="{localModel>/CummDNQ}"
+                                width="150px"
+                                editable="false"
+                            />
+                        </contentMiddle>
+                        <contentRight>
+                            <Button
+                                id="IdPubNomAddBtnForRedlv"
+                                icon="sap-icon://add"
+                                type="Emphasized"
+                                press="onAddPress"
+                                class=""
+                            />
+                            <Button
+                                id="IdPubNomDeleteBtnForRedlv"
+                                icon="sap-icon://delete"
+                                type="Reject"
+                                press="onDeletePress"
+                            />
+                        </contentRight>
+                    </Bar>
+                    <Table
+                        id="IdPubNomRedPointTable"
+                        items="{RedlvModelData>/RedeliveryPoints}"
+                     >
+                        <columns>
+                            <Column id="IdPubNomRedvPointCol">
+                                <Text
+                                    id="IdPubNomRedvPointText"
+                                    text="Re-Delivery Point"
+                                    width="7rem"
+                                />
+                            </Column>
+                            <Column id="IdPubNomDNQCol2">
+                                <Label
+                                    id="IdPubNomDNQLabel2"
+                                    text="DNQ"
+                                    width="15rem"
+                                    required="true"
+                                />
+                            </Column>
+                            <Column id="IdPubNomUOMCol2">
+                                <Text
+                                    id="IdPubNomUOMText2"
+                                    text="UOM"
+                                />
+                            </Column>
+                            <Column id="IdPubNomRedvFromCol">
+                                <Text
+                                    id="IdPubNomRedvFromLabel"
+                                    text="From Time"
+                                />
+                            </Column>
+                            <Column id="IdPubNomRedvToCol">
+                                <Text
+                                    id="IdPubNomRedvToLabel"
+                                    text="To Time"
+                                />
+                            </Column>
+                            <Column id="IdPubNomEventCol2">
+                                <Text
+                                    id="IdPubNomEventText2"
+                                    text="Event"
+                                />
+                            </Column>
+                        </columns>
+                        <ColumnListItem id="IdPubNomRedvPointItem">
+                            <cells>
+                                <Input
+                                    id="IdPubNomRedvPointInput"
+                                    editable="false"
+                                    value="{RedlvModelData>RedeliveryPt}"
+                                />
+                                <!-- <Input id="IdPubNomDNQInput2"  value="{RedlvModelData>DNQ}" liveChange=".onLiveInputValidation($event, 'IdPubNomRedPointTable', 'IdCummDNQInput')" /> -->
+                                <Input
+                                    id="IdPubNomDNQInput2"
+                                    value="{RedlvModelData>DNQ}"
+                                    liveChange="onLiveInputValidation"
+                                />
+                                <Input
+                                    id="IdPubNomUOMInput2"
+                                    value="{RedlvModelData>UOM}"
+                                    editable="false"
+                                />
+                                <TimePicker
+                                    id="IdPubNomRedvFromTimePicker"
+                                    value="{RedlvModelData>FromT}"
+                                    placeholder="HH:mm"
+                                    valueFormat="HH:mm:ss"
+                                    displayFormat="HH:mm"
+                                    change="onTimeChange"
+                                />
+                                <TimePicker
+                                    id="IdPubNomRedvToTimePicker"
+                                    value="{RedlvModelData>ToT}"
+                                    placeholder="HH:mm"
+                                    valueFormat="HH:mm:ss"
+                                    displayFormat="HH:mm"
+                                    change="onTimeChange"
+                                />
+                                <Select
+                                    id="IdPubNomEventSelect2"
+                                    selectedKey="{RedlvModelData>Event}"
+                                    selectedItem="{RedlvModelData>Event}"
+                                >
+                                    <core:ListItem id="IdPubNomNoneEvent" key="" text=""/>
+                                    <core:ListItem
+                                        id="IdPubNomReNoEventItem"
+                                        key="No-event"
+                                        text="No-event"
+                                    />
+                                    <core:ListItem
+                                        id="IdPubNomReForceMajeureItem"
+                                        key="Force-Majeure"
+                                        text="Force-Majeure"
+                                    />
+                                    <core:ListItem
+                                        id="IdPubNomReUnderMaintenanceItem"
+                                        key="Under-Maintenance"
+                                        text="Under-Maintenance"
+                                    />
+                                </Select>
+                            </cells>
+                        </ColumnListItem>
+                    </Table>
+                    <InputListItem id="IdPubNomRemarksItem">
+                        <Input
+                            id="IdPubNomRemarksInput"
+                            placeholder="Remarks.."
+                            width="100%"
+                            textAlign="End"
+                        />
+                    </InputListItem>
+                    <HBox class="sapUiTinyMarginTop">
+                        <Button
+                            id="IdPubNomSubmitButton"
+                            text="Submit"
+                            class="sapUiTinyMarginBegin"
+                            type="Emphasized"
+                            press="createNomination"
+                        />
+                        <Button
+                            id="IdPubNomSimulateButton"
+                            text="Simulate"
+                            type="Emphasized"
+                            class="sapUiTinyMarginBegin"
+                            press="Onsimulate"
+                        />
+                    </HBox>
+                </Page>
+            </l:SplitPane>
+
+            <l:PaneContainer
+                orientation="Vertical"
+                resize=".onInnerContainerResize"
+            >
+                <l:layoutData>
+                    <l:SplitterLayoutData size="25%" />
+                </l:layoutData>
+
+                <l:SplitPane requiredParentWidth="600">
+                    <l:layoutData>
+                        <l:SplitterLayoutData size="auto" />
+                    </l:layoutData>
+                    <Page
+                        id="IdPubNomPastNominationPage"
+                        title="Past Nomination"
+                        titleAlignment="Center"
+                    >
+                        <Table
+                            id="IdPubNomPastNomTable"
+                            items="{modelData>/PastNominations}"
+                            sticky="ColumnHeaders"
+                        >
+                            <layoutData>
+                                <l:SplitterLayoutData
+                                    id="IdPubNomSplitterLayoutData1"
+                                    size="250px"
+                                    resizable="true"
+                                />
+                            </layoutData>
+                            <columns>
+                                <Column id="IdPubNomPastNomGasDayCol">
+                                    <Text
+                                        id="IdPubNomPastNomGasDayText"
+                                        text="Gas Day"
+                                    />
+                                </Column>
+                                <Column id="IdPubNomPastNomApprovedDNQCol">
+                                    <Text
+                                        id="IdPubNomPastNomApprovedDNQText"
+                                        text="Approved DNQ"
+                                    />
+                                </Column>
+                                <Column id="IdPubNomPastNomUOMCol">
+                                    <Text
+                                        id="IdPubNomPastNomUOMText"
+                                        text="UoM"
+                                    />
+                                </Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem id="IdPubNomPastNomItem">
+                                    <cells>
+                                        <Text
+                                            id="IdPubNomPastNomGasDayValue"
+                                            text="{modelData>Gasday}"
+                                        />
+                                        <Text
+                                            id="IdPubNomPastNomApprovedDNQValue"
+                                            text="{modelData>Adnq}"
+                                        />
+                                        <Text
+                                            id="IdPubNomPastNomUOMValue"
+                                            text="{modelData>Uom4}"
+                                        />
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                        <layoutData>
+                            <l:SplitterLayoutData
+                                id="IdPubNomSplitterLayoutData2"
+                                size="20%"
+                                minSize="200px"
+                                resizable="true"
+                            />
+                        </layoutData>
+                    </Page>
+                </l:SplitPane>
+
+                <l:SplitPane requiredParentWidth="800">
+                    <l:layoutData>
+                        <l:SplitterLayoutData size="auto" />
+                    </l:layoutData>
+                    <Panel>
+                        <VBox
+                            id="IdPubNomChartContainer"
+                            height="320px"
+                            class="chartContainer"
+                        />
+                    </Panel>
+                </l:SplitPane>
+            </l:PaneContainer>
+        </l:PaneContainer>
+    </l:ResponsiveSplitter>
+</mvc:View>

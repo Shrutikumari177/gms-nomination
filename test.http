@@ -1,0 +1,69 @@
+GET http://localhost:4004/odata/v4/nomination-services/CreateSPSet('40000787')?$expand=toHeaderTable,toservpara,toClausecode,toCustfld,toOrgDetail
+###
+GET http://localhost:4004/odata/v4/nomination-services/getNominationsByCustomer?SoldToParty=1100000003
+
+###
+
+GET http://localhost:4004/odata/v4/nomination-services/getContractDetailsAndPastNom?DocNo=40000932
+
+####
+GET http://localhost:4004/odata/v4/nomination-services/getContractMatDetailsByGasday?DocNo=40000935&Gasday=2025-03-05
+
+
+
+###
+GET http://localhost:4004/odata/v4/nomination-services/ZNOMMASTER8?$filter=Customer eq '1100000003'&$expand=to_contract($filter=DocType eq 'S' and Vbeln eq '40000740')
+
+###
+GET http://localhost:4004/odata/v4/nomination-services/getContractByCustomer?Customer=11000000033
+
+###
+
+POST  http://localhost:4004/odata/v4/nomination-services/znom_headSet
+Content-Type: application/json
+
+
+###
+GET http://localhost:4004/odata/v4/nomination-services/getContractDetailsAndPastNom?DocNo=40000941
+
+####
+GET http://localhost:4004/odata/v4/nomination-services/getContractDetail?DocNo=40000941&Material=2000000068&Redelivery_Point=C1100004
+###
+
+GET http://localhost:4004/odata/v4/nomination-services/getRenominationContractData?DocNo=40000909&Material=2000000068&Redelivery_Point=BENGALURU&Gasday=2025-03-10
+
+
+
+####
+
+POST http://localhost:4004/odata/v4/nomination-services/znom_headSet
+Content-Type: application/json
+
+
+# {
+# "Gasday" : "2025-02-26",
+#  "Vbeln" : "40000796",
+# "nomi_toitem":
+# [
+# {
+#         "Gasday" : "2025-02-26",
+#         "Vbeln" : "40000796",
+#         "ItemNo" : "000020",
+#         "NomItem" : "10",
+#         "Versn" : "",
+#         "DeliveryPoint" : "",
+#         "RedelivryPoint" : "C1100003",
+#         "ValidTo" : "06:40:00",
+#         "ValidFrom" : "06:30:00",
+#         "Material" : "2000000068",
+#         "Kunnr" : "",
+#         "Auart" : "ZGSA",
+#         "Ddcq" : "0.000",
+#         "Rdcq" : "0.000",
+#         "Uom1" : "MBT",
+#         "Pdnq" : "2500.000",
+#         "Event" : ""
+#       }
+# ]
+
+# }

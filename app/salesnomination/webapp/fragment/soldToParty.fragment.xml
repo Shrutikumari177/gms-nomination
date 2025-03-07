@@ -1,0 +1,22 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+
+    <SelectDialog
+        id="soldToParty"
+        noDataText="Loading ..."
+        title="Select Sold To Party"
+        confirm=".onValueHelpConfirmSTP"
+        liveChange="onValueHelpSearchSTP"
+      
+            items="{
+            path: '/ZNOMMASTER8'
+        }">
+        <StandardListItem id="_IDGenStandardListItemSTP"
+            title="{Customer}"
+            description="{CustomerName}"
+            iconDensityAware="false"
+            iconInset="false"
+            type="Active" />
+    </SelectDialog>
+</core:FragmentDefinition>

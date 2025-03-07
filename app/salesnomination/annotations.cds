@@ -1,0 +1,1 @@
+using nominationServices as service from '../../srv/nominationService';

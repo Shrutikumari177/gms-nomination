@@ -1,0 +1,2794 @@
+{
+ "meta": {
+  "creator": "cds-dk 8.4.2"
+ },
+ "$version": "2.0",
+ "definitions": {
+  "GMS_CONFIG.uniqueDelLocorAllocMapRule": {
+   "kind": "function",
+   "@cds.external": true,
+   "returns": {
+    "items": {
+     "type": "GMS_CONFIG.return_configServices_uniqueDelLocorAllocMapRule"
+    }
+   }
+  },
+  "GMS_CONFIG.getPenalityRelevant": {
+   "kind": "function",
+   "@cds.external": true,
+   "params": {
+    "serviceProfileName": {
+     "type": "cds.LargeString"
+    }
+   },
+   "returns": {
+    "items": {
+     "type": "GMS_CONFIG.return_configServices_getPenalityRelevant"
+    }
+   }
+  },
+  "GMS_CONFIG.ServiceProfileMaster": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "createdAt": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset",
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Immutable": true,
+     "@Core.Computed": true,
+     "@Common.Label": "Created On"
+    },
+    "createdBy": {
+     "type": "cds.String",
+     "length": 255,
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Immutable": true,
+     "@Core.Computed": true,
+     "doc": "User's unique ID",
+     "@Common.Label": "Created By"
+    },
+    "modifiedAt": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset",
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Computed": true,
+     "@Common.Label": "Changed On"
+    },
+    "modifiedBy": {
+     "type": "cds.String",
+     "length": 255,
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Computed": true,
+     "doc": "User's unique ID",
+     "@Common.Label": "Changed By"
+    },
+    "ID": {
+     "key": true,
+     "type": "cds.Integer",
+     "notNull": true
+    },
+    "serviceProfileName": {
+     "key": true,
+     "type": "cds.LargeString",
+     "notNull": true
+    },
+    "serviceProfileDesc": {
+     "type": "cds.LargeString"
+    },
+    "field1": {
+     "type": "cds.LargeString"
+    },
+    "field2": {
+     "type": "cds.LargeString"
+    },
+    "field3": {
+     "type": "cds.LargeString"
+    },
+    "field4": {
+     "type": "cds.LargeString"
+    },
+    "field5": {
+     "type": "cds.LargeString"
+    }
+   }
+  },
+  "GMS_CONFIG.FieldMapping": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "createdAt": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset",
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Immutable": true,
+     "@Core.Computed": true,
+     "@Common.Label": "Created On"
+    },
+    "createdBy": {
+     "type": "cds.String",
+     "length": 255,
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Immutable": true,
+     "@Core.Computed": true,
+     "doc": "User's unique ID",
+     "@Common.Label": "Created By"
+    },
+    "modifiedAt": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset",
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Computed": true,
+     "@Common.Label": "Changed On"
+    },
+    "modifiedBy": {
+     "type": "cds.String",
+     "length": 255,
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Computed": true,
+     "doc": "User's unique ID",
+     "@Common.Label": "Changed By"
+    },
+    "ID": {
+     "key": true,
+     "type": "cds.UUID",
+     "notNull": true,
+     "@Core.ComputedDefaultValue": true
+    },
+    "Snum": {
+     "type": "cds.LargeString"
+    },
+    "EzID": {
+     "key": true,
+     "type": "cds.LargeString",
+     "notNull": true
+    },
+    "Table": {
+     "type": "cds.LargeString"
+    },
+    "SubProcessId": {
+     "type": "cds.LargeString"
+    },
+    "Field": {
+     "key": true,
+     "type": "cds.LargeString",
+     "notNull": true
+    },
+    "FieldType": {
+     "type": "cds.LargeString"
+    },
+    "FieldID": {
+     "type": "cds.LargeString"
+    },
+    "FieldDesc": {
+     "type": "cds.LargeString"
+    },
+    "selected": {
+     "type": "cds.Boolean"
+    },
+    "display": {
+     "type": "cds.Boolean"
+    },
+    "mandatory": {
+     "type": "cds.Boolean"
+    },
+    "filterfield": {
+     "type": "cds.Boolean"
+    },
+    "Operation": {
+     "type": "cds.LargeString"
+    },
+    "DefaultVal": {
+     "type": "cds.LargeString"
+    },
+    "MappedTable": {
+     "type": "cds.LargeString"
+    },
+    "MappedField": {
+     "type": "cds.LargeString"
+    },
+    "AddiFunction": {
+     "type": "cds.LargeString"
+    },
+    "Formula": {
+     "type": "cds.LargeString"
+    }
+   }
+  },
+  "GMS_CONFIG.TableMappings": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "createdAt": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset",
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Immutable": true,
+     "@Core.Computed": true,
+     "@Common.Label": "Created On"
+    },
+    "createdBy": {
+     "type": "cds.String",
+     "length": 255,
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Immutable": true,
+     "@Core.Computed": true,
+     "doc": "User's unique ID",
+     "@Common.Label": "Created By"
+    },
+    "modifiedAt": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset",
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Computed": true,
+     "@Common.Label": "Changed On"
+    },
+    "modifiedBy": {
+     "type": "cds.String",
+     "length": 255,
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Computed": true,
+     "doc": "User's unique ID",
+     "@Common.Label": "Changed By"
+    },
+    "Snum": {
+     "key": true,
+     "type": "cds.LargeString",
+     "notNull": true
+    },
+    "EzID": {
+     "key": true,
+     "type": "cds.LargeString",
+     "notNull": true
+    },
+    "Table": {
+     "key": true,
+     "type": "cds.LargeString",
+     "notNull": true
+    },
+    "SubProcessId": {
+     "type": "cds.LargeString"
+    },
+    "TableDesc": {
+     "type": "cds.LargeString"
+    }
+   }
+  },
+  "GMS_CONFIG.EzIdTable": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "createdAt": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset",
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Immutable": true,
+     "@Core.Computed": true,
+     "@Common.Label": "Created On"
+    },
+    "createdBy": {
+     "type": "cds.String",
+     "length": 255,
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Immutable": true,
+     "@Core.Computed": true,
+     "doc": "User's unique ID",
+     "@Common.Label": "Created By"
+    },
+    "modifiedAt": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset",
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Computed": true,
+     "@Common.Label": "Changed On"
+    },
+    "modifiedBy": {
+     "type": "cds.String",
+     "length": 255,
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Computed": true,
+     "doc": "User's unique ID",
+     "@Common.Label": "Changed By"
+    },
+    "EzID": {
+     "key": true,
+     "type": "cds.LargeString",
+     "notNull": true
+    },
+    "EzIdDescription": {
+     "type": "cds.LargeString"
+    }
+   }
+  },
+  "GMS_CONFIG.AddiFunction": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "createdAt": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset",
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Immutable": true,
+     "@Core.Computed": true,
+     "@Common.Label": "Created On"
+    },
+    "createdBy": {
+     "type": "cds.String",
+     "length": 255,
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Immutable": true,
+     "@Core.Computed": true,
+     "doc": "User's unique ID",
+     "@Common.Label": "Created By"
+    },
+    "modifiedAt": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset",
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Computed": true,
+     "@Common.Label": "Changed On"
+    },
+    "modifiedBy": {
+     "type": "cds.String",
+     "length": 255,
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Computed": true,
+     "doc": "User's unique ID",
+     "@Common.Label": "Changed By"
+    },
+    "Function": {
+     "key": true,
+     "type": "cds.LargeString",
+     "notNull": true
+    },
+    "FunctionDesc": {
+     "type": "cds.LargeString"
+    }
+   }
+  },
+  "GMS_CONFIG.transportAgreementDetail": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "createdAt": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset",
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Immutable": true,
+     "@Core.Computed": true,
+     "@Common.Label": "Created On"
+    },
+    "createdBy": {
+     "type": "cds.String",
+     "length": 255,
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Immutable": true,
+     "@Core.Computed": true,
+     "doc": "User's unique ID",
+     "@Common.Label": "Created By"
+    },
+    "modifiedAt": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset",
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Computed": true,
+     "@Common.Label": "Changed On"
+    },
+    "modifiedBy": {
+     "type": "cds.String",
+     "length": 255,
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Computed": true,
+     "doc": "User's unique ID",
+     "@Common.Label": "Changed By"
+    },
+    "salesNumber": {
+     "key": true,
+     "type": "cds.LargeString",
+     "notNull": true
+    },
+    "purchaseNumber": {
+     "type": "cds.LargeString"
+    },
+    "exchangeNumber": {
+     "type": "cds.LargeString"
+    }
+   }
+  },
+  "GMS_CONFIG.pathAndFuelMapping": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "createdAt": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset",
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Immutable": true,
+     "@Core.Computed": true,
+     "@Common.Label": "Created On"
+    },
+    "createdBy": {
+     "type": "cds.String",
+     "length": 255,
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Immutable": true,
+     "@Core.Computed": true,
+     "doc": "User's unique ID",
+     "@Common.Label": "Created By"
+    },
+    "modifiedAt": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset",
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Computed": true,
+     "@Common.Label": "Changed On"
+    },
+    "modifiedBy": {
+     "type": "cds.String",
+     "length": 255,
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Computed": true,
+     "doc": "User's unique ID",
+     "@Common.Label": "Changed By"
+    },
+    "DeliveryPoint": {
+     "key": true,
+     "type": "cds.LargeString",
+     "notNull": true
+    },
+    "DpTsSystem": {
+     "type": "cds.LargeString"
+    },
+    "ReDeliveryPoint": {
+     "key": true,
+     "type": "cds.LargeString",
+     "notNull": true
+    },
+    "RDpTsSystem": {
+     "type": "cds.LargeString"
+    },
+    "InterconnectPath": {
+     "type": "cds.LargeString"
+    },
+    "Interconnect": {
+     "type": "cds.LargeString"
+    },
+    "path": {
+     "type": "cds.LargeString"
+    },
+    "FuelPercentage": {
+     "type": "cds.Decimal"
+    }
+   }
+  },
+  "GMS_CONFIG.serviceParametersItems": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "createdAt": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset",
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Immutable": true,
+     "@Core.Computed": true,
+     "@Common.Label": "Created On"
+    },
+    "createdBy": {
+     "type": "cds.String",
+     "length": 255,
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Immutable": true,
+     "@Core.Computed": true,
+     "doc": "User's unique ID",
+     "@Common.Label": "Created By"
+    },
+    "modifiedAt": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset",
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Computed": true,
+     "@Common.Label": "Changed On"
+    },
+    "modifiedBy": {
+     "type": "cds.String",
+     "length": 255,
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Computed": true,
+     "doc": "User's unique ID",
+     "@Common.Label": "Changed By"
+    },
+    "ID": {
+     "key": true,
+     "type": "cds.Integer",
+     "notNull": true
+    },
+    "serviceParameter": {
+     "key": true,
+     "type": "cds.LargeString",
+     "notNull": true
+    },
+    "serviceParameterDesc": {
+     "type": "cds.LargeString"
+    },
+    "serviceParameterType": {
+     "type": "cds.LargeString"
+    },
+    "serviceParameterlength": {
+     "type": "cds.Integer"
+    },
+    "List": {
+     "items": {
+      "type": "cds.LargeString"
+     }
+    },
+    "ParentId": {
+     "type": "cds.LargeString"
+    },
+    "Level": {
+     "type": "cds.LargeString"
+    }
+   }
+  },
+  "GMS_CONFIG.serviceProfileParametersItems": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "createdAt": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset",
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Immutable": true,
+     "@Core.Computed": true,
+     "@Common.Label": "Created On"
+    },
+    "createdBy": {
+     "type": "cds.String",
+     "length": 255,
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Immutable": true,
+     "@Core.Computed": true,
+     "doc": "User's unique ID",
+     "@Common.Label": "Created By"
+    },
+    "modifiedAt": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset",
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Computed": true,
+     "@Common.Label": "Changed On"
+    },
+    "modifiedBy": {
+     "type": "cds.String",
+     "length": 255,
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Computed": true,
+     "doc": "User's unique ID",
+     "@Common.Label": "Changed By"
+    },
+    "checkedParameter": {
+     "type": "cds.Boolean"
+    },
+    "serviceProfileName": {
+     "key": true,
+     "type": "cds.LargeString",
+     "notNull": true
+    },
+    "serviceProfileDesc": {
+     "type": "cds.LargeString"
+    },
+    "ProfileId": {
+     "type": "cds.LargeString"
+    },
+    "ID": {
+     "key": true,
+     "type": "cds.Integer",
+     "notNull": true
+    },
+    "serviceParameter": {
+     "key": true,
+     "type": "cds.LargeString",
+     "notNull": true
+    },
+    "serviceParameterDesc": {
+     "type": "cds.LargeString"
+    },
+    "serviceParameterType": {
+     "type": "cds.LargeString"
+    },
+    "serviceParameterlength": {
+     "type": "cds.Integer"
+    },
+    "ParentId": {
+     "type": "cds.LargeString"
+    },
+    "ContractRelevant": {
+     "type": "cds.Boolean"
+    },
+    "Value_Parameter": {
+     "type": "cds.Boolean"
+    },
+    "Threshold_Relevance": {
+     "type": "cds.Boolean"
+    },
+    "Referrence_Relevant": {
+     "type": "cds.Boolean"
+    },
+    "Nomination_Relevant": {
+     "type": "cds.Boolean"
+    },
+    "Balancing_Relevant": {
+     "type": "cds.Boolean"
+    },
+    "Allocation_Relevant": {
+     "type": "cds.Boolean"
+    },
+    "Billing_Relevant": {
+     "type": "cds.Boolean"
+    },
+    "Price_Relevant": {
+     "type": "cds.Boolean"
+    }
+   }
+  },
+  "GMS_CONFIG.DocumentNoProfileMapping": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "createdAt": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset",
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Immutable": true,
+     "@Core.Computed": true,
+     "@Common.Label": "Created On"
+    },
+    "createdBy": {
+     "type": "cds.String",
+     "length": 255,
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Immutable": true,
+     "@Core.Computed": true,
+     "doc": "User's unique ID",
+     "@Common.Label": "Created By"
+    },
+    "modifiedAt": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset",
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Computed": true,
+     "@Common.Label": "Changed On"
+    },
+    "modifiedBy": {
+     "type": "cds.String",
+     "length": 255,
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Computed": true,
+     "doc": "User's unique ID",
+     "@Common.Label": "Changed By"
+    },
+    "DocumentNo": {
+     "key": true,
+     "type": "cds.LargeString",
+     "notNull": true
+    },
+    "DocumentDesc": {
+     "type": "cds.LargeString"
+    },
+    "ProfileId": {
+     "type": "cds.LargeString"
+    },
+    "serviceProfileName": {
+     "key": true,
+     "type": "cds.LargeString",
+     "notNull": true
+    },
+    "serviceProfileDesc": {
+     "type": "cds.LargeString"
+    },
+    "description": {
+     "type": "cds.LargeString"
+    },
+    "field2": {
+     "type": "cds.LargeString"
+    },
+    "field3": {
+     "type": "cds.LargeString"
+    },
+    "field4": {
+     "type": "cds.LargeString"
+    },
+    "field5": {
+     "type": "cds.LargeString"
+    }
+   }
+  },
+  "GMS_CONFIG.AllocationProfile": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "ID": {
+     "key": true,
+     "type": "cds.Integer",
+     "notNull": true
+    },
+    "createdAt": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset",
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Immutable": true,
+     "@Core.Computed": true,
+     "@Common.Label": "Created On"
+    },
+    "createdBy": {
+     "type": "cds.String",
+     "length": 255,
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Immutable": true,
+     "@Core.Computed": true,
+     "doc": "User's unique ID",
+     "@Common.Label": "Created By"
+    },
+    "modifiedAt": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset",
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Computed": true,
+     "@Common.Label": "Changed On"
+    },
+    "modifiedBy": {
+     "type": "cds.String",
+     "length": 255,
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Computed": true,
+     "doc": "User's unique ID",
+     "@Common.Label": "Changed By"
+    },
+    "allocationProfileName": {
+     "type": "cds.LargeString"
+    },
+    "allocationProfileDesc": {
+     "type": "cds.LargeString"
+    },
+    "allocationfield1": {
+     "type": "cds.LargeString"
+    },
+    "allocationfield2": {
+     "type": "cds.LargeString"
+    },
+    "allocationfield3": {
+     "type": "cds.LargeString"
+    },
+    "allocationfield4": {
+     "type": "cds.LargeString"
+    },
+    "allocationfield5": {
+     "type": "cds.LargeString"
+    }
+   }
+  },
+  "GMS_CONFIG.AllocationLocation": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "createdAt": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset",
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Immutable": true,
+     "@Core.Computed": true,
+     "@Common.Label": "Created On"
+    },
+    "createdBy": {
+     "type": "cds.String",
+     "length": 255,
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Immutable": true,
+     "@Core.Computed": true,
+     "doc": "User's unique ID",
+     "@Common.Label": "Created By"
+    },
+    "modifiedAt": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset",
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Computed": true,
+     "@Common.Label": "Changed On"
+    },
+    "modifiedBy": {
+     "type": "cds.String",
+     "length": 255,
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Computed": true,
+     "doc": "User's unique ID",
+     "@Common.Label": "Changed By"
+    },
+    "location": {
+     "key": true,
+     "type": "cds.String",
+     "length": 50,
+     "notNull": true
+    },
+    "schedulingReduction": {
+     "type": "cds.String",
+     "length": 50
+    },
+    "technicalBalancing": {
+     "type": "cds.String",
+     "length": 50
+    },
+    "buisnessBalancing": {
+     "type": "cds.String",
+     "length": 50
+    },
+    "validFromAlloc": {
+     "type": "cds.Date"
+    },
+    "validToAlloc": {
+     "type": "cds.Date"
+    }
+   }
+  },
+  "GMS_CONFIG.AllocationRuleOnLocation": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "createdAt": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset",
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Immutable": true,
+     "@Core.Computed": true,
+     "@Common.Label": "Created On"
+    },
+    "createdBy": {
+     "type": "cds.String",
+     "length": 255,
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Immutable": true,
+     "@Core.Computed": true,
+     "doc": "User's unique ID",
+     "@Common.Label": "Created By"
+    },
+    "modifiedAt": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset",
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Computed": true,
+     "@Common.Label": "Changed On"
+    },
+    "modifiedBy": {
+     "type": "cds.String",
+     "length": 255,
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Computed": true,
+     "doc": "User's unique ID",
+     "@Common.Label": "Changed By"
+    },
+    "location": {
+     "key": true,
+     "type": "cds.String",
+     "length": 50,
+     "notNull": true
+    },
+    "schedulingReduction": {
+     "type": "cds.String",
+     "length": 50
+    },
+    "technicalBalancing": {
+     "type": "cds.String",
+     "length": 50
+    },
+    "buisnessBalancing": {
+     "type": "cds.String",
+     "length": 50
+    },
+    "validFromAlloc": {
+     "type": "cds.Date"
+    },
+    "validToAlloc": {
+     "type": "cds.Date"
+    }
+   }
+  },
+  "GMS_CONFIG.serviceParameterNode": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "createdAt": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset",
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Immutable": true,
+     "@Core.Computed": true,
+     "@Common.Label": "Created On"
+    },
+    "createdBy": {
+     "type": "cds.String",
+     "length": 255,
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Immutable": true,
+     "@Core.Computed": true,
+     "doc": "User's unique ID",
+     "@Common.Label": "Created By"
+    },
+    "modifiedAt": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset",
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Computed": true,
+     "@Common.Label": "Changed On"
+    },
+    "modifiedBy": {
+     "type": "cds.String",
+     "length": 255,
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Computed": true,
+     "doc": "User's unique ID",
+     "@Common.Label": "Changed By"
+    },
+    "ID": {
+     "key": true,
+     "type": "cds.UUID",
+     "notNull": true,
+     "@Core.Computed": true,
+     "@Core.ComputedDefaultValue": true
+    },
+    "parentID": {
+     "type": "cds.LargeString"
+    },
+    "nodeLevel": {
+     "type": "cds.Integer"
+    },
+    "allocationID": {
+     "type": "cds.LargeString"
+    },
+    "servicetitle": {
+     "type": "cds.LargeString"
+    },
+    "rank": {
+     "type": "cds.Integer"
+    }
+   }
+  },
+  "GMS_CONFIG.HeaderItem_Config": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "createdAt": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset",
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Immutable": true,
+     "@Core.Computed": true,
+     "@Common.Label": "Created On"
+    },
+    "createdBy": {
+     "type": "cds.String",
+     "length": 255,
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Immutable": true,
+     "@Core.Computed": true,
+     "doc": "User's unique ID",
+     "@Common.Label": "Created By"
+    },
+    "modifiedAt": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset",
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Computed": true,
+     "@Common.Label": "Changed On"
+    },
+    "modifiedBy": {
+     "type": "cds.String",
+     "length": 255,
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Computed": true,
+     "doc": "User's unique ID",
+     "@Common.Label": "Changed By"
+    },
+    "unique": {
+     "key": true,
+     "type": "cds.UUID",
+     "notNull": true,
+     "@Core.ComputedDefaultValue": true
+    },
+    "ID": {
+     "type": "cds.Integer"
+    },
+    "contractType": {
+     "type": "cds.LargeString"
+    },
+    "documentType": {
+     "type": "cds.LargeString"
+    },
+    "flag": {
+     "type": "cds.Integer"
+    },
+    "service_parameter": {
+     "type": "cds.LargeString"
+    },
+    "label": {
+     "type": "cds.LargeString"
+    },
+    "serviceParameterType": {
+     "type": "cds.LargeString"
+    },
+    "serviceParameterlength": {
+     "type": "cds.LargeString"
+    },
+    "mandatory": {
+     "type": "cds.Boolean"
+    },
+    "visible": {
+     "type": "cds.Boolean"
+    },
+    "List": {
+     "items": {
+      "type": "cds.LargeString"
+     }
+    },
+    "parameterRelevancy": {
+     "type": "cds.String",
+     "length": 20
+    }
+   }
+  },
+  "GMS_CONFIG.penalties": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "createdAt": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset",
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Immutable": true,
+     "@Core.Computed": true,
+     "@Common.Label": "Created On"
+    },
+    "createdBy": {
+     "type": "cds.String",
+     "length": 255,
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Immutable": true,
+     "@Core.Computed": true,
+     "doc": "User's unique ID",
+     "@Common.Label": "Created By"
+    },
+    "modifiedAt": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset",
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Computed": true,
+     "@Common.Label": "Changed On"
+    },
+    "modifiedBy": {
+     "type": "cds.String",
+     "length": 255,
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Computed": true,
+     "doc": "User's unique ID",
+     "@Common.Label": "Changed By"
+    },
+    "profileName": {
+     "key": true,
+     "type": "cds.LargeString",
+     "notNull": true
+    },
+    "paneltyParmeter": {
+     "key": true,
+     "type": "cds.LargeString",
+     "notNull": true
+    },
+    "ezReportId": {
+     "key": true,
+     "type": "cds.LargeString",
+     "notNull": true
+    }
+   }
+  },
+  "GMS_CONFIG.TransportConfig": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "createdAt": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset",
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Immutable": true,
+     "@Core.Computed": true,
+     "@Common.Label": "Created On"
+    },
+    "createdBy": {
+     "type": "cds.String",
+     "length": 255,
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Immutable": true,
+     "@Core.Computed": true,
+     "doc": "User's unique ID",
+     "@Common.Label": "Created By"
+    },
+    "modifiedAt": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset",
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Computed": true,
+     "@Common.Label": "Changed On"
+    },
+    "modifiedBy": {
+     "type": "cds.String",
+     "length": 255,
+     "@UI.HiddenFilter": true,
+     "@UI.ExcludeFromNavigationContext": true,
+     "@Core.Computed": true,
+     "doc": "User's unique ID",
+     "@Common.Label": "Changed By"
+    },
+    "ID": {
+     "key": true,
+     "type": "cds.Integer",
+     "notNull": true
+    },
+    "documentType": {
+     "items": {
+      "type": "cds.LargeString"
+     }
+    },
+    "side": {
+     "items": {
+      "type": "cds.LargeString"
+     }
+    },
+    "exchangeType": {
+     "type": "cds.LargeString"
+    }
+   }
+  },
+  "GMS_CONFIG.xGMSxContractType": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "Auart": {
+     "key": true,
+     "type": "cds.String",
+     "length": 4,
+     "notNull": true
+    },
+    "Kopgr": {
+     "key": true,
+     "type": "cds.String",
+     "length": 4,
+     "notNull": true
+    },
+    "Description": {
+     "type": "cds.String",
+     "length": 20
+    }
+   }
+  },
+  "GMS_CONFIG.xGMSxLocPoint": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "Locid": {
+     "key": true,
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true
+    },
+    "Locnam": {
+     "type": "cds.String",
+     "length": 60
+    },
+    "Loctyp": {
+     "type": "cds.String",
+     "length": 4
+    },
+    "LoctypText": {
+     "type": "cds.String",
+     "length": 15
+    },
+    "LoctypLongText": {
+     "type": "cds.String",
+     "length": 60
+    }
+   }
+  },
+  "GMS_CONFIG.xGMSxLocPoint_Map": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "Pblnr": {
+     "key": true,
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true
+    },
+    "Tsyst": {
+     "key": true,
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true
+    },
+    "Locid": {
+     "key": true,
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true
+    },
+    "Pbltyp": {
+     "key": true,
+     "type": "cds.String",
+     "length": 4,
+     "notNull": true
+    },
+    "Delivery_Point": {
+     "type": "cds.Boolean"
+    },
+    "Redelivery_Point": {
+     "type": "cds.Boolean"
+    },
+    "isDeliveryPoint": {
+     "type": "cds.String",
+     "length": 3
+    },
+    "isRedeliveryPoint": {
+     "type": "cds.String",
+     "length": 3
+    },
+    "isInterconnect": {
+     "type": "cds.String",
+     "length": 3
+    }
+   }
+  },
+  "GMS_CONFIG.xGMSxLocPoint_RDP": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "Locid": {
+     "key": true,
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true
+    },
+    "Locnam": {
+     "type": "cds.String",
+     "length": 60
+    },
+    "Loctyp": {
+     "type": "cds.String",
+     "length": 4
+    },
+    "LoctypText": {
+     "type": "cds.String",
+     "length": 15
+    },
+    "LoctypLongText": {
+     "type": "cds.String",
+     "length": 60
+    }
+   }
+  },
+  "GMS_CONFIG.xGMSxLocPoint_DP": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "Locid": {
+     "key": true,
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true
+    },
+    "Locnam": {
+     "type": "cds.String",
+     "length": 60
+    },
+    "Loctyp": {
+     "type": "cds.String",
+     "length": 4
+    },
+    "LoctypText": {
+     "type": "cds.String",
+     "length": 15
+    },
+    "LoctypLongText": {
+     "type": "cds.String",
+     "length": 60
+    }
+   }
+  },
+  "GMS_CONFIG.xGMSxInterconnect": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "Pblnr": {
+     "key": true,
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true
+    },
+    "Tsyst": {
+     "key": true,
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true
+    },
+    "Locid": {
+     "key": true,
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true
+    },
+    "Pbltyp": {
+     "key": true,
+     "type": "cds.String",
+     "length": 4,
+     "notNull": true
+    },
+    "Delivery_Point": {
+     "type": "cds.Boolean"
+    },
+    "Redelivery_Point": {
+     "type": "cds.Boolean"
+    }
+   }
+  },
+  "GMS_CONFIG.xGMSxLocMatnr": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "Locid": {
+     "key": true,
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true
+    },
+    "Pmatnr": {
+     "key": true,
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "Tsyst": {
+     "key": true,
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true
+    },
+    "Loctyp": {
+     "type": "cds.String",
+     "length": 4
+    },
+    "Locnam": {
+     "type": "cds.String",
+     "length": 60
+    },
+    "Pluom": {
+     "type": "cds.String",
+     "length": 3
+    },
+    "Pmatname": {
+     "type": "cds.String",
+     "length": 40
+    }
+   }
+  },
+  "GMS_CONFIG.Interconnect_pointSet": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "Transport1": {
+     "key": true,
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true
+    },
+    "Transport2": {
+     "key": true,
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true
+    },
+    "IntLoc": {
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true
+    },
+    "IntLocNam": {
+     "type": "cds.String",
+     "length": 60,
+     "notNull": true
+    }
+   }
+  },
+  "GMS_CONFIG.xGMSxEXCHGTYPEVH": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "Spras": {
+     "key": true,
+     "type": "cds.String",
+     "length": 2,
+     "notNull": true
+    },
+    "Exgtyp": {
+     "key": true,
+     "type": "cds.String",
+     "length": 4,
+     "notNull": true
+    },
+    "Exgtxt": {
+     "type": "cds.String",
+     "length": 30
+    }
+   }
+  },
+  "GMS_CONFIG.EZReporstIdsSet": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "Vcid": {
+     "key": true,
+     "type": "cds.String",
+     "length": 6,
+     "notNull": true
+    },
+    "VcDesc": {
+     "type": "cds.String",
+     "length": 80,
+     "notNull": true
+    },
+    "Ernam": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "Erdat": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset"
+    },
+    "Erzeit": {
+     "type": "cds.Time"
+    },
+    "Aenam": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "Aedat": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset"
+    },
+    "Aezeit": {
+     "type": "cds.Time"
+    },
+    "ReqOut1": {
+     "type": "cds.String",
+     "length": 255
+    },
+    "ReqOut2": {
+     "type": "cds.String",
+     "length": 255
+    },
+    "UsageFreq": {
+     "type": "cds.String",
+     "length": 10
+    },
+    "NotifSubj": {
+     "type": "cds.String",
+     "length": 50
+    },
+    "NotifDateFlg": {
+     "type": "cds.Boolean"
+    }
+   }
+  },
+  "GMS_CONFIG.EzIDMapSet": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "Operation": {
+     "key": true,
+     "type": "cds.LargeString",
+     "notNull": true
+    },
+    "VCIDTableMapNav": {
+     "type": "cds.Association",
+     "target": "GMS_CONFIG.TableMapSet",
+     "cardinality": {
+      "max": "*"
+     },
+     "keys": []
+    }
+   }
+  },
+  "GMS_CONFIG.EzTableSet": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "name": {
+     "key": true,
+     "type": "cds.LargeString",
+     "notNull": true
+    },
+    "value": {
+     "type": "cds.LargeString",
+     "notNull": true
+    }
+   }
+  },
+  "GMS_CONFIG.xGMSxFieldType": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "TableName": {
+     "key": true,
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "FiledName": {
+     "key": true,
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "DataElement": {
+     "key": true,
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "DataType": {
+     "key": true,
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true
+    }
+   }
+  },
+  "GMS_CONFIG.xGMSxGETTABLEFIELDS": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "TableName": {
+     "key": true,
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "TableFieldName": {
+     "key": true,
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "TableShortDescription": {
+     "type": "cds.String",
+     "length": 60
+    },
+    "TableFieldShortDescription": {
+     "type": "cds.String",
+     "length": 60
+    },
+    "TableFieldKeyFieldIndicator": {
+     "type": "cds.Boolean"
+    }
+   }
+  },
+  "GMS_CONFIG.TableMapSet": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "Vcid": {
+     "key": true,
+     "type": "cds.String",
+     "length": 6,
+     "notNull": true
+    },
+    "VcprId": {
+     "key": true,
+     "type": "cds.String",
+     "length": 3,
+     "notNull": true
+    },
+    "VcprTabid": {
+     "type": "cds.String",
+     "length": 3,
+     "notNull": true
+    },
+    "VcDesc": {
+     "type": "cds.String",
+     "length": 80,
+     "notNull": true
+    },
+    "VcprDesc": {
+     "type": "cds.String",
+     "length": 80,
+     "notNull": true
+    },
+    "Strname": {
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "Tabname": {
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "Ddtext": {
+     "type": "cds.String",
+     "length": 60,
+     "notNull": true
+    },
+    "Ernam": {
+     "type": "cds.String",
+     "length": 12,
+     "notNull": true
+    },
+    "Erdat": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset"
+    },
+    "Erzeit": {
+     "type": "cds.Time",
+     "notNull": true
+    },
+    "Aenam": {
+     "type": "cds.String",
+     "length": 12,
+     "notNull": true
+    },
+    "Aedat": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset"
+    },
+    "Aezeit": {
+     "type": "cds.Time",
+     "notNull": true
+    },
+    "Incl": {
+     "type": "cds.Boolean",
+     "notNull": true
+    }
+   }
+  },
+  "GMS_CONFIG.DynamicTableSet": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "name": {
+     "key": true,
+     "type": "cds.LargeString",
+     "notNull": true
+    },
+    "value": {
+     "key": true,
+     "type": "cds.LargeString",
+     "notNull": true
+    }
+   }
+  },
+  "GMS_CONFIG.DynamicHelpSet": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "Fieldname": {
+     "key": true,
+     "type": "cds.String",
+     "length": 60,
+     "notNull": true
+    },
+    "Recordpos": {
+     "key": true,
+     "type": "cds.Integer",
+     "notNull": true
+    },
+    "Fieldval": {
+     "type": "cds.String",
+     "length": 132,
+     "notNull": true
+    },
+    "Isreturnfield": {
+     "type": "cds.String",
+     "length": 1,
+     "notNull": true
+    }
+   }
+  },
+  "GMS_CONFIG.FieldDataSet": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "Data": {
+     "key": true,
+     "type": "cds.LargeBinary",
+     "notNull": true
+    }
+   }
+  },
+  "GMS_CONFIG.FieldMapSet": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "Vcid": {
+     "key": true,
+     "type": "cds.String",
+     "length": 6,
+     "notNull": true
+    },
+    "VcprId": {
+     "key": true,
+     "type": "cds.String",
+     "length": 3,
+     "notNull": true
+    },
+    "VcprTabid": {
+     "type": "cds.String",
+     "length": 3,
+     "notNull": true
+    },
+    "VcprFldid": {
+     "type": "cds.String",
+     "length": 3,
+     "notNull": true
+    },
+    "VcDesc": {
+     "type": "cds.String",
+     "length": 80,
+     "notNull": true
+    },
+    "VcprDesc": {
+     "type": "cds.String",
+     "length": 80,
+     "notNull": true
+    },
+    "Tabname": {
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "Ddtext": {
+     "type": "cds.String",
+     "length": 60,
+     "notNull": true
+    },
+    "Fieldname": {
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "FieldDesc": {
+     "type": "cds.String",
+     "length": 60,
+     "notNull": true
+    },
+    "FieldType": {
+     "type": "cds.String",
+     "length": 4,
+     "notNull": true
+    },
+    "Operators": {
+     "type": "cds.String",
+     "length": 3,
+     "notNull": true
+    },
+    "OperationId": {
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true
+    },
+    "Operation": {
+     "type": "cds.String",
+     "length": 2,
+     "notNull": true
+    },
+    "DLow": {
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "DHigh": {
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "OperationValue": {
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "TabField": {
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "Routine": {
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "FieldLabel": {
+     "type": "cds.String",
+     "length": 35,
+     "notNull": true
+    },
+    "NoDisplay": {
+     "type": "cds.String",
+     "length": 1,
+     "notNull": true
+    },
+    "ColPosition": {
+     "type": "cds.String",
+     "length": 3,
+     "notNull": true
+    },
+    "Ernam": {
+     "type": "cds.String",
+     "length": 12,
+     "notNull": true
+    },
+    "Erdat": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset"
+    },
+    "Erzeit": {
+     "type": "cds.Time"
+    },
+    "Aenam": {
+     "type": "cds.String",
+     "length": 12,
+     "notNull": true
+    },
+    "Aedat": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset"
+    },
+    "Aezeit": {
+     "type": "cds.Time"
+    },
+    "Zfieldtype": {
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "Colorcode": {
+     "type": "cds.String",
+     "length": 4,
+     "notNull": true
+    },
+    "ColmnColorName": {
+     "type": "cds.String",
+     "length": 20,
+     "notNull": true
+    },
+    "CompFormula": {
+     "type": "cds.String",
+     "length": 255,
+     "notNull": true
+    },
+    "Sumfield": {
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "ConField": {
+     "type": "cds.String",
+     "length": 150,
+     "notNull": true
+    },
+    "Repeatfield": {
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "Sumgroup": {
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "Addfunc": {
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "LogicalFormula": {
+     "type": "cds.String",
+     "length": 4,
+     "notNull": true
+    },
+    "Tcode": {
+     "type": "cds.String",
+     "length": 4,
+     "notNull": true
+    },
+    "Lalign": {
+     "type": "cds.String",
+     "length": 4,
+     "notNull": true
+    },
+    "Ralign": {
+     "type": "cds.String",
+     "length": 4,
+     "notNull": true
+    },
+    "Calign": {
+     "type": "cds.String",
+     "length": 4,
+     "notNull": true
+    },
+    "Useinwhr": {
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "Useinheading": {
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "Aggregat": {
+     "type": "cds.String",
+     "length": 7,
+     "notNull": true
+    },
+    "Subtotcurrref": {
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "Subtotalquanref": {
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    }
+   }
+  },
+  "GMS_CONFIG.FieldTypeSet": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "RowPos": {
+     "type": "cds.Integer"
+    },
+    "Currency": {
+     "type": "cds.String",
+     "length": 5,
+     "notNull": true
+    },
+    "ColPos": {
+     "type": "cds.Integer"
+    },
+    "Cfieldname": {
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "Fieldname": {
+     "type": "cds.String",
+     "length": 30
+    },
+    "Quantity": {
+     "type": "cds.String",
+     "length": 3,
+     "notNull": true
+    },
+    "Tabname": {
+     "key": true,
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "Qfieldname": {
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "Ifieldname": {
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "Round": {
+     "type": "cds.Integer",
+     "notNull": true
+    },
+    "Exponent": {
+     "type": "cds.String",
+     "length": 3,
+     "notNull": true
+    },
+    "KeySel": {
+     "key": true,
+     "type": "cds.String",
+     "length": 1,
+     "notNull": true
+    },
+    "Icon": {
+     "type": "cds.Boolean",
+     "notNull": true
+    },
+    "Symbol": {
+     "type": "cds.String",
+     "length": 1,
+     "notNull": true
+    },
+    "Checkbox": {
+     "type": "cds.Boolean",
+     "notNull": true
+    },
+    "Just": {
+     "type": "cds.String",
+     "length": 1,
+     "notNull": true
+    },
+    "Lzero": {
+     "type": "cds.Boolean",
+     "notNull": true
+    },
+    "NoSign": {
+     "type": "cds.Boolean",
+     "notNull": true
+    },
+    "NoZero": {
+     "type": "cds.Boolean",
+     "notNull": true
+    },
+    "NoConvext": {
+     "type": "cds.String",
+     "length": 1,
+     "notNull": true
+    },
+    "EditMask": {
+     "type": "cds.String",
+     "length": 60,
+     "notNull": true
+    },
+    "Emphasize": {
+     "type": "cds.String",
+     "length": 4,
+     "notNull": true
+    },
+    "FixColumn": {
+     "type": "cds.Boolean",
+     "notNull": true
+    },
+    "DoSum": {
+     "type": "cds.Boolean",
+     "notNull": true
+    },
+    "NoSum": {
+     "type": "cds.Boolean",
+     "notNull": true
+    },
+    "NoOut": {
+     "type": "cds.String",
+     "length": 1,
+     "notNull": true
+    },
+    "Tech": {
+     "type": "cds.Boolean",
+     "notNull": true
+    },
+    "Outputlen": {
+     "type": "cds.String",
+     "length": 6,
+     "notNull": true
+    },
+    "Convexit": {
+     "type": "cds.String",
+     "length": 5,
+     "notNull": true
+    },
+    "Seltext": {
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "Tooltip": {
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "Rollname": {
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "Datatype": {
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true
+    },
+    "Inttype": {
+     "type": "cds.String",
+     "length": 1,
+     "notNull": true
+    },
+    "Intlen": {
+     "type": "cds.String",
+     "length": 6,
+     "notNull": true
+    },
+    "Lowercase": {
+     "type": "cds.Boolean",
+     "notNull": true
+    },
+    "Reptext": {
+     "type": "cds.String",
+     "length": 55,
+     "notNull": true
+    },
+    "HierLevel": {
+     "type": "cds.Integer",
+     "notNull": true
+    },
+    "Reprep": {
+     "type": "cds.String",
+     "length": 1,
+     "notNull": true
+    },
+    "Domname": {
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "SpGroup": {
+     "type": "cds.String",
+     "length": 4,
+     "notNull": true
+    },
+    "Hotspot": {
+     "type": "cds.String",
+     "length": 1,
+     "notNull": true
+    },
+    "Dfieldname": {
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "ColId": {
+     "type": "cds.Integer",
+     "notNull": true
+    },
+    "F4availabl": {
+     "type": "cds.Boolean",
+     "notNull": true
+    },
+    "AutoValue": {
+     "type": "cds.String",
+     "length": 1,
+     "notNull": true
+    },
+    "Checktable": {
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "Valexi": {
+     "type": "cds.Boolean",
+     "notNull": true
+    },
+    "WebField": {
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "HrefHndl": {
+     "type": "cds.Integer",
+     "notNull": true
+    },
+    "Style": {
+     "type": "cds.LargeBinary",
+     "notNull": true
+    },
+    "Style2": {
+     "type": "cds.LargeBinary",
+     "notNull": true
+    },
+    "Style3": {
+     "type": "cds.LargeBinary",
+     "notNull": true
+    },
+    "Style4": {
+     "type": "cds.LargeBinary",
+     "notNull": true
+    },
+    "DrdnHndl": {
+     "type": "cds.Integer",
+     "notNull": true
+    },
+    "DrdnField": {
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "NoMerging": {
+     "type": "cds.String",
+     "length": 1,
+     "notNull": true
+    },
+    "HFtype": {
+     "type": "cds.String",
+     "length": 3,
+     "notNull": true
+    },
+    "ColOpt": {
+     "type": "cds.String",
+     "length": 1,
+     "notNull": true
+    },
+    "NoInitCh": {
+     "type": "cds.String",
+     "length": 1,
+     "notNull": true
+    },
+    "DrdnAlias": {
+     "type": "cds.String",
+     "length": 1,
+     "notNull": true
+    },
+    "DecfloatStyle": {
+     "type": "cds.String",
+     "length": 2,
+     "notNull": true
+    },
+    "Parameter0": {
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "Parameter1": {
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "Parameter2": {
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "Parameter3": {
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "Parameter4": {
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "Parameter5": {
+     "type": "cds.Integer",
+     "notNull": true
+    },
+    "Parameter6": {
+     "type": "cds.Integer",
+     "notNull": true
+    },
+    "Parameter7": {
+     "type": "cds.Integer",
+     "notNull": true
+    },
+    "Parameter8": {
+     "type": "cds.Integer",
+     "notNull": true
+    },
+    "Parameter9": {
+     "type": "cds.Integer",
+     "notNull": true
+    },
+    "RefField": {
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "RefTable": {
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "TxtField": {
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "Roundfield": {
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "DecimalsO": {
+     "type": "cds.String",
+     "length": 6,
+     "notNull": true
+    },
+    "Decmlfield": {
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "DdOutlen": {
+     "type": "cds.String",
+     "length": 6,
+     "notNull": true
+    },
+    "Decimals": {
+     "type": "cds.String",
+     "length": 6,
+     "notNull": true
+    },
+    "Coltext": {
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "ScrtextL": {
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "ScrtextM": {
+     "type": "cds.String",
+     "length": 20,
+     "notNull": true
+    },
+    "ScrtextS": {
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true
+    },
+    "Colddictxt": {
+     "type": "cds.String",
+     "length": 1,
+     "notNull": true
+    },
+    "Selddictxt": {
+     "type": "cds.String",
+     "length": 1,
+     "notNull": true
+    },
+    "Tipddictxt": {
+     "type": "cds.String",
+     "length": 1,
+     "notNull": true
+    },
+    "Edit": {
+     "type": "cds.String",
+     "length": 1,
+     "notNull": true
+    },
+    "TechCol": {
+     "type": "cds.Integer",
+     "notNull": true
+    },
+    "TechForm": {
+     "type": "cds.Integer",
+     "notNull": true
+    },
+    "TechComp": {
+     "type": "cds.Boolean",
+     "notNull": true
+    },
+    "HierCpos": {
+     "type": "cds.Integer",
+     "notNull": true
+    },
+    "HColKey": {
+     "type": "cds.String",
+     "length": 12,
+     "notNull": true
+    },
+    "HSelect": {
+     "type": "cds.String",
+     "length": 1,
+     "notNull": true
+    },
+    "DdRoll": {
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "Dragdropid": {
+     "type": "cds.Integer",
+     "notNull": true
+    },
+    "Mac": {
+     "type": "cds.String",
+     "length": 1,
+     "notNull": true
+    },
+    "IndxField": {
+     "type": "cds.Integer",
+     "notNull": true
+    },
+    "IndxCfiel": {
+     "type": "cds.Integer",
+     "notNull": true
+    },
+    "IndxQfiel": {
+     "type": "cds.Integer",
+     "notNull": true
+    },
+    "IndxIfiel": {
+     "type": "cds.Integer",
+     "notNull": true
+    },
+    "IndxRound": {
+     "type": "cds.Integer",
+     "notNull": true
+    },
+    "IndxDecml": {
+     "type": "cds.Integer",
+     "notNull": true
+    },
+    "GetStyle": {
+     "type": "cds.String",
+     "length": 1,
+     "notNull": true
+    },
+    "Mark": {
+     "type": "cds.String",
+     "length": 1,
+     "notNull": true
+    }
+   }
+  },
+  "GMS_CONFIG.FillterMapSet": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "Vcid": {
+     "key": true,
+     "type": "cds.String",
+     "length": 6,
+     "notNull": true
+    },
+    "VcprId": {
+     "type": "cds.String",
+     "length": 3,
+     "notNull": true
+    },
+    "VcprTabid": {
+     "type": "cds.String",
+     "length": 3,
+     "notNull": true
+    },
+    "VcprFldid": {
+     "type": "cds.String",
+     "length": 3,
+     "notNull": true
+    },
+    "VcDesc": {
+     "type": "cds.String",
+     "length": 80,
+     "notNull": true
+    },
+    "VcprDesc": {
+     "type": "cds.String",
+     "length": 80,
+     "notNull": true
+    },
+    "Tabname": {
+     "key": true,
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "Ddtext": {
+     "type": "cds.String",
+     "length": 60,
+     "notNull": true
+    },
+    "Fieldname": {
+     "key": true,
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "FieldDesc": {
+     "type": "cds.String",
+     "length": 60,
+     "notNull": true
+    },
+    "Operation": {
+     "type": "cds.String",
+     "length": 2,
+     "notNull": true
+    },
+    "DLow": {
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "DHigh": {
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "Mandatory": {
+     "type": "cds.String",
+     "length": 1,
+     "notNull": true
+    },
+    "Brobj": {
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true
+    },
+    "Ernam": {
+     "type": "cds.String",
+     "length": 12,
+     "notNull": true
+    },
+    "Erdat": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset"
+    },
+    "Erzeit": {
+     "type": "cds.Time"
+    },
+    "Aenam": {
+     "type": "cds.String",
+     "length": 12,
+     "notNull": true
+    },
+    "Aedat": {
+     "type": "cds.Timestamp",
+     "@odata.Precision": 7,
+     "@odata.Type": "Edm.DateTimeOffset"
+    },
+    "Aezeit": {
+     "type": "cds.Time"
+    },
+    "Nodisplay": {
+     "type": "cds.String",
+     "length": 1,
+     "notNull": true
+    },
+    "Selopttext": {
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    }
+   }
+  },
+  "GMS_CONFIG.GetFilterDataSet": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "Tabname": {
+     "key": true,
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "Fieldname": {
+     "key": true,
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    }
+   }
+  },
+  "GMS_CONFIG.RawDummySet": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "RawString": {
+     "key": true,
+     "type": "cds.LargeString",
+     "notNull": true
+    }
+   }
+  },
+  "GMS_CONFIG.RawstringSet": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "Vcid": {
+     "key": true,
+     "type": "cds.LargeString",
+     "notNull": true
+    },
+    "Vcpr_id": {
+     "type": "cds.LargeString",
+     "notNull": true
+    },
+    "Tabname": {
+     "type": "cds.LargeString",
+     "notNull": true
+    },
+    "FieldType": {
+     "type": "cds.LargeString",
+     "notNull": true
+    },
+    "Operation": {
+     "type": "cds.LargeString",
+     "notNull": true
+    },
+    "Operation_value": {
+     "type": "cds.LargeString",
+     "notNull": true
+    },
+    "Data": {
+     "type": "cds.LargeBinary"
+    },
+    "FieldName": {
+     "type": "cds.LargeString"
+    }
+   }
+  },
+  "GMS_CONFIG.return_configServices_uniqueDelLocorAllocMapRule": {
+   "kind": "type",
+   "@cds.external": true,
+   "elements": {
+    "Locid": {
+     "type": "cds.LargeString"
+    }
+   }
+  },
+  "GMS_CONFIG.return_configServices_getPenalityRelevant": {
+   "kind": "type",
+   "@cds.external": true,
+   "elements": {
+    "penalityVal": {
+     "type": "cds.LargeString"
+    }
+   }
+  },
+  "GMS_CONFIG": {
+   "kind": "service",
+   "@cds.external": true
+  }
+ }
+}

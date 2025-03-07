@@ -1,0 +1,17 @@
+<core:FragmentDefinition 
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+
+    <SelectDialog
+        id="selectMaterial"
+        noDataText="Loading ..."
+        title="Select Material"
+        confirm="onConfirmMat"
+        items="{path: 'materialModel>/selectedMaterials'}">
+
+        <StandardListItem id="selectMaterials"
+            title="{materialModel>Material}"
+            description="{materialModel>RedeliveryPt}"
+            type="Active" />
+    </SelectDialog>
+</core:FragmentDefinition>
