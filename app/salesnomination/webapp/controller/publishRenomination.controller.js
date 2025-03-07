@@ -183,6 +183,7 @@ sap.ui.define([
 				}
 				this.byId("IdDelCummDNQInput").setValue("");
 				this.byId("IdCummDNQInput").setValue("");
+				
 				this.clearMaterialModels();
 
 				
@@ -234,9 +235,9 @@ sap.ui.define([
 				}]);
 			}
 
-			// if (oMaterialWiseContractData) {
-			// 	oMaterialWiseContractData.setData({}); // Clear contract data
-			// }
+			if (oMaterialWiseContractData) {
+				oMaterialWiseContractData.setData({}); // Clear contract data
+			}
 
 			// Refresh the model bindings if they exist
 			const oGasDayPicker = this.byId("IdRePubNomGasDayPicker");
