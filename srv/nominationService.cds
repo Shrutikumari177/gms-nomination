@@ -10,7 +10,6 @@ service nominationServices {
     function getNominationsByCustomer(SoldToParty : String) returns array of String;
     function getContractDetailsAndPastNom(DocNo : String)                  returns array of String;
     function getContractDetail(DocNo : String , Material : String,Redelivery_Point:String)                  returns array of String;
-    // function getNominationsDetailByGasDay(Gasday : Date, Vbeln : String)   returns array of String;
     function getContractMatDetailsByGasday(Gasday : Date,DocNo : String) returns array of String;
     function getRenominationContractData(DocNo : String , Material : String,Redelivery_Point:String ,Gasday:Date)                   returns array of String;
 
@@ -250,6 +249,7 @@ service nominationServices {
 
 
     entity pathAndFuelMapping            as projection on GMS_CONFIG.pathAndFuelMapping;
+    entity Nominationlogic            as projection on GMS_CONFIG.Nominationlogic;
     entity serviceProfileParametersItems as projection on GMS_CONFIG.serviceProfileParametersItems;
     entity ServiceProfileMaster          as projection on GMS_CONFIG.ServiceProfileMaster;
     entity transportAgreementDetail      as projection on db.transportAgreementDetail;

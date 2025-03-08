@@ -13,19 +13,20 @@ sap.ui.define([
 	"sap/m/MessageToast",
 	"external/ChartJSAdapterDateFns",
 	"external/ChartJS"
-	
-	
-	
-], function (Device, Fragment, Controller, JSONModel,HelperFunction, Popover, Button, mobileLibrary, FeedItem, FlattenedDataset, MessageBox, MessageToast, ChartJSAdapterDateFns, ChartJS) {
+
+
+
+], function (Device, Fragment, Controller, JSONModel, HelperFunction, Popover, Button, mobileLibrary, FeedItem, FlattenedDataset, MessageBox, MessageToast, ChartJSAdapterDateFns, ChartJS) {
 	"use strict";
-	
+
 	let material;
-	
+
 	let oView;
 	let minDCQVal = Number.MAX_SAFE_INTEGER;
 	let maxDCQVal = 0;
 	let remainingDCQ = 0;
-	let sContract
+	let sContract;
+	let customerValue;
 
 	return Controller.extend("com.ingenx.nomination.salesnomination.controller.publishNomination", {
 
@@ -46,8 +47,8 @@ sap.ui.define([
 					DeliveryPt: "",
 					DNQ: "",
 					UOM: "",
-					FromT: "06:00",
-					ToT: "06:00",
+					FromT: "06:00:00",
+					ToT: "06:00:00",
 					Event: ""
 				}]
 			};
@@ -57,8 +58,8 @@ sap.ui.define([
 					RedeliveryPt: "",
 					DNQ: "",
 					UOM: "",
-					FromT: "",
-					ToT: "",
+					FromT: "06:00:00",
+					ToT: "06:00:00",
 					Event: ""
 				}]
 			};
@@ -116,39 +117,39 @@ sap.ui.define([
 		},
 
 		// updated code 
-	
+
 		soldToPartyValueHelp: async function (oEvent) {
 			try {
 				let sDialogId = "_customerSelectDialog";
 				let sFragmentName = "com.ingenx.nomination.salesnomination.fragment.soldToParty";
-		
+
 				this._currentValueHelpSource = oEvent.getSource();
-		
+
 				await HelperFunction._openValueHelpDialog(this, sDialogId, sFragmentName);
 			} catch (error) {
 				console.error("Error opening value help dialog:", error);
 				sap.m.MessageBox.error("Could not open value help. Please contact support.");
 			}
 		},
-		
-		
+
+
 		onValueHelpConfirmSTP: async function (oEvent) {
-			
+
 			try {
 				let oSource = this._currentValueHelpSource;
-				let selectedValue = HelperFunction._valueHelpSelectedValue(oEvent, this, oSource.getId());
-				if (!selectedValue) return;
-		
+				 customerValue = HelperFunction._valueHelpSelectedValue(oEvent, this, oSource.getId());
+				if (!customerValue) return;
+
 				let oView = this.getView();
 				oView.byId("IdPubNomContractsPage").setBusy(true);
-		
+
 				let oData = await HelperFunction._getSingleEntityDataWithParam(
 					this,
 					"getNominationsByCustomer",
 					"SoldToParty",
-					selectedValue
+					customerValue
 				);
-		
+
 				if (oData && oData.length) {
 					let newModelForContracts = new sap.ui.model.json.JSONModel({ data: oData });
 					oView.setModel(newModelForContracts, "newModelForContracts");
@@ -174,9 +175,9 @@ sap.ui.define([
 
 				const oMaterialBox = this.byId("IdPubNomVboxMaterials");
 				const oContractsBox = this.byId("IdPubNomVboxContracts");
-                oContractsBox.setVisible(true);
+				oContractsBox.setVisible(true);
 				oMaterialBox.setVisible(false);
-				
+
 
 				// Hide Delivery Point Table and Header
 				const oDeliveryDNQTable = this.byId("IdPubNomDelPointTable");
@@ -188,27 +189,27 @@ sap.ui.define([
 				this.byId("IdCummDNQInput").setValue("");
 				this.clearMaterialModels();
 
-				
+
 			} catch (error) {
 				console.error("Error in onBackMat:", error);
 				// Optionally, show a message to the user
 				sap.m.MessageToast.show("An error occurred while processing. Please try again.");
 			}
 		},
-		
-
-		
-		
-		
-		
 
 
-	
-		
-		
+
+
+
+
+
+
+
+
+
 
 		clearMaterialModels: function () {
-			
+
 			const oMaterialWiseContractData = this.getView().getModel("materialModel");
 			const oMaterialWiseModelData = this.getView().getModel("contDataModel");
 			const oReDelvNomDCQTableData = this.getView().getModel("RedlvModelData");
@@ -223,8 +224,8 @@ sap.ui.define([
 					RedeliveryPt: "",
 					DNQ: "",
 					UOM: "",
-					FromT: "",
-					ToT: "",
+					FromT: "06:00:00",
+					ToT: "06:00:00",
 					Event: ""
 				}]);
 			}
@@ -234,8 +235,8 @@ sap.ui.define([
 					DeliveryPt: "",
 					DNQ: "",
 					UOM: "",
-					FromT: "06:00",
-					ToT: "06:00",
+					FromT: "06:00:00",
+					ToT: "06:00:00",
 					Event: ""
 				}]);
 			}
@@ -323,67 +324,181 @@ sap.ui.define([
 		},
 		
 
+
+
 		onSelectMaterial: async function (oEvent) {
-			
-			var oSelectedItem = oEvent.getSource();
-			var oContext = oSelectedItem.getBindingContext("materialModel");
-			if (oContext) {
-				var oSelectedMaterial = oContext.getObject();
-				
-				var material = oSelectedMaterial.Material;
-				var Redelivery_Point = oSelectedMaterial.Redelivery_Point
-				
-			}
+			let oSelectedItem = oEvent.getSource();
+			let oContext = oSelectedItem.getBindingContext("materialModel");
+			if (!oContext) return;
+
+			let oSelectedMaterial = oContext.getObject();
+			let material = oSelectedMaterial.Material;
+			let Redelivery_Point = oSelectedMaterial.Redelivery_Point;
 
 			const sPath = `/getContractDetail?DocNo=${sContract.DocNo}&Material=${material}&Redelivery_Point=${Redelivery_Point}`;
-			console.log("sPath", sPath)
+			console.log("sPath", sPath);
 
 			let oModelgetCust = this.getOwnerComponent().getModel();
-			const oBindinggetCust = oModelgetCust.bindContext(sPath, null, {});
+			let oBindinggetCust = oModelgetCust.bindContext(sPath, null, {});
+
 			try {
 				const oData = await oBindinggetCust.requestObject();
 				console.log("Fetched Data:", oData.value);
-				const oNewJsonModel = new sap.ui.model.json.JSONModel(oData.value[0]);
+
+				let oNewJsonModel = new sap.ui.model.json.JSONModel(oData.value[0]);
 				this.getView().setModel(oNewJsonModel, "contDataModel");
-				const hasRedeliveryDcq = oData.value[0].Redelivery_Point && oData.value[0].Redelivery_Point.trim() !== "";
-				if (hasRedeliveryDcq) {
-					this.getView().byId("IdPubNomContractRPDCQ").setVisible(true);
-					var oRedlvModel = this.getView().getModel("RedlvModelData");
-					var aRedeliveryPoints = oRedlvModel.getProperty("/RedeliveryPoints") || [];
 
-					aRedeliveryPoints.forEach(item => {
-						item.RedeliveryPt = oData.value[0].Redelivery_Point;
-						item.UOM = "MBT";
-					});
-					oRedlvModel.setProperty("/RedeliveryPoints", aRedeliveryPoints);
-				}
-				const hasDeliveryDcq = !!(oData.value[0].Delivery_Point && oData.value[0].Delivery_Point.trim());
-				if (hasDeliveryDcq) {
-					var oDelvModel = this.getView().getModel("DelvModelData");
-					var aDeliveryPoints = oDelvModel.getProperty("/DeliveryPoints") || [];
-					this.getView().byId("IdPubNomStaticListS").setVisible(true)
-					this.getView().byId("IdPubNomContratRPDCQ").setVisible(true)
-					this.getView().byId("IdPubNomContractDPDCQ").setVisible(true)
-					this.getView().byId("IdPubNomContractRPDCQ").setVisible(false)
-					this.getView().byId("IdPubNomStaticListfinal").setVisible(false)
-					this.getView().byId("IdPubNomDelPointTable").setVisible(true);
-
-
-					aDeliveryPoints.forEach(item => {
-						item.DeliveryPt = oData.value[0].Delivery_Point;
-						item.UOM = "MBT";
-					});
-
-					oDelvModel.setProperty("/DeliveryPoints", aDeliveryPoints);
-				}
+				this._updateRedeliveryData(oData.value[0]);
+				this._updateDeliveryData(oData.value[0]);
 
 			} catch (error) {
-				console.log("error", error)
+				console.error("Error fetching contract details:", error);
 			}
-
 		},
-	
+
+		// to show redilivery data
+		_updateRedeliveryData: function (oData) {
+			const hasRedeliveryDcq = oData.Redelivery_Point && oData.Redelivery_Point.trim() !== "";
+			if (hasRedeliveryDcq) {
+				this.getView().byId("IdPubNomContractRPDCQ").setVisible(true);
+				let oRedlvModel = this.getView().getModel("RedlvModelData");
+				let aRedeliveryPoints = oRedlvModel.getProperty("/RedeliveryPoints") || [];
+
+				aRedeliveryPoints.forEach(item => {
+					item.RedeliveryPt = oData.Redelivery_Point;
+					item.UOM = "MBT";
+				});
+
+				oRedlvModel.setProperty("/RedeliveryPoints", aRedeliveryPoints);
+			}
+		},
+		// to show delivery data 
+		_updateDeliveryData: function (oData) {
+			const hasDeliveryDcq = !!(oData.Delivery_Point && oData.Delivery_Point.trim());
+			if (hasDeliveryDcq) {
+				let oView = this.getView();
+				oView.byId("IdPubNomStaticListS").setVisible(true);
+				oView.byId("IdPubNomContratRPDCQ").setVisible(true);
+				oView.byId("IdPubNomContractDPDCQ").setVisible(true);
+				oView.byId("IdPubNomContractRPDCQ").setVisible(false);
+				oView.byId("IdPubNomStaticListfinal").setVisible(false);
+				oView.byId("IdPubNomDelPointTable").setVisible(true);
+
+				let oDelvModel = oView.getModel("DelvModelData");
+				let aDeliveryPoints = oDelvModel.getProperty("/DeliveryPoints") || [];
+
+				aDeliveryPoints.forEach(item => {
+					item.DeliveryPt = oData.Delivery_Point;
+					item.UOM = "MBT";
+				});
+
+				oDelvModel.setProperty("/DeliveryPoints", aDeliveryPoints);
+			}
+		},
+		// Utility to delay function execution
+		debounce: function (fn, delay) {
+			let timer;
+			return function (...args) {
+				clearTimeout(timer);
+				timer = setTimeout(() => fn.apply(this, args), delay);
+			};
+		},
 		
+		
+		OnDeliveryDNQValidation: function (oEvent) {
+			let sValue = oEvent.getParameter("value").trim();
+			let dnqValue = parseFloat(sValue) || 0;
+			let oView = this.getView();
+		
+			let oContractData = oView.getModel("contDataModel").getData();
+			let maxDCQ = this._getClauseValue(oContractData.data, "Max DP DCQ");
+			let minDCQ = this._getClauseValue(oContractData.data, "Min DP DCQ");
+		
+			let valueMap = {
+				"DNQ": dnqValue,
+				"Max DCQ": maxDCQ,
+				"Min DCQ": minDCQ
+			};
+		
+			if (this._validationTimeout) {
+				clearTimeout(this._validationTimeout);
+			}
+		
+			if (sValue === "") {
+				this._lastValidatedValue = null;
+				return; // Skip validation if field is empty
+			}
+		
+			if (!this._lastValidatedValue || this._lastValidatedValue !== sValue) {
+				this._lastValidatedValue = sValue;
+		
+				this._validationTimeout = setTimeout(async () => {
+					if (sValue.length >= 2) { 
+						try {
+							await HelperFunction.validateDNQ(oView, valueMap, customerValue);
+						} catch (err) {
+							console.error("Validation failed:", err);
+						} finally {
+							this._validationTimeout = null;
+						}
+					}
+				}, 1000); // Debounce time (1000ms)
+			}
+		},
+		OnReDeliveryDNQValidation: function (oEvent) {
+			let sValue = oEvent.getParameter("value").trim();
+			let dnqValue = parseFloat(sValue) || 0;
+			let oView = this.getView();
+			let oModel = oView.getModel("localModel");
+		
+			oModel.setProperty("/CummDNQ", sValue ? sValue + "MBT" : "");
+		
+			let oContractData = oView.getModel("contDataModel").getData();
+			let maxRDPDCQ = this._getClauseValue(oContractData.data, "Max RDP DCQ");
+			let minRDPDCQ = this._getClauseValue(oContractData.data, "Min RDP DCQ");
+		
+			let valueMap = {
+				"DNQ": dnqValue,
+				"Max DCQ": maxRDPDCQ,
+				"Min DCQ": minRDPDCQ
+			};
+		
+			if (this._validationTimeout) {
+				clearTimeout(this._validationTimeout);
+			}
+		
+			if (sValue === "") {
+				this._lastValidatedValue = null;
+				return; 
+			}
+		
+			if (!this._lastValidatedValue || this._lastValidatedValue !== sValue) {
+				this._lastValidatedValue = sValue;
+		
+				this._validationTimeout = setTimeout(async () => {
+					if (sValue.length >= 2) { 
+						try {
+							await HelperFunction.validateDNQ(oView, valueMap, customerValue);
+						} catch (err) {
+							console.error("Validation failed:", err);
+						} finally {
+							this._validationTimeout = null;
+						}
+					}
+				}, 1000); // Debounce time (1000ms)
+			}
+		},
+		
+		
+		_getClauseValue: function (data, clauseCode) {
+			let clause = data.find(item => item.Clause_Code === clauseCode);
+			return clause ? parseFloat(clause.Calculated_Value) || 0 : 0;
+		},
+
+
+
+
+
 
 		calculateDCQStatsByLabels: function (dynamicArray, label) {
 			if (dynamicArray.length === 0) {
@@ -430,24 +545,24 @@ sap.ui.define([
 			}
 		},
 
-		
+
 		createNomination: async function () {
 			try {
 				let Gasday = this.getView().byId("IdPubNomGasDayPicker").getDateValue();
 				const oDateFormat = sap.ui.core.format.DateFormat.getDateInstance({ pattern: "yyyy-MM-dd" });
 				Gasday = oDateFormat.format(Gasday);
-		
+
 				if (!Gasday) {
 					sap.m.MessageBox.error("Please select a Gas Day!");
 					return;
 				}
-		
+
 				const oModelDataRedlv = this.getView().getModel("RedlvModelData").getData();
 				const oModelDataDelv = this.getView().getModel("DelvModelData").getData();
 				const selectedMaterialData = this.getView().getModel("contDataModel").getData();
-		
+
 				let nomi_toitem = [];
-		
+
 				if (selectedMaterialData.Delivery_Point) {
 					nomi_toitem.push({
 						Gasday,
@@ -476,7 +591,7 @@ sap.ui.define([
 						CustGrp: "",
 						SrvProfile: "",
 					});
-		
+
 					nomi_toitem.push({
 						Gasday,
 						Vbeln: selectedMaterialData.DocNo,
@@ -535,21 +650,22 @@ sap.ui.define([
 						SrvProfile: "",
 					});
 				}
-		
+
 				console.log("nomi_toitem", nomi_toitem);
-		
+
 				let createNomPayLoad = {
 					Gasday,
 					Vbeln: selectedMaterialData.DocNo,
 					nomi_toitem
 				};
-		
+
+
 				let oModel = this.getOwnerComponent().getModel();
 				let oBindList = oModel.bindList("/znom_headSet");
-		
+
 				const newContext = await oBindList.create(createNomPayLoad, true);
 				await newContext.created();
-		
+
 				sap.m.MessageBox.success("Nomination Successfully Submitted");
 				this.clearMaterialModels();
 			} catch (error) {
@@ -557,12 +673,8 @@ sap.ui.define([
 				sap.m.MessageBox.error("Failed to submit nomination. Please try again.");
 			}
 		},
+
 		
-		onLiveInputValidation: function (oEvent) {
-			var sValue = oEvent.getParameter("value");
-			var oModel = this.getView().getModel("localModel");
-			oModel.setProperty("/CummDNQ", sValue ? sValue + "MBT" : "");
-		},
 		onCloseSimulateDialog: function () {
 			this._simulateDialog.close();
 			// sap.ui.getCore().byId("projectedImbalance").setValue("");
@@ -587,10 +699,10 @@ sap.ui.define([
 				gasDay: gasDay
 			});
 		},
-	
-		
-		
 
-		
+
+
+
+
 	});
 });

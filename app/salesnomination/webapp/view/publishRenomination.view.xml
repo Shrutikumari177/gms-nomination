@@ -225,6 +225,7 @@
                                 valueFormat="{ YYYY-MM-dd }"
                                 minDate="{}"
                                 liveChange="onSelectedDate"
+                                editable="false"
                             />
                         </contentRight>
                     </Bar>
@@ -351,7 +352,7 @@
                                     forceSelection="false"
                                     width="200px"
                                 >
-                                <core:ListItem id="IdPubNomNoneEvent" key="" text=""/>
+                                <core:ListItem id="IdRePubNomNoneEvent" key="" text=""/>
                                     
                                     <core:ListItem
                                         id="IdRePubNomNoEventItem"
@@ -475,6 +476,7 @@
                                     id="IdRePubNomDNQInput2"
                                     value="{RedlvModelData>DNQ}"
                                     liveChange="onLiveInputValidation"
+                                    type="Number"
                                 />
                                 <Input
                                     id="IdRePubNomUOMInput2"

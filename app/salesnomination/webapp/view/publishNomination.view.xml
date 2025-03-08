@@ -320,6 +320,7 @@
                                     id="IdPubNomDNQInput"
                                     value="{DelvModelData>DNQ}"
                                     type="Number"
+                                    liveChange="OnDeliveryDNQValidation"
         
                                 />
                                 <Input
@@ -471,7 +472,8 @@
                                 <Input
                                     id="IdPubNomDNQInput2"
                                     value="{RedlvModelData>DNQ}"
-                                    liveChange="onLiveInputValidation"
+                                    liveChange="OnReDeliveryDNQValidation"
+                                    type="Number"
                                 />
                                 <Input
                                     id="IdPubNomUOMInput2"

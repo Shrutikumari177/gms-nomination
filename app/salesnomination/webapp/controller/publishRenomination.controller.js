@@ -333,76 +333,96 @@ sap.ui.define([
 				oContractsControl.setBusy(false);
 			}
 		},
+		onLiveInputValidation: function (oEvent) {
+			var sValue = oEvent.getParameter("value");
+			var oModel = this.getView().getModel("localModel");
+			oModel.setProperty("/CummDNQ", sValue ? sValue + "MBT" : "");
+		},
 
 	
+		
+		
 		onSelectMaterial: async function (oEvent) {
-			
 			var oSelectedItem = oEvent.getSource();
 			var oContext = oSelectedItem.getBindingContext("materialModel");
 			if (oContext) {
 				var oSelectedMaterial = oContext.getObject();
 				
 				var material = oSelectedMaterial.Material;
-				var Redelivery_Point = oSelectedMaterial.RedelivryPoint
-				
+				var Redelivery_Point = oSelectedMaterial.RedelivryPoint;
 			}
-
+		
 			const sPath = `/getRenominationContractData?DocNo=${selectedContract}&Material=${material}&Redelivery_Point=${Redelivery_Point}&Gasday=${selectedGasDay}`;
-			console.log("sPath", sPath)
-
+			console.log("sPath", sPath);
+		
 			let oModelgetCust = this.getOwnerComponent().getModel();
 			const oBindinggetCust = oModelgetCust.bindContext(sPath, null, {});
 			try {
 				const oData = await oBindinggetCust.requestObject();
 				console.log("Fetched Data:", oData.value);
+		
 				const oNewJsonModel = new sap.ui.model.json.JSONModel(oData.value[0]);
 				this.getView().setModel(oNewJsonModel, "contDataModel");
+				var oLocalModel = this.getView().getModel("localModel");
+				var redeliveryDNQ = oData.value[0].Rpdnq || "0.000";
+				var uom = "MBT";
+				oLocalModel.setProperty("/CummDNQ", redeliveryDNQ + " " + uom);
+	
+		
+				const oDatePicker = this.getView().byId("IdRePubNomGasDayPicker");
+				if (selectedGasDay) {
+					const oFormattedDate = new Date(selectedGasDay);
+					oDatePicker.setDateValue(oFormattedDate);
+					
+				} else {
+					oDatePicker.setVisible(false);
+				}
+		
 				const hasRedeliveryDcq = oData.value[0].Redelivery_Point && oData.value[0].Redelivery_Point.trim() !== "";
 				if (hasRedeliveryDcq) {
 					this.getView().byId("IdRePubNomContractRPDCQ").setVisible(true);
 					var oRedlvModel = this.getView().getModel("RedlvModelData");
 					var aRedeliveryPoints = oRedlvModel.getProperty("/RedeliveryPoints") || [];
-
+		
 					aRedeliveryPoints.forEach(item => {
 						item.RedeliveryPt = oData.value[0].Redelivery_Point;
-						item.DNQ =oData.value[0].Rpdnq;
+						item.DNQ = oData.value[0].Rpdnq;
 						item.UOM = "MBT";
-						item.FromT=oData.value[0].Redelivery_ValidFrom;
-						item.ToT=oData.value[0].Redelivery_ValidTo
+						item.FromT = oData.value[0].Redelivery_ValidFrom;
+						item.ToT = oData.value[0].Redelivery_ValidTo;
 					});
 					oRedlvModel.setProperty("/RedeliveryPoints", aRedeliveryPoints);
 				}
+		
 				const hasDeliveryDcq = !!(oData.value[0].Delivery_Point && oData.value[0].Delivery_Point.trim());
 				if (hasDeliveryDcq) {
 					var oDelvModel = this.getView().getModel("DelvModelData");
 					var aDeliveryPoints = oDelvModel.getProperty("/DeliveryPoints") || [];
-					this.getView().byId("IdRePubNomStaticListS").setVisible(true)
-					this.getView().byId("IdRePubNomContratRPDCQ").setVisible(true)
-					this.getView().byId("IdRePubNomContractDPDCQ").setVisible(true)
-
-
-					this.getView().byId("IdRePubNomContractRPDCQ").setVisible(false)
-					this.getView().byId("IdRePubNomStaticListfinal").setVisible(false)
+					this.getView().byId("IdRePubNomStaticListS").setVisible(true);
+					this.getView().byId("IdRePubNomContratRPDCQ").setVisible(true);
+					this.getView().byId("IdRePubNomContractDPDCQ").setVisible(true);
+		
+					this.getView().byId("IdRePubNomContractRPDCQ").setVisible(false);
+					this.getView().byId("IdRePubNomStaticListfinal").setVisible(false);
 					this.getView().byId("IdRePubNomDelPointTable").setVisible(true);
-
-
+		
 					aDeliveryPoints.forEach(item => {
 						item.DeliveryPt = oData.value[0].Delivery_Point;
 						item.UOM = "MBT";
-						item.DNQ =oData.value[0].Pdnq;
-					
-						item.FromT=oData.value[0].Redelivery_ValidFrom;
-						item.ToT=oData.value[0].Redelivery_ValidTo
+						item.DNQ = oData.value[0].Pdnq;
+						item.FromT = oData.value[0].Redelivery_ValidFrom;
+						item.ToT = oData.value[0].Redelivery_ValidTo;
 					});
-
+		
 					oDelvModel.setProperty("/DeliveryPoints", aDeliveryPoints);
 				}
-
+		
 			} catch (error) {
-				console.log("error", error)
+				console.log("error", error);
 			}
-
 		},
+		
+		
 	
 
 		createNomination: async function () {
