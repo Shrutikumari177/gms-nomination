@@ -350,7 +350,8 @@
                                     forceSelection="false"
                                     width="200px"
                                 >
-                                    
+                                                                    <core:ListItem id="IdPubNmNoneEvent" key="" text=""/>
+    
                                     <core:ListItem
                                         id="IdPubNomNoEventItem"
                                         key="No-event"

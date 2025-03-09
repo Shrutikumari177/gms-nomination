@@ -132,183 +132,7 @@ module.exports = cds.service.impl(async (srv) => {
     });
     
 
-    // srv.on('getContractDetailsAndPastNom', async (req) => {
-    //     const { DocNo } = req.data;
-    
-    //     const query = SELECT.from('xGMSxFETCHNOMINATION')
-    //         .columns('DocNo', 'Material', 'Redelivery_Point', 'Delivery_Point', 'Item')
-    //         .where({ DocNo });
-    
-    //     const resultRes = await GMSNOMINATIONS_SRV.run(query);
-    
-    //     if (!resultRes || resultRes.length === 0) {
-    //         return null; // Return null if no data found
-    //     }
-    
-    //     // Filter out duplicate Item values
-    //     const uniqueItems = [];
-    //     const itemSet = new Set();
-    
-    //     for (const entry of resultRes) {
-    //         if (!itemSet.has(entry.Item)) {
-    //             itemSet.add(entry.Item);
-    //             uniqueItems.push(entry);
-    //         }
-    //     }
-    
-    //     return uniqueItems; // Return filtered result with unique Item values
-    // });
-
-
-    // srv.on('getContractDetail', async (req) => {
-    //     const { DocNo, Material, Redelivery_Point } = req.data; 
-    //     console.log("Received:", DocNo, Material, Redelivery_Point);
-    
-    //     const query = SELECT.from('xGMSxFETCHNOMINATION')
-    //         .columns(
-    //             'DocNo', 'Item', 'Material', 'Redelivery_Point', 'Delivery_Point', 
-    //             'Delivery_Dcq', 'Redelivery_Dcq', 'Valid_Form', 'Valid_To', 
-    //             'Calculated_Value', 'Clause_Code', 'SoldToParty', 'UOM', 'Contracttype'
-    //         )
-    //         .where({ DocNo });
-    
-    //     const resultRes = await GMSNOMINATIONS_SRV.run(query);
-    //     console.log("Query Result:", resultRes);
-    
-    //     if (!resultRes?.length) {
-    //         return null;
-    //     }
-    
-    //     // Filter by Material and Redelivery_Point
-    //     const matfilter = resultRes.filter(item => 
-    //         item.Material === Material && item.Redelivery_Point === Redelivery_Point
-    //     );
-    //     console.log("Filtered Results:", matfilter);
-    
-    //     if (!matfilter.length) {
-    //         return null;
-    //     }
-    
-    //     // Destructure main fields from the first matched result
-    //     const {
-    //         Item,
-    //         Delivery_Point,
-    //         Delivery_Dcq,
-    //         Redelivery_Dcq,
-    //         Valid_Form,
-    //         Valid_To,
-    //         SoldToParty,
-    //         UOM,
-    //         Contracttype
-    //     } = matfilter[0];
-    
-    //     // Remove duplicates from 'data' array
-    //     const uniqueData = [];
-    //     const seen = new Set();
-    
-    //     matfilter.forEach(({ Calculated_Value, Clause_Code }) => {
-    //         const key = `${Calculated_Value}-${Clause_Code}`;
-    //         if (!seen.has(key)) {
-    //             seen.add(key);
-    //             uniqueData.push({ Calculated_Value, Clause_Code });
-    //         }
-    //     });
-    
-    //     return {
-    //         DocNo,
-    //         Item,
-    //         Material,
-    //         Redelivery_Point,
-    //         Delivery_Point,
-    //         Delivery_Dcq,
-    //         Redelivery_Dcq,
-    //         Valid_Form,
-    //         Valid_To,
-    //         SoldToParty,
-    //         UOM,
-    //         Contracttype,
-    //         data: uniqueData
-    //     };
-    // });
-
-
-    // srv.on('getContractDetail', async (req) => {
-    //     const { DocNo, Material, Redelivery_Point } = req.data; 
-    //     console.log("Received:", DocNo, Material, Redelivery_Point);
-    
-    //     const query = SELECT.from('xGMSxFETCHNOMINATION')
-    //         .columns(
-    //             'DocNo', 'Item', 'Material', 'Redelivery_Point', 'Delivery_Point', 
-    //             'Delivery_Dcq', 'Redelivery_Dcq', 'Valid_Form', 'Valid_To', 
-    //             'Calculated_Value', 'Clause_Code', 'SoldToParty', 'UOM', 'Contracttype'
-    //         )
-    //         .where({ DocNo });
-    
-    //     const resultRes = await GMSNOMINATIONS_SRV.run(query);
-    //     console.log("Query Result:", resultRes);
-    
-    //     if (!resultRes?.length) {
-    //         return null;
-    //     }
-    
-    //     // Get current date in 'YYYY-MM-DD' format
-    //     const currentDate = new Date().toISOString().split('T')[0];
-    
-    //     // Filter by Material, Redelivery_Point, and date range
-    //     const filteredResults = resultRes.filter(item => 
-    //         item.Material === Material &&
-    //         item.Redelivery_Point === Redelivery_Point &&
-    //         item.Valid_Form <= currentDate &&
-    //         item.Valid_To >= currentDate
-    //     );
-    //     console.log("Filtered Results:", filteredResults);
-    
-    //     if (!filteredResults.length) {
-    //         return null;
-    //     }
-    
-    //     // Destructure main fields from the first matched result
-    //     const {
-    //         Item,
-    //         Delivery_Point,
-    //         Delivery_Dcq,
-    //         Redelivery_Dcq,
-    //         Valid_Form,
-    //         Valid_To,
-    //         SoldToParty,
-    //         UOM,
-    //         Contracttype
-    //     } = filteredResults[0];
-    
-    //     // Remove duplicates based on Calculated_Value and Clause_Code
-    //     const uniqueData = [];
-    //     const seen = new Set();
-    
-    //     filteredResults.forEach(({ Calculated_Value, Clause_Code }) => {
-    //         const key = `${Calculated_Value}-${Clause_Code}`;
-    //         if (!seen.has(key)) {
-    //             seen.add(key);
-    //             uniqueData.push({ Calculated_Value, Clause_Code });
-    //         }
-    //     });
-    
-    //     return {
-    //         DocNo,
-    //         Item,
-    //         Material,
-    //         Redelivery_Point,
-    //         Delivery_Point,
-    //         Delivery_Dcq,
-    //         Redelivery_Dcq,
-    //         Valid_Form,
-    //         Valid_To,
-    //         SoldToParty,
-    //         UOM,
-    //         Contracttype,
-    //         data: uniqueData
-    //     };
-    // });
-
+   
 
     srv.on('getContractDetail', async (req) => {
         const { DocNo, Material, Redelivery_Point } = req.data; 
@@ -420,101 +244,10 @@ module.exports = cds.service.impl(async (srv) => {
         }
         return resultRes;
     });
-    
-    // srv.on('getRenominationContractData', async (req) => {
-    //     const { DocNo, Material, Redelivery_Point, Gasday } = req.data;
-    //     console.log("Received:", DocNo, Material, Redelivery_Point, Gasday);
-    
-    //     // Fetch data from xGMSxFETCHNOMINATION
-    //     const queryNomination = SELECT.from('xGMSxFETCHNOMINATION')
-    //         .columns(
-    //             'DocNo', 'Item', 'Material', 'Redelivery_Point', 'Delivery_Point',
-    //             'Delivery_Dcq', 'Redelivery_Dcq', 'Valid_Form', 'Valid_To',
-    //             'Calculated_Value', 'Clause_Code', 'SoldToParty', 'UOM', 'Contracttype'
-    //         )
-    //         .where({ DocNo });
-    
-    //     const resultNomination = await GMSNOMINATIONS_SRV.run(queryNomination);
-    //     console.log("Query Result (Nominations):", resultNomination);
-    
-    //     if (!resultNomination?.length) {
-    //         return null;
-    //     }
-    
-    //     // Filter by Material and Redelivery_Point
-    //     const matfilter = resultNomination.filter(item =>
-    //         item.Material === Material && item.Redelivery_Point === Redelivery_Point
-    //     );
-    //     console.log("Filtered Results (Nominations):", matfilter);
-    
-    //     if (!matfilter.length) {
-    //         return null;
-    //     }
-    
-    //     // Fetch data from xGMSxCREATENOMINATION with Gasday condition
-    //     const queryCreateNomination = SELECT.from('xGMSxCREATENOMINATION')
-    //         .columns(
-    //             'Gasday', 'Vbeln', 'ItemNo', 'NomItem', 'Versn',
-    //             'DeliveryPoint', 'RedelivryPoint', 'ValidTo', 'ValidFrom',
-    //             'Material', 'Pdnq', 'Rpdnq'
-    //         )
-    //         .where({ Vbeln: DocNo, Material, Gasday });
-    
-    //     const resultCreateNomination = await GMSNOMINATIONS_SRV.run(queryCreateNomination);
-    //     console.log("Query Result (Create Nominations):", resultCreateNomination);
-    
-    //     // Find matching entries for DeliveryPoint and RedeliveryPoint
-    //     const deliveryData = resultCreateNomination.find(item => item.DeliveryPoint === matfilter[0].Delivery_Point);
-    //     const redeliveryData = resultCreateNomination.find(item => item.RedelivryPoint === matfilter[0].Redelivery_Point);
-    
-    //     // Extract required fields
-    //     const {
-    //         Item, Delivery_Point, Delivery_Dcq, Redelivery_Dcq,
-    //         Valid_Form, Valid_To, SoldToParty, UOM, Contracttype
-    //     } = matfilter[0];
-    
-    //     // Remove duplicates from 'data' array
-    //     const uniqueData = [];
-    //     const seen = new Set();
-    
-    //     matfilter.forEach(({ Calculated_Value, Clause_Code }) => {
-    //         const key = `${Calculated_Value}-${Clause_Code}`;
-    //         if (!seen.has(key)) {
-    //             seen.add(key);
-    //             uniqueData.push({ Calculated_Value, Clause_Code });
-    //         }
-    //     });
-    
-    //     return {
-    //         Gasday,
-    //         DocNo,
-    //         Item,
-    //         Material,
-    //         Redelivery_Point,
-    //         Delivery_Point,
-    //         Delivery_Dcq,
-    //         Redelivery_Dcq,
-    //         Valid_Form,
-    //         Valid_To,
-    //         SoldToParty,
-    //         UOM,
-    //         Contracttype,
-    //         Delivery_ValidFrom: deliveryData?.ValidFrom || null,
-    //         Delivery_ValidTo: deliveryData?.ValidTo || null,
-    //         Redelivery_ValidFrom: redeliveryData?.ValidFrom || null,
-    //         Redelivery_ValidTo: redeliveryData?.ValidTo || null,
-    //         Pdnq: deliveryData?.Pdnq || "0.000",
-    //         Rpdnq: redeliveryData?.Rpdnq || "0.000",
-    //         data: uniqueData
-    //     };
-    // });
-     
+
     srv.on('getRenominationContractData', async (req) => {
         const { DocNo, Material, Redelivery_Point, Gasday } = req.data;
-        console.log("Received:", DocNo, Material, Redelivery_Point, Gasday);
-    
         const currentDate = new Date().toISOString().split('T')[0];
-        console.log("Current Date:", currentDate);
     
         // Fetch data from xGMSxFETCHNOMINATION
         const queryNomination = SELECT.from('xGMSxFETCHNOMINATION')
@@ -526,8 +259,6 @@ module.exports = cds.service.impl(async (srv) => {
             .where({ DocNo });
     
         const resultNomination = await GMSNOMINATIONS_SRV.run(queryNomination);
-        console.log("Query Result (Nominations):", resultNomination);
-    
         if (!resultNomination?.length) {
             return null;
         }
@@ -536,7 +267,6 @@ module.exports = cds.service.impl(async (srv) => {
         const matfilter = resultNomination.filter(item =>
             item.Material === Material && item.Redelivery_Point === Redelivery_Point
         );
-        console.log("Filtered Results (Nominations):", matfilter);
     
         if (!matfilter.length) {
             return null;
@@ -544,8 +274,6 @@ module.exports = cds.service.impl(async (srv) => {
     
         // Get unique items
         const uniqueItems = new Set(matfilter.map(item => item.Item));
-        console.log("Unique Items:", Array.from(uniqueItems));
-    
         let filteredResults = matfilter;
     
         // If more than one item, filter based on current date
@@ -553,7 +281,6 @@ module.exports = cds.service.impl(async (srv) => {
             filteredResults = matfilter.filter(item =>
                 item.Valid_Form <= currentDate && item.Valid_To >= currentDate
             );
-            console.log("Filtered by Date (Multiple Items):", filteredResults);
         }
     
         if (!filteredResults.length) {
@@ -564,20 +291,16 @@ module.exports = cds.service.impl(async (srv) => {
         const minValidForm = filteredResults.reduce((min, item) => item.Valid_Form < min ? item.Valid_Form : min, filteredResults[0].Valid_Form);
         const maxValidTo = filteredResults.reduce((max, item) => item.Valid_To > max ? item.Valid_To : max, filteredResults[0].Valid_To);
     
-        console.log("Min Valid_Form:", minValidForm);
-        console.log("Max Valid_To:", maxValidTo);
-    
-        // Fetch data from xGMSxCREATENOMINATION
+        // Fetch data from xGMSxCREATENOMINATION including Event field
         const queryCreateNomination = SELECT.from('xGMSxCREATENOMINATION')
             .columns(
                 'Gasday', 'Vbeln', 'ItemNo', 'NomItem', 'Versn',
                 'DeliveryPoint', 'RedelivryPoint', 'ValidTo', 'ValidFrom',
-                'Material', 'Pdnq', 'Rpdnq'
+                'Material', 'Pdnq', 'Rpdnq', 'Event'
             )
             .where({ Vbeln: DocNo, Material, Gasday });
     
         const resultCreateNomination = await GMSNOMINATIONS_SRV.run(queryCreateNomination);
-        console.log("Query Result (Create Nominations):", resultCreateNomination);
     
         // Find matching entries for DeliveryPoint and RedeliveryPoint
         const deliveryData = resultCreateNomination.find(item => item.DeliveryPoint === matfilter[0].Delivery_Point);
@@ -592,7 +315,6 @@ module.exports = cds.service.impl(async (srv) => {
         // Remove duplicates from 'data'
         const uniqueData = [];
         const seen = new Set();
-    
         filteredResults.forEach(({ Calculated_Value, Clause_Code }) => {
             const key = `${Calculated_Value}-${Clause_Code}`;
             if (!seen.has(key)) {
@@ -621,9 +343,128 @@ module.exports = cds.service.impl(async (srv) => {
             Redelivery_ValidTo: redeliveryData?.ValidTo || null,
             Pdnq: deliveryData?.Pdnq || "0.000",
             Rpdnq: redeliveryData?.Rpdnq || "0.000",
+            Event: deliveryData?.Event || redeliveryData?.Event || null,
             data: uniqueData
         };
     });
+    
+    
+         
+    // srv.on('getRenominationContractData', async (req) => {
+    //     const { DocNo, Material, Redelivery_Point, Gasday } = req.data;
+    //     console.log("Received:", DocNo, Material, Redelivery_Point, Gasday);
+    
+    //     const currentDate = new Date().toISOString().split('T')[0];
+    //     console.log("Current Date:", currentDate);
+    
+    //     // Fetch data from xGMSxFETCHNOMINATION
+    //     const queryNomination = SELECT.from('xGMSxFETCHNOMINATION')
+    //         .columns(
+    //             'DocNo', 'Item', 'Material', 'Redelivery_Point', 'Delivery_Point',
+    //             'Delivery_Dcq', 'Redelivery_Dcq', 'Valid_Form', 'Valid_To',
+    //             'Calculated_Value', 'Clause_Code', 'SoldToParty', 'UOM', 'Contracttype'
+    //         )
+    //         .where({ DocNo });
+    
+    //     const resultNomination = await GMSNOMINATIONS_SRV.run(queryNomination);
+    //     console.log("Query Result (Nominations):", resultNomination);
+    
+    //     if (!resultNomination?.length) {
+    //         return null;
+    //     }
+    
+    //     // Filter by Material and Redelivery_Point
+    //     const matfilter = resultNomination.filter(item =>
+    //         item.Material === Material && item.Redelivery_Point === Redelivery_Point
+    //     );
+    //     console.log("Filtered Results (Nominations):", matfilter);
+    
+    //     if (!matfilter.length) {
+    //         return null;
+    //     }
+    
+    //     // Get unique items
+    //     const uniqueItems = new Set(matfilter.map(item => item.Item));
+    //     console.log("Unique Items:", Array.from(uniqueItems));
+    
+    //     let filteredResults = matfilter;
+    
+    //     // If more than one item, filter based on current date
+    //     if (uniqueItems.size > 1) {
+    //         filteredResults = matfilter.filter(item =>
+    //             item.Valid_Form <= currentDate && item.Valid_To >= currentDate
+    //         );
+    //         console.log("Filtered by Date (Multiple Items):", filteredResults);
+    //     }
+    
+    //     if (!filteredResults.length) {
+    //         return null;
+    //     }
+    
+    //     // Find min/max Valid_Form and Valid_To dates
+    //     const minValidForm = filteredResults.reduce((min, item) => item.Valid_Form < min ? item.Valid_Form : min, filteredResults[0].Valid_Form);
+    //     const maxValidTo = filteredResults.reduce((max, item) => item.Valid_To > max ? item.Valid_To : max, filteredResults[0].Valid_To);
+    
+    //     console.log("Min Valid_Form:", minValidForm);
+    //     console.log("Max Valid_To:", maxValidTo);
+    
+    //     // Fetch data from xGMSxCREATENOMINATION
+    //     const queryCreateNomination = SELECT.from('xGMSxCREATENOMINATION')
+    //         .columns(
+    //             'Gasday', 'Vbeln', 'ItemNo', 'NomItem', 'Versn',
+    //             'DeliveryPoint', 'RedelivryPoint', 'ValidTo', 'ValidFrom',
+    //             'Material', 'Pdnq', 'Rpdnq'
+    //         )
+    //         .where({ Vbeln: DocNo, Material, Gasday });
+    
+    //     const resultCreateNomination = await GMSNOMINATIONS_SRV.run(queryCreateNomination);
+    //     console.log("Query Result (Create Nominations):", resultCreateNomination);
+    
+    //     // Find matching entries for DeliveryPoint and RedeliveryPoint
+    //     const deliveryData = resultCreateNomination.find(item => item.DeliveryPoint === matfilter[0].Delivery_Point);
+    //     const redeliveryData = resultCreateNomination.find(item => item.RedelivryPoint === matfilter[0].Redelivery_Point);
+    
+    //     // Extract main fields from first matched result
+    //     const {
+    //         Item, Delivery_Point, Delivery_Dcq, Redelivery_Dcq,
+    //         SoldToParty, UOM, Contracttype
+    //     } = filteredResults[0];
+    
+    //     // Remove duplicates from 'data'
+    //     const uniqueData = [];
+    //     const seen = new Set();
+    
+    //     filteredResults.forEach(({ Calculated_Value, Clause_Code }) => {
+    //         const key = `${Calculated_Value}-${Clause_Code}`;
+    //         if (!seen.has(key)) {
+    //             seen.add(key);
+    //             uniqueData.push({ Calculated_Value, Clause_Code });
+    //         }
+    //     });
+    
+    //     return {
+    //         Gasday,
+    //         DocNo,
+    //         Item,
+    //         Material,
+    //         Redelivery_Point,
+    //         Delivery_Point,
+    //         Delivery_Dcq,
+    //         Redelivery_Dcq,
+    //         Valid_Form: minValidForm,
+    //         Valid_To: maxValidTo,
+    //         SoldToParty,
+    //         UOM,
+    //         Contracttype,
+    //         Delivery_ValidFrom: deliveryData?.ValidFrom || null,
+    //         Delivery_ValidTo: deliveryData?.ValidTo || null,
+    //         Redelivery_ValidFrom: redeliveryData?.ValidFrom || null,
+    //         Redelivery_ValidTo: redeliveryData?.ValidTo || null,
+    //         Pdnq: deliveryData?.Pdnq || "0.000",
+    //         Rpdnq: redeliveryData?.Rpdnq || "0.000",
+    //         data: uniqueData
+    //     };
+    // });
     
     
     

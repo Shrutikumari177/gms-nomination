@@ -323,12 +323,14 @@
                                     id="IdRePubNomDNQInput"
                                     value="{DelvModelData>DNQ}"
                                     type="Number"
+                                    liveChange="OnDeliveryDNQValidation"
         
                                 />
                                 <Input
                                     id="IdRePubNomUOMInput"
                                     value="{DelvModelData>UOM}"
                                     editable="false"
+
                                 />
                                 <TimePicker
                                     id="IdRePubNomDelvFromTimePicker"
@@ -348,11 +350,14 @@
                                 />
                                 <Select
                                     id="IdRePubNomEventSelect"
-                                    selectedItem="{}"
+
+                                    selectedKey="{DelvModelData>Event}"
+
                                     forceSelection="false"
                                     width="200px"
-                                >
-                                <core:ListItem id="IdRePubNomNoneEvent" key="" text=""/>
+                                    
+                                 >
+                                 <core:ListItem id="IdRePubNomNoneEvent" key="" text=""/>
                                     
                                     <core:ListItem
                                         id="IdRePubNomNoEventItem"
@@ -475,7 +480,7 @@
                                 <Input
                                     id="IdRePubNomDNQInput2"
                                     value="{RedlvModelData>DNQ}"
-                                    liveChange="onLiveInputValidation"
+                                    liveChange="OnReDeliveryDNQValidation"
                                     type="Number"
                                 />
                                 <Input
@@ -502,9 +507,11 @@
                                 <Select
                                     id="IdRePubNomEventSelect2"
                                     selectedKey="{RedlvModelData>Event}"
-                                    selectedItem="{RedlvModelData>Event}"
+                                      forceSelection="false"
+
                                 >
-                                    
+                                    <core:ListItem id="IdPubNomNneEvent" key="" text=""/>
+
                                     <core:ListItem
                                         id="IdRePubNomReNoEventItem"
                                         key="No-event"

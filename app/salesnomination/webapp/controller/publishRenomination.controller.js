@@ -19,6 +19,7 @@ sap.ui.define([
 	let selectedContract = undefined
 	let oView;
 	let sContract
+	let customerValue;
 
 	return Controller.extend("com.ingenx.nomination.salesnomination.controller.publishRenomination", {
 
@@ -38,8 +39,8 @@ sap.ui.define([
 					DeliveryPt: "",
 					DNQ: "",
 					UOM: "",
-					FromT: "06:00",
-					ToT: "06:00",
+					FromT: "06:00:00",
+					ToT: "06:00:00",
 					Event: ""
 				}]
 			};
@@ -49,8 +50,8 @@ sap.ui.define([
 					RedeliveryPt: "",
 					DNQ: "",
 					UOM: "",
-					FromT: "",
-					ToT: "",
+					FromT: "06:00:00",
+					ToT: "06:00:00",
 					Event: ""
 				}]
 			};
@@ -124,14 +125,11 @@ sap.ui.define([
 				sap.m.MessageBox.error("Could not open value help. Please contact support.");
 			}
 		},
-		
-		
 		onValueHelpConfirmSTP: async function (oEvent) {
-			
 			try {
 				let oSource = this._currentValueHelpSource;
-				let selectedValue = HelperFunction._valueHelpSelectedValue(oEvent, this, oSource.getId());
-				if (!selectedValue) return;
+				let customerValue = HelperFunction._valueHelpSelectedValue(oEvent, this, oSource.getId());
+				if (!customerValue) return;
 		
 				let oView = this.getView();
 				oView.byId("pubNom_Contracts").setBusy(true);
@@ -140,7 +138,7 @@ sap.ui.define([
 					this,
 					"getNominationsByCustomer",
 					"SoldToParty",
-					selectedValue
+					customerValue
 				);
 		
 				if (oData && oData.length) {
@@ -149,15 +147,23 @@ sap.ui.define([
 					oView.getModel("newModelForContracts").refresh();
 					this.byId("datePicker").setVisible(true);
 				}
-
 			} catch (error) {
 				console.error("Unexpected error:", error.message || error);
 				sap.m.MessageBox.error("An unexpected error occurred. Please try again.");
 			} finally {
-				this.getView().byId("pubNom_Contracts").setBusy(false);
-				this._customerSelectDialog.getBinding("items").filter([]);
+				oView.byId("pubNom_Contracts").setBusy(false);
+				if (this._customerSelectDialog) {
+					let oBinding = this._customerSelectDialog.getBinding("items");
+					if (oBinding) {
+						oBinding.filter([]);
+					}
+				}
 			}
 		},
+		
+		
+		
+	
 		onValueHelpSearchSTP: function (oEvent) {
 			HelperFunction._valueHelpLiveSearch(oEvent, "Customer", "soldToParty", this);
 		},
@@ -218,8 +224,8 @@ sap.ui.define([
 					RedeliveryPt: "",
 					DNQ: "",
 					UOM: "",
-					FromT: "",
-					ToT: "",
+					FromT: "06:00:00",
+					ToT: "06:00:00",
 					Event: ""
 				}]);
 			}
@@ -229,8 +235,8 @@ sap.ui.define([
 					DeliveryPt: "",
 					DNQ: "",
 					UOM: "",
-					FromT: "06:00",
-					ToT: "06:00",
+					FromT: "06:00:00",
+					ToT: "06:00:00",
 					Event: ""
 				}]);
 			}
@@ -333,10 +339,102 @@ sap.ui.define([
 				oContractsControl.setBusy(false);
 			}
 		},
-		onLiveInputValidation: function (oEvent) {
-			var sValue = oEvent.getParameter("value");
-			var oModel = this.getView().getModel("localModel");
+		
+		debounce: function (fn, delay) {
+			let timer;
+			return function (...args) {
+				clearTimeout(timer);
+				timer = setTimeout(() => fn.apply(this, args), delay);
+			};
+		},
+		_getClauseValue: function (data, clauseCode) {
+			let clause = data.find(item => item.Clause_Code === clauseCode);
+			return clause ? parseFloat(clause.Calculated_Value) || 0 : 0;
+		},
+		
+		
+		OnDeliveryDNQValidation: function (oEvent) {
+			let sValue = oEvent.getParameter("value").trim();
+			let dnqValue = parseFloat(sValue) || 0;
+			let oView = this.getView();
+		
+			let oContractData = oView.getModel("contDataModel").getData();
+			let maxDCQ = this._getClauseValue(oContractData.data, "Max DP DCQ");
+			let minDCQ = this._getClauseValue(oContractData.data, "Min DP DCQ");
+		
+			let valueMap = {
+				"DNQ": dnqValue,
+				"Max DCQ": maxDCQ,
+				"Min DCQ": minDCQ
+			};
+		
+			if (this._validationTimeout) {
+				clearTimeout(this._validationTimeout);
+			}
+		
+			if (sValue === "") {
+				this._lastValidatedValue = null;
+				return; // Skip validation if field is empty
+			}
+		
+			if (!this._lastValidatedValue || this._lastValidatedValue !== sValue) {
+				this._lastValidatedValue = sValue;
+		
+				this._validationTimeout = setTimeout(async () => {
+					if (sValue.length >= 2) { 
+						try {
+							await HelperFunction.validateDNQ(oView, valueMap, customerValue);
+						} catch (err) {
+							console.error("Validation failed:", err);
+						} finally {
+							this._validationTimeout = null;
+						}
+					}
+				}, 1000); // Debounce time (1000ms)
+			}
+		},
+		OnReDeliveryDNQValidation: function (oEvent) {
+			let sValue = oEvent.getParameter("value").trim();
+			let dnqValue = parseFloat(sValue) || 0;
+			let oView = this.getView();
+			let oModel = oView.getModel("localModel");
+		
 			oModel.setProperty("/CummDNQ", sValue ? sValue + "MBT" : "");
+		
+			let oContractData = oView.getModel("contDataModel").getData();
+			let maxRDPDCQ = this._getClauseValue(oContractData.data, "Max RDP DCQ");
+			let minRDPDCQ = this._getClauseValue(oContractData.data, "Min RDP DCQ");
+		
+			let valueMap = {
+				"DNQ": dnqValue,
+				"Max DCQ": maxRDPDCQ,
+				"Min DCQ": minRDPDCQ
+			};
+		
+			if (this._validationTimeout) {
+				clearTimeout(this._validationTimeout);
+			}
+		
+			if (sValue === "") {
+				this._lastValidatedValue = null;
+				return; 
+			}
+		
+			if (!this._lastValidatedValue || this._lastValidatedValue !== sValue) {
+				this._lastValidatedValue = sValue;
+		
+				this._validationTimeout = setTimeout(async () => {
+					if (sValue.length >= 2) { 
+						try {
+							await HelperFunction.validateDNQ(oView, valueMap, customerValue);
+						} catch (err) {
+							console.error("Validation failed:", err);
+						} finally {
+							this._validationTimeout = null;
+						}
+					}
+				}, 1000); // Debounce time (1000ms)
+			}
 		},
 
 	
@@ -390,6 +488,8 @@ sap.ui.define([
 						item.UOM = "MBT";
 						item.FromT = oData.value[0].Redelivery_ValidFrom;
 						item.ToT = oData.value[0].Redelivery_ValidTo;
+						item.Event=oData.value[0].Event;
+
 					});
 					oRedlvModel.setProperty("/RedeliveryPoints", aRedeliveryPoints);
 				}
@@ -412,6 +512,7 @@ sap.ui.define([
 						item.DNQ = oData.value[0].Pdnq;
 						item.FromT = oData.value[0].Redelivery_ValidFrom;
 						item.ToT = oData.value[0].Redelivery_ValidTo;
+						item.Event=oData.value[0].Event;
 					});
 		
 					oDelvModel.setProperty("/DeliveryPoints", aDeliveryPoints);
@@ -421,6 +522,10 @@ sap.ui.define([
 				console.log("error", error);
 			}
 		},
+	
+		
+	
+		
 		
 		
 	
