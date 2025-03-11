@@ -152,6 +152,7 @@ sap.ui.define(["sap/ui/core/Fragment","sap/ui/model/Filter","sap/ui/model/Filter
         }
     },
     validateDNQ: async function (oView, valueMap, customerNo) {
+        
         try {
             const oModel = oView.getModel();
             if (!oModel) {

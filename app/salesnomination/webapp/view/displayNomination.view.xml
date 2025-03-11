@@ -1,7 +1,7 @@
 <mvc:View
     xmlns:uxap="sap.uxap"
     xmlns:tnt="sap.tnt"
-    controllerName="com.ingenx.nomination.salesnomination.controller.publishRenomination"
+    controllerName="com.ingenx.nomination.salesnomination.controller.displayNomination"
     xmlns:l="sap.ui.layout"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns:core="sap.ui.core"
@@ -19,7 +19,7 @@
         <Title
             id="IdPubReNomTitle"
             textAlign="Center"
-            text="Publish Re-Nomination"
+            text="Display Nomination"
             wrapping="false">
         </Title>
         <ToolbarSpacer id="IdPubReNomToolbarSpacer" />
@@ -324,6 +324,7 @@
                                     value="{DelvModelData>DNQ}"
                                     type="Number"
                                     liveChange="OnDeliveryDNQValidation"
+                                    editable="false"
         
                                 />
                                 <Input
@@ -339,6 +340,7 @@
                                     valueFormat="HH:mm:ss"
                                     displayFormat="HH:mm"
                                     change="onTimeChange"
+                                    editable="false"
                                 />
                                 <TimePicker
                                     id="IdRePubNomDelvToTimePicker"
@@ -347,6 +349,7 @@
                                     valueFormat="HH:mm:ss"
                                     displayFormat="HH:mm"
                                     change="onTimeChange"
+                                    editable="false"
                                 />
                                 <Select
                                     id="IdRePubNomEventSelect"
@@ -356,6 +359,7 @@
                                     forceSelection="false"
                                     width="200px"
                                     
+                                    editable="false"
                                  >
                                  <core:ListItem id="IdRePubNomNoneEvent" key="" text=""/>
                                     
@@ -408,21 +412,7 @@
                                 editable="false"
                             />
                         </contentMiddle>
-                        <contentRight>
-                            <Button
-                                id="IdRePubNomAddBtnForRedlv"
-                                icon="sap-icon://add"
-                                type="Emphasized"
-                                press="onAddPress"
-                                class=""
-                            />
-                            <Button
-                                id="IdRePubNomDeleteBtnForRedlv"
-                                icon="sap-icon://delete"
-                                type="Reject"
-                                press="onDeletePress"
-                            />
-                        </contentRight>
+                        
                     </Bar>
                     <Table
                         id="IdRePubNomRedPointTable"
@@ -482,6 +472,7 @@
                                     value="{RedlvModelData>DNQ}"
                                     liveChange="OnReDeliveryDNQValidation"
                                     type="Number"
+                                    editable="false"
                                 />
                                 <Input
                                     id="IdRePubNomUOMInput2"
@@ -495,6 +486,7 @@
                                     valueFormat="HH:mm:ss"
                                     displayFormat="HH:mm"
                                     change="onTimeChange"
+                                    editable="false"
                                 />
                                 <TimePicker
                                     id="IdRePubNomRedvToTimePicker"
@@ -503,11 +495,13 @@
                                     valueFormat="HH:mm:ss"
                                     displayFormat="HH:mm"
                                     change="onTimeChange"
+                                    editable="false"
                                 />
                                 <Select
                                     id="IdRePubNomEventSelect2"
                                     selectedKey="{RedlvModelData>Event}"
                                       forceSelection="false"
+                                      editable="false"
 
                                 >
                                     <core:ListItem id="IdPubNomNneEvent" key="" text=""/>
@@ -537,24 +531,10 @@
                             placeholder="Remarks.."
                             width="100%"
                             textAlign="End"
+                            editable="false"
                         />
                     </InputListItem>
-                    <HBox class="sapUiTinyMarginTop">
-                        <Button
-                            id="IdRePubNomSubmitButton"
-                            text="Submit"
-                            class="sapUiTinyMarginBegin"
-                            type="Emphasized"
-                            press="updateNomination"
-                        />
-                        <Button
-                            id="IdRePubNomSimulateButton"
-                            text="Simulate"
-                            type="Emphasized"
-                            class="sapUiTinyMarginBegin"
-                            press="Onsimulate"
-                        />
-                    </HBox>
+                    
                 </Page>
             </l:SplitPane>
 

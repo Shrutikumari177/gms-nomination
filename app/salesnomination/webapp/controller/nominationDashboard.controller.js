@@ -20,7 +20,7 @@ sap.ui.define([
 
             publishDisplay: function () {
                 const reNom = this.getOwnerComponent().getRouter();
-                reNom.navTo("Routefdisplay");
+                reNom.navTo("RoutedisplayNomination");
             },
             OnImportNom: function () {
                 const reNom = this.getOwnerComponent().getRouter();

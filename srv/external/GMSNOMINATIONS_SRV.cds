@@ -1,4 +1,4 @@
-/* checksum : 693f7e88d8e79ec1748212b140a4b12d */
+/* checksum : b364c31aea17b8718b6ea3caaf5af0e4 */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -12,43 +12,15 @@ service GMSNOMINATIONS_SRV {};
 @sap.deletable : 'false'
 @sap.pageable : 'false'
 @sap.content.version : '1'
-entity GMSNOMINATIONS_SRV.znom_headSet {
-  @sap.unicode : 'false'
-  @sap.label : 'Sales Document'
-  @sap.creatable : 'false'
-  @sap.updatable : 'false'
-  @sap.sortable : 'false'
-  @sap.filterable : 'false'
-  key Vbeln : String(10) not null;
-  @odata.Type : 'Edm.DateTime'
-  @odata.Precision : 7
-  @sap.unicode : 'false'
-  @sap.label : 'Gas Day'
-  @sap.creatable : 'false'
-  @sap.updatable : 'false'
-  @sap.sortable : 'false'
-  @sap.filterable : 'false'
-  Gasday : Timestamp;
-  nomi_toitem : Association to many GMSNOMINATIONS_SRV.nomi_SaveSet {  };
-};
-
-@cds.external : true
-@cds.persistence.skip : true
-@sap.creatable : 'false'
-@sap.updatable : 'false'
-@sap.deletable : 'false'
-@sap.pageable : 'false'
-@sap.content.version : '1'
 entity GMSNOMINATIONS_SRV.nomi_SaveSet {
-  @odata.Type : 'Edm.DateTime'
-  @odata.Precision : 7
+  @sap.display.format : 'Date'
   @sap.unicode : 'false'
   @sap.label : 'Gas Day'
   @sap.creatable : 'false'
   @sap.updatable : 'false'
   @sap.sortable : 'false'
   @sap.filterable : 'false'
-  key Gasday : Timestamp not null;
+  key Gasday : Date not null;
   @sap.unicode : 'false'
   @sap.label : 'Sales Document'
   @sap.creatable : 'false'
@@ -64,12 +36,12 @@ entity GMSNOMINATIONS_SRV.nomi_SaveSet {
   @sap.filterable : 'false'
   ItemNo : String(6);
   @sap.unicode : 'false'
-  @sap.label : 'Nomination Item'
+  @sap.label : 'Nom. key item'
   @sap.creatable : 'false'
   @sap.updatable : 'false'
   @sap.sortable : 'false'
   @sap.filterable : 'false'
-  NomItem : String(5);
+  NomItem : String(10);
   @sap.unicode : 'false'
   @sap.label : 'Version'
   @sap.creatable : 'false'
@@ -91,6 +63,20 @@ entity GMSNOMINATIONS_SRV.nomi_SaveSet {
   @sap.sortable : 'false'
   @sap.filterable : 'false'
   RedelivryPoint : String(20);
+  @sap.unicode : 'false'
+  @sap.label : 'Customer'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  @sap.sortable : 'false'
+  @sap.filterable : 'false'
+  Shiptoparty : String(10);
+  @sap.unicode : 'false'
+  @sap.label : 'Vendor'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  @sap.sortable : 'false'
+  @sap.filterable : 'false'
+  Vendor : String(10);
   @sap.unicode : 'false'
   @sap.label : 'Time To'
   @sap.creatable : 'false'
@@ -305,6 +291,33 @@ entity GMSNOMINATIONS_SRV.nomi_SaveSet {
 @sap.creatable : 'false'
 @sap.updatable : 'false'
 @sap.deletable : 'false'
+@sap.pageable : 'false'
+@sap.content.version : '1'
+entity GMSNOMINATIONS_SRV.znom_headSet {
+  @sap.unicode : 'false'
+  @sap.label : 'Sales Document'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  @sap.sortable : 'false'
+  @sap.filterable : 'false'
+  key Vbeln : String(10) not null;
+  @odata.Type : 'Edm.DateTime'
+  @odata.Precision : 7
+  @sap.unicode : 'false'
+  @sap.label : 'Gas Day'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  @sap.sortable : 'false'
+  @sap.filterable : 'false'
+  Gasday : Timestamp;
+  nomi_toitem : Association to many GMSNOMINATIONS_SRV.nomi_SaveSet {  };
+};
+
+@cds.external : true
+@cds.persistence.skip : true
+@sap.creatable : 'false'
+@sap.updatable : 'false'
+@sap.deletable : 'false'
 @sap.content.version : '1'
 @sap.label : 'Create Nomination Data'
 entity GMSNOMINATIONS_SRV.xGMSxCREATENOMINATION {
@@ -319,10 +332,10 @@ entity GMSNOMINATIONS_SRV.xGMSxCREATENOMINATION {
   @sap.display.format : 'NonNegative'
   @sap.label : 'Sales Document Item'
   key ItemNo : String(6) not null;
-  @sap.display.format : 'UpperCase'
-  @sap.label : ''
-  @sap.quickinfo : 'Nomination Item'
-  key NomItem : String(5) not null;
+  @sap.display.format : 'NonNegative'
+  @sap.label : 'Nomination key item'
+  @sap.quickinfo : 'Nomination Key Item'
+  key NomItem : String(10) not null;
   @sap.display.format : 'UpperCase'
   @sap.label : 'Version'
   key Versn : String(3) not null;
@@ -333,6 +346,14 @@ entity GMSNOMINATIONS_SRV.xGMSxCREATENOMINATION {
   @sap.label : 'Redelivery Point'
   @sap.quickinfo : 'Re-Delivery Ponit'
   key RedelivryPoint : String(20) not null;
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Customer'
+  @sap.quickinfo : 'Customer Number'
+  shiptoparty : String(10);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Vendor'
+  @sap.quickinfo : 'Account Number of Vendor or Creditor'
+  vendor : String(10);
   @sap.label : 'Time To'
   @sap.quickinfo : 'Nomination Time'
   ValidTo : Time;
@@ -460,9 +481,16 @@ entity GMSNOMINATIONS_SRV.xGMSxFETCHNOMINATION {
   @sap.display.format : 'Date'
   @sap.label : 'Valid To'
   key Valid_To : Date not null;
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Service Profile'
+  Profile : String(40);
   @sap.label : 'Target Quantity UoM'
   @sap.semantics : 'unit-of-measure'
   UOM : String(3);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Nomination key'
+  @sap.quickinfo : 'Nomination (technical) Key'
+  nomtk : String(20);
   @sap.label : 'Contract Name'
   ContractDescription : String(40);
   @sap.display.format : 'UpperCase'

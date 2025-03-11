@@ -112,6 +112,13 @@
           ]
         },
         {
+          "name": "RoutedisplayNomination",
+          "pattern": "displayRenomination",
+          "target": [
+            "TargetdisplayNomination"
+          ]
+        },
+        {
           "name": "RouteSystemNom",
           "pattern": "systemNom",
           "target": [
@@ -131,6 +138,10 @@
         "TargetpublishRenomination": {
           "id": "publishRenomination",
           "name": "publishRenomination"
+        },
+        "TargetdisplayNomination": {
+          "id": "displayNomination",
+          "name": "displayNomination"
         },
         "TargetsystemNom": {
           "id": "systemNom",

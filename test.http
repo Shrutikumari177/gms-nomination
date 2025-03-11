@@ -2,12 +2,13 @@ GET http://localhost:4004/odata/v4/nomination-services/CreateSPSet('40000787')?$
 ###
 GET http://localhost:4004/odata/v4/nomination-services/getNominationsByCustomer?SoldToParty=1100000003
 
+
 ###
 
 GET http://localhost:4004/odata/v4/nomination-services/getContractDetailsAndPastNom?DocNo=40000932
 
 ####
-GET http://localhost:4004/odata/v4/nomination-services/getContractMatDetailsByGasday?DocNo=40000935&Gasday=2025-03-05
+GET http://localhost:4004/odata/v4/nomination-services/getContractMatDetailsByGasday?DocNo=40000942&Gasday=2025-03-15
 
 
 
@@ -30,11 +31,101 @@ GET http://localhost:4004/odata/v4/nomination-services/getContractDetailsAndPast
 GET http://localhost:4004/odata/v4/nomination-services/getContractDetail?DocNo=40000945&Material=2000000068&Redelivery_Point=BENGALURU
 ###
 
-GET http://localhost:4004/odata/v4/nomination-services/getRenominationContractData?DocNo=40000941&Material=2000000068&Redelivery_Point=C1100003&Gasday=2025-03-10
+GET http://localhost:4004/odata/v4/nomination-services/getRenominationContractData?DocNo=40000942&Material=2000000068&Redelivery_Point=C1100003&Gasday=2025-03-15
 
 
 
 ####
+GET http://localhost:4004/odata/v4/nomination-services/nomi_SaveSet(Gasday='2025-03-20',Vbeln='40000945')
+
+###
+GET http://localhost:4004/odata/v4/nomination-services/nomi_SaveSet?$filter=Gasday eq '2025-03-20',Vbeln eq '40000945'
+
+
+
+
+
+
+
+
+
+####
+
+####
+# PUT http://localhost:4004/odata/v4/nomination-services/nomi_SaveSet(Gasday='2025-03-17',Vbeln='40000942')
+# Content-Type: application/json
+
+# {
+#         "Gasday" : "2025-03-17",
+#         "Vbeln" : "40000942",
+#         "ItemNo" : "000010",
+#         "NomItem" : "10",
+#         "DeliveryPoint" : "",
+#         "RedelivryPoint" : "C1100003",
+#         "ValidTo" : "04:00:00",
+#         "ValidFrom" : "04:00:00",
+#         "Material" : "2000000068",
+#         "Timestamp" : null,
+#         "Nomtk" : "",
+#         "Kunnr" : "",
+#         "Auart" : "",
+#         "Ddcq" : "0.000",
+#         "Rdcq" : "0.000",
+#         "Uom1" : "MBT",
+#         "Pdnq" : "0.000",
+#         "Event" : "",
+#         "Adnq" : "0.000",
+#         "Rpdnq" : "2600.000",
+#         "Znomtk" : "",
+#         "Src" : "",
+#         "Remarks" : "",
+#         "Flag" : "",
+#         "Action" : "",
+#         "Path" : "",
+#         "CustGrp" : "",
+#         "SrvProfile" : ""
+#       }
+####
+PUT http://localhost:4004/odata/v4/nomination-services/nomi_SaveSet(Gasday='2025-03-17',Vbeln='40000942')
+Content-Type: application/json
+
+{
+  "Gasday": "2025-03-17",
+  "Vbeln": "40000942",
+  "ItemNo": "000010",
+  "NomItem": "10",
+  "DeliveryPoint": "",
+  "RedelivryPoint": "C1100003",
+  "ValidTo": "11:04:00",
+  "ValidFrom": "02:04:00",
+  "Material": "2000000068",
+  "Timestamp": null,
+  "Nomtk": "",
+  "Kunnr": "",
+  "Auart": "",
+  "Ddcq": "0.000",
+  "Rdcq": "0.000",
+  "Uom1": "MBT",
+  "Pdnq" : "0.000",
+  "Event": "",
+  "Adnq": "0.000",
+  "Rpdnq": "2900.000",
+  "Znomtk": "",
+  "Src": "",
+  "Remarks": "",
+  "Flag": "",
+  "Action": "",
+  "Path": "",
+  "CustGrp": "",
+  "SrvProfile": ""
+}
+
+
+####
+GET http://localhost:4004/odata/v4/odataservices/ZNOMCPDATA?$filter=Gasday eq 2025-02-10&vbeln eq '40000797'
+
+
+#####
 
 POST http://localhost:4004/odata/v4/nomination-services/znom_headSet
 Content-Type: application/json

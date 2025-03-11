@@ -433,7 +433,7 @@ sap.ui.define([
 				this._lastValidatedValue = sValue;
 		
 				this._validationTimeout = setTimeout(async () => {
-					if (sValue.length >= 2) { 
+					if (sValue.length >= 1) { 
 						try {
 							await HelperFunction.validateDNQ(oView, valueMap, customerValue);
 						} catch (err) {
@@ -476,7 +476,7 @@ sap.ui.define([
 				this._lastValidatedValue = sValue;
 		
 				this._validationTimeout = setTimeout(async () => {
-					if (sValue.length >= 2) { 
+					if (sValue.length >= 1) { 
 						try {
 							await HelperFunction.validateDNQ(oView, valueMap, customerValue);
 						} catch (err) {
@@ -677,8 +677,7 @@ sap.ui.define([
 		
 		onCloseSimulateDialog: function () {
 			this._simulateDialog.close();
-			// sap.ui.getCore().byId("projectedImbalance").setValue("");
-			// sap.ui.getCore().byId("probablePenalty").setValue("");
+		
 		},
 		Onsimulate: function () {
 			//         const oEventBus = sap.ui.getCore().getEventBus();
@@ -691,8 +690,8 @@ sap.ui.define([
 			// Open the dialog
 			this._simulateDialog.open();
 
-			const dnqValue = this.getView().byId("dnqGSA").getValue(); // Assuming you have an input field for DNQ
-			const gasDay = this.getView().byId("selectedDate").getDateValue(); // Assuming you have a date picker for Gas Day
+			const dnqValue = this.getView().byId("dnqGSA").getValue();
+			const gasDay = this.getView().byId("selectedDate").getDateValue(); 
 
 			sap.ui.getCore().getEventBus().publish("chartUpdate", "addDNQPoint", {
 				dnq: Number(dnqValue),
