@@ -36,7 +36,7 @@ GET http://localhost:4004/odata/v4/nomination-services/getRenominationContractDa
 
 
 ####
-GET http://localhost:4004/odata/v4/nomination-services/nomi_SaveSet(Gasday='2025-03-20',Vbeln='40000945')
+GET http://localhost:4004/odata/v4/nomination-services/nomi_SaveSet(Gasday='2025-03-24',Vbeln='40000945')
 
 ###
 GET http://localhost:4004/odata/v4/nomination-services/nomi_SaveSet?$filter=Gasday eq '2025-03-20',Vbeln eq '40000945'
