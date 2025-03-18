@@ -31,7 +31,7 @@ GET http://localhost:4004/odata/v4/nomination-services/getContractDetailsAndPast
 GET http://localhost:4004/odata/v4/nomination-services/getContractDetail?DocNo=40000945&Material=2000000068&Redelivery_Point=BENGALURU
 ###
 
-GET http://localhost:4004/odata/v4/nomination-services/getRenominationContractData?DocNo=40000942&Material=2000000068&Redelivery_Point=C1100003&Gasday=2025-03-15
+GET http://localhost:4004/odata/v4/nomination-services/getRenominationContractData?DocNo=40000945&Material=2000000068&Redelivery_Point=BENGALURU&Gasday=2025-03-24
 
 
 
@@ -39,7 +39,7 @@ GET http://localhost:4004/odata/v4/nomination-services/getRenominationContractDa
 GET http://localhost:4004/odata/v4/nomination-services/nomi_SaveSet(Gasday='2025-03-24',Vbeln='40000945')
 
 ###
-GET http://localhost:4004/odata/v4/nomination-services/nomi_SaveSet?$filter=Gasday eq '2025-03-20',Vbeln eq '40000945'
+GET http://localhost:4004/odata/v4/nomination-services/nomi_SaveSet?$filter=Gasday eq '2025-03-31'&Vbeln eq '40000945'
 
 
 
@@ -86,30 +86,30 @@ GET http://localhost:4004/odata/v4/nomination-services/nomi_SaveSet?$filter=Gasd
 #         "SrvProfile" : ""
 #       }
 ####
-PUT http://localhost:4004/odata/v4/nomination-services/nomi_SaveSet(Gasday='2025-03-17',Vbeln='40000942')
+PUT http://localhost:4004/odata/v4/nomination-services/nomi_SaveSet(Gasday='2025-03-24',Vbeln='40000945')
 Content-Type: application/json
 
 {
-  "Gasday": "2025-03-17",
-  "Vbeln": "40000942",
+  "Gasday": "2025-03-24",
+  "Vbeln": "40000945",
   "ItemNo": "000010",
-  "NomItem": "10",
-  "DeliveryPoint": "",
-  "RedelivryPoint": "C1100003",
-  "ValidTo": "11:04:00",
-  "ValidFrom": "02:04:00",
+  "NomItem": "0000000010",
+  "DeliveryPoint": "AMRELI",
+  "RedelivryPoint": "",
+  "ValidTo": "10:04:00",
+  "ValidFrom": "06:04:00",
   "Material": "2000000068",
   "Timestamp": null,
   "Nomtk": "",
   "Kunnr": "",
   "Auart": "",
-  "Ddcq": "0.000",
+  "Ddcq": "2000.000",
   "Rdcq": "0.000",
   "Uom1": "MBT",
-  "Pdnq" : "0.000",
-  "Event": "",
+  "Pdnq" : "2200.000",
+  "Event": "No-event",
   "Adnq": "0.000",
-  "Rpdnq": "2900.000",
+  "Rpdnq": "0.000",
   "Znomtk": "",
   "Src": "",
   "Remarks": "",
@@ -119,6 +119,44 @@ Content-Type: application/json
   "CustGrp": "",
   "SrvProfile": ""
 }
+
+
+####
+POST http://localhost:4004/odata/v4/nomination-services/updateNomination
+Content-Type: application/json
+
+{
+  "Gasday": "2025-03-24",
+  "Vbeln": "40000945",
+  "ItemNo": "000010",
+  "NomItem": "0000000010",
+  "DeliveryPoint": "AMRELI",
+  "RedelivryPoint": "",
+  "ValidTo": "10:04:00",
+  "ValidFrom": "07:04:00",
+  "Material": "2000000068",
+  "Timestamp": null,
+  "Nomtk": "",
+  "Kunnr": "",
+  "Auart": "",
+  "Ddcq": "2000.000",
+  "Rdcq": "0.000",
+  "Uom1": "MBT",
+  "Pdnq" : "2000.000",
+  "Event": "No-event",
+  "Adnq": "0.000",
+  "Rpdnq": "0.000",
+  "Znomtk": "",
+  "Src": "",
+  "Remarks": "",
+  "Flag": "",
+  "Action": "",
+  "Path": "",
+  "CustGrp": "",
+  "SrvProfile": ""
+}
+
+
 
 
 ####

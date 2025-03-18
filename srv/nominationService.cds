@@ -8,11 +8,45 @@ using GMSNOMINATIONS_SRV from './external/GMSNOMINATIONS_SRV.cds';
 service nominationServices {
 
 
-    function getNominationsByCustomer(SoldToParty : String) returns array of String;
-    function getContractDetailsAndPastNom(DocNo : String)                  returns array of String;
-    function getContractDetail(DocNo : String , Material : String,Redelivery_Point:String)                  returns array of String;
-    function getContractMatDetailsByGasday(Gasday : Date,DocNo : String) returns array of String;
-    function getRenominationContractData(DocNo : String , Material : String,Redelivery_Point:String ,Gasday:Date)                   returns array of String;
+    function getNominationsByCustomer(SoldToParty : String)                                                           returns array of String;
+    function getContractDetailsAndPastNom(DocNo : String)                                                             returns array of String;
+    function getContractDetail(DocNo : String, Material : String, Redelivery_Point : String)                          returns array of String;
+    function getContractMatDetailsByGasday(Gasday : Date, DocNo : String)                                             returns array of String;
+    function getRenominationContractData(DocNo : String, Material : String, Redelivery_Point : String, Gasday : Date) returns array of String;
+
+
+    type NominationDataType {
+    Gasday : Date;
+    Vbeln : String;
+    ItemNo : String;
+    NomItem : String;
+    DeliveryPoint : String;
+    RedelivryPoint : String;
+    ValidTo : Time;
+    ValidFrom : Time;
+    Material : String;
+    Timestamp : Timestamp;
+    Nomtk : String;
+    Kunnr : String;
+    Auart : String;
+    Ddcq : Decimal;
+    Rdcq : Decimal;
+    Uom1 : String;
+    Pdnq : Decimal;
+    Event : String;
+    Adnq : Decimal;
+    Rpdnq : Decimal;
+    Znomtk : String;
+    Src : String;
+    Remarks : String;
+    Flag : String;
+    Action : String;
+    Path : String;
+    CustGrp : String;
+    SrvProfile : String;
+}
+
+action updateNomination(nominations : array of NominationDataType) returns String;
 
     entity ZNOMCPDATA                    as
         projection on ZNOM_CREATE_SRV.ZNOMCPDATA {
@@ -121,19 +155,116 @@ service nominationServices {
                 DocType
         };
 
-    entity nomi_SaveSet as projection on GMSNOMINATIONS_SRV.nomi_SaveSet
-    {        key Gasday, key Vbeln, ItemNo, NomItem, Versn, DeliveryPoint, RedelivryPoint, Shiptoparty, Vendor, ValidTo, ValidFrom, Material, Timestamp, Nomtk, Kunnr, Auart, Ddcq, Rdcq, Uom1, Pdnq, Event, Adnq, Rpdnq, Znomtk, Src, Remarks, Flag, Action, Path, CustGrp, SrvProfile, Createdby, Createddate, Createdtime, Changedby, Changeddate, Changedtime     }    
-;
-     entity xGMSxCREATENOMINATION as projection on GMSNOMINATIONS_SRV.xGMSxCREATENOMINATION
-    {        key Gasday, key Vbeln, key ItemNo, key NomItem, key Versn, key DeliveryPoint, key RedelivryPoint, shiptoparty, vendor, ValidTo, ValidFrom, Material, Timestamp, Nomtk, Kunnr, Auart, Ddcq, Rdcq, Uom1, Pdnq, Event, Adnq, Rpdnq, Znomtk, Src, Remarks, Flag, Action, Path, CustGrp, SrvProfile, Createdby, Createddate, Createdtime, Changedby, Changeddate, Changedtime     }    
-;
-   
-    entity znom_headSet as projection on GMSNOMINATIONS_SRV.znom_headSet
-    {        Gasday, key Vbeln   , nomi_toitem  }    
-;
-       entity xGMSxFETCHNOMINATION as projection on GMSNOMINATIONS_SRV.xGMSxFETCHNOMINATION
-    {        key DocNo, key Item, key Delivery_Point, key Redelivery_Point, key Material, key Delivery_Dcq, key Redelivery_Dcq, key Valid_Form, key Valid_To, Profile, UOM, nomtk, ContractDescription, Calculated_Value, Contracttype, Clause_Code, SoldToParty     }    
-;
+    entity nomi_SaveSet                  as
+        projection on GMSNOMINATIONS_SRV.nomi_SaveSet {
+            key Gasday,
+            key Vbeln,
+                ItemNo,
+                NomItem,
+                Versn,
+                DeliveryPoint,
+                RedelivryPoint,
+                Shiptoparty,
+                Vendor,
+                ValidTo,
+                ValidFrom,
+                Material,
+                Timestamp,
+                Nomtk,
+                Kunnr,
+                Auart,
+                Ddcq,
+                Rdcq,
+                Uom1,
+                Pdnq,
+                Event,
+                Adnq,
+                Rpdnq,
+                Znomtk,
+                Src,
+                Remarks,
+                Flag,
+                Action,
+                Path,
+                CustGrp,
+                SrvProfile,
+                Createdby,
+                Createddate,
+                Createdtime,
+                Changedby,
+                Changeddate,
+                Changedtime
+        };
+
+    entity xGMSxCREATENOMINATION         as
+        projection on GMSNOMINATIONS_SRV.xGMSxCREATENOMINATION {
+            key Gasday,
+            key Vbeln,
+            key ItemNo,
+            key NomItem,
+            key Versn,
+            key DeliveryPoint,
+            key RedelivryPoint,
+                shiptoparty,
+                vendor,
+                ValidTo,
+                ValidFrom,
+                Material,
+                Timestamp,
+                Nomtk,
+                Kunnr,
+                Auart,
+                Ddcq,
+                Rdcq,
+                Uom1,
+                Pdnq,
+                Event,
+                Adnq,
+                Rpdnq,
+                Znomtk,
+                Src,
+                Remarks,
+                Flag,
+                Action,
+                Path,
+                CustGrp,
+                SrvProfile,
+                Createdby,
+                Createddate,
+                Createdtime,
+                Changedby,
+                Changeddate,
+                Changedtime
+        };
+
+    entity znom_headSet                  as
+        projection on GMSNOMINATIONS_SRV.znom_headSet {
+                Gasday,
+            key Vbeln,
+                nomi_toitem
+        };
+
+    entity xGMSxFETCHNOMINATION          as
+        projection on GMSNOMINATIONS_SRV.xGMSxFETCHNOMINATION {
+            key DocNo,
+            key Item,
+            key Delivery_Point,
+            key Redelivery_Point,
+            key Material,
+            key Delivery_Dcq,
+            key Redelivery_Dcq,
+            key Valid_Form,
+            key Valid_To,
+                Profile,
+                UOM,
+                nomtk,
+                ContractDescription,
+                Calculated_Value,
+                Contracttype,
+                Clause_Code,
+                SoldToParty
+        };
+
     entity ZNOMMASTER15                  as
         projection on GMSNOMCP_GMS_SRV.ZNOMMASTER15 {
             key ExchangeAgreement,
@@ -251,7 +382,7 @@ service nominationServices {
 
 
     entity pathAndFuelMapping            as projection on GMS_CONFIG.pathAndFuelMapping;
-    entity Nominationlogic            as projection on GMS_CONFIG.Nominationlogic;
+    entity Nominationlogic               as projection on GMS_CONFIG.Nominationlogic;
     entity serviceProfileParametersItems as projection on GMS_CONFIG.serviceProfileParametersItems;
     entity ServiceProfileMaster          as projection on GMS_CONFIG.ServiceProfileMaster;
     entity transportAgreementDetail      as projection on db.transportAgreementDetail;

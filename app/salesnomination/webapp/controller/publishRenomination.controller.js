@@ -382,7 +382,7 @@ sap.ui.define([
 				this._lastValidatedValue = sValue;
 
 				this._validationTimeout = setTimeout(async () => {
-					if (sValue.length >= 2) {
+					if (sValue.length >= 1) {
 						try {
 							await HelperFunction.validateDNQ(oView, valueMap, customerValue);
 						} catch (err) {
@@ -425,7 +425,7 @@ sap.ui.define([
 				this._lastValidatedValue = sValue;
 
 				this._validationTimeout = setTimeout(async () => {
-					if (sValue.length >= 2) {
+					if (sValue.length >= 1) {
 						try {
 							await HelperFunction.validateDNQ(oView, valueMap, customerValue);
 						} catch (err) {
@@ -549,97 +549,156 @@ sap.ui.define([
 
 
 
+		
 		updateNomination: async function () {
+			let oBusyDialog = new sap.m.BusyDialog();
+		
 			try {
+				oBusyDialog.open(); // Show Busy Dialog
+		
 				let Gasday = this.getView().byId("IdRePubNomGasDayPicker").getDateValue();
 				if (!Gasday) {
 					sap.m.MessageBox.error("Please select a Gas Day!");
 					oBusyDialog.close();
 					return;
 				}
-
+		
 				const oDateFormat = sap.ui.core.format.DateFormat.getDateInstance({ pattern: "yyyy-MM-dd" });
-				Gasday = oDateFormat.format(Gasday);
-
+				let formattedGasday = oDateFormat.format(Gasday);
+		
+				// Fetch models
 				const oModelDataRedlv = this.getView().getModel("RedlvModelData").getData();
 				const oModelDataDelv = this.getView().getModel("DelvModelData").getData();
 				const selectedMaterialData = this.getView().getModel("contDataModel").getData();
-
-				let updatePayload = {
-					Gasday: Gasday,
-					Vbeln: selectedMaterialData.DocNo ? selectedMaterialData.DocNo : "",
-					ItemNo: "10",
-					Material: selectedMaterialData.Material ? selectedMaterialData.Material : "",
-					Auart: "ZGSA",
-					Ddcq: selectedMaterialData.Delivery_Dcq ? selectedMaterialData.Delivery_Dcq : "0.000",
-					Rdcq: selectedMaterialData.Redelivery_Dcq ? selectedMaterialData.Redelivery_Dcq : "0.000",
-					Uom1: (oModelDataRedlv.RedeliveryPoints && oModelDataRedlv.RedeliveryPoints[0] && oModelDataRedlv.RedeliveryPoints[0].UOM)
-						? oModelDataRedlv.RedeliveryPoints[0].UOM
-						: (oModelDataDelv.DeliveryPoints && oModelDataDelv.DeliveryPoints[0] && oModelDataDelv.DeliveryPoints[0].UOM)
-							? oModelDataDelv.DeliveryPoints[0].UOM
-							: "",
-					Pdnq: (oModelDataDelv.DeliveryPoints && oModelDataDelv.DeliveryPoints[0] && oModelDataDelv.DeliveryPoints[0].DNQ)
-						? oModelDataDelv.DeliveryPoints[0].DNQ
-						: "0.000",
-					Rpdnq: (oModelDataRedlv.RedeliveryPoints && oModelDataRedlv.RedeliveryPoints[0] && oModelDataRedlv.RedeliveryPoints[0].DNQ)
-						? oModelDataRedlv.RedeliveryPoints[0].DNQ
-						: "0.000",
-					Event: (oModelDataRedlv.RedeliveryPoints && oModelDataRedlv.RedeliveryPoints[0] && oModelDataRedlv.RedeliveryPoints[0].Event)
-						? oModelDataRedlv.RedeliveryPoints[0].Event
-						: (oModelDataDelv.DeliveryPoints && oModelDataDelv.DeliveryPoints[0] && oModelDataDelv.DeliveryPoints[0].Event)
-							? oModelDataDelv.DeliveryPoints[0].Event
-							: "",
-					ValidFrom: (oModelDataRedlv.RedeliveryPoints && oModelDataRedlv.RedeliveryPoints[0] && oModelDataRedlv.RedeliveryPoints[0].FromT)
-						? oModelDataRedlv.RedeliveryPoints[0].FromT
-						: (oModelDataDelv.DeliveryPoints && oModelDataDelv.DeliveryPoints[0] && oModelDataDelv.DeliveryPoints[0].FromT)
-							? oModelDataDelv.DeliveryPoints[0].FromT
-							: "",
-					ValidTo: (oModelDataRedlv.RedeliveryPoints && oModelDataRedlv.RedeliveryPoints[0] && oModelDataRedlv.RedeliveryPoints[0].ToT)
-						? oModelDataRedlv.RedeliveryPoints[0].ToT
-						: (oModelDataDelv.DeliveryPoints && oModelDataDelv.DeliveryPoints[0] && oModelDataDelv.DeliveryPoints[0].ToT)
-							? oModelDataDelv.DeliveryPoints[0].ToT
-							: "",
-					DeliveryPoint: selectedMaterialData.Delivery_Point ? selectedMaterialData.Delivery_Point : "",
-					RedelivryPoint: selectedMaterialData.Redelivery_Point ? selectedMaterialData.Redelivery_Point : ""
-				};
-
-
-
-
-				const sPath = `/nomi_SaveSet(Gasday='${Gasday}',Vbeln='${selectedMaterialData.DocNo}')`;
-
-				console.log("sPath", sPath);
-
-				let oModelgetNom = this.getOwnerComponent().getModel();
-				const oBindingNom = oModelgetNom.bindContext(sPath, null, {});
-
-				const oData = await oBindingNom.requestObject();
-				console.log("Fetched Data:", oData);
-				const oContext = oBindingNom.getBoundContext();
-
-				if (oContext) {
-					 oContext.setProperty("Rpdnq", updatePayload.Rpdnq); 
-					 oContext.setProperty("Pdnq", updatePayload.Pdnq); 
-
-					 oContext.setProperty("ValidFrom", updatePayload.ValidFrom); 
-
-					 oContext.setProperty("ValidTo", updatePayload.ValidTo); 
-					 oContext.setProperty("Event", updatePayload.Event); 
-
-					 
-
-					await oModelgetNom.submitBatch(oModelgetNom.getUpdateGroupId());
-					sap.m.MessageToast.show("Rpdnq updated successfully!");
+		
+				let nomi_toitem = [];
+		
+				if (selectedMaterialData.Delivery_Point) {
+					nomi_toitem.push({
+						Gasday: formattedGasday,
+						Vbeln: selectedMaterialData.DocNo,
+						ItemNo: "10",
+						NomItem: "20",
+						DeliveryPoint: selectedMaterialData.Delivery_Point,
+						RedelivryPoint: "",
+						ValidTo: oModelDataDelv.DeliveryPoints[0]?.ToT || "",
+						ValidFrom: oModelDataDelv.DeliveryPoints[0]?.FromT || "",
+						Material: selectedMaterialData.Material,
+						Auart: "ZGSA",
+						Ddcq: selectedMaterialData.Delivery_Dcq || 0.000,
+						Uom1: oModelDataDelv.DeliveryPoints[0]?.UOM || "",
+						Pdnq: oModelDataDelv.DeliveryPoints[0]?.DNQ 
+							  && !isNaN(oModelDataDelv.DeliveryPoints[0]?.DNQ) 
+							  ? parseFloat(oModelDataDelv.DeliveryPoints[0]?.DNQ) 
+							  : 0.000,
+						Event: oModelDataDelv.DeliveryPoints[0]?.Event || "",
+						Adnq: 0.000,
+						Rpdnq: 0.000, // No redelivery value for this entry
+						Znomtk: "",
+						Src: "",
+						Remarks: "",
+						Flag: "",
+						Action: "",
+						Path: "",
+						CustGrp: "",
+						SrvProfile: "",
+					});
+		
+					nomi_toitem.push({
+						Gasday: formattedGasday,
+						Vbeln: selectedMaterialData.DocNo,
+						ItemNo: "10",
+						NomItem: "10",
+						DeliveryPoint: "",
+						RedelivryPoint: selectedMaterialData.Redelivery_Point,
+						ValidTo: oModelDataRedlv.RedeliveryPoints[0]?.ToT || "",
+						ValidFrom: oModelDataRedlv.RedeliveryPoints[0]?.FromT || "",
+						Material: selectedMaterialData.Material,
+						Auart: "ZGSA",
+						Ddcq: 0.000,
+						Rdcq: selectedMaterialData.Redelivery_Dcq || 0.000,
+						Uom1: oModelDataRedlv.RedeliveryPoints[0]?.UOM || "",
+						Event: oModelDataRedlv.RedeliveryPoints[0]?.Event || "",
+						Adnq: 0.000,
+						Rpdnq: oModelDataRedlv.RedeliveryPoints[0]?.DNQ 
+							   && !isNaN(oModelDataRedlv.RedeliveryPoints[0]?.DNQ) 
+							   ? parseFloat(oModelDataRedlv.RedeliveryPoints[0]?.DNQ) 
+							   : 0.000,
+						Znomtk: "",
+						Src: "",
+						Remarks: "",
+						Flag: "",
+						Action: "",
+						Path: "",
+						CustGrp: "",
+						SrvProfile: "",
+					});
 				} else {
-					sap.m.MessageBox.error("Failed to bind context for update.");
+					nomi_toitem.push({
+						Gasday: formattedGasday,
+						Vbeln: selectedMaterialData.DocNo,
+						ItemNo: "10",
+						NomItem: "10",
+						DeliveryPoint: "",
+						RedelivryPoint: selectedMaterialData.Redelivery_Point,
+						ValidTo: oModelDataRedlv.RedeliveryPoints[0]?.ToT || "",
+						ValidFrom: oModelDataRedlv.RedeliveryPoints[0]?.FromT || "",
+						Material: selectedMaterialData.Material,
+						Auart: "ZGSA",
+						Ddcq: 0.000,
+						Rdcq: selectedMaterialData.Redelivery_Dcq || 0.000,
+						Uom1: oModelDataRedlv.RedeliveryPoints[0]?.UOM || "",
+						Event: oModelDataRedlv.RedeliveryPoints[0]?.Event || "",
+						Adnq: 0.000,
+						Rpdnq: oModelDataRedlv.RedeliveryPoints[0]?.DNQ 
+							   && !isNaN(oModelDataRedlv.RedeliveryPoints[0]?.DNQ) 
+							   ? parseFloat(oModelDataRedlv.RedeliveryPoints[0]?.DNQ) 
+							   : 0.000,
+						Znomtk: "",
+						Src: "",
+						Remarks: "",
+						Flag: "",
+						Action: "",
+						Path: "",
+						CustGrp: "",
+						SrvProfile: "",
+					});
 				}
-
-				
+		
+				// **Get OData Model**
+				var oModel = this.getOwnerComponent().getModel();
+				if (!oModel) {
+					throw new Error("OData V4 model not found.");
+				}
+		
+				// **Bind Context to OData Action**
+				let sAction = "/updateNomination";
+				const oContext = oModel.bindContext(`${sAction}(...)`, undefined);
+		
+				// **Set Payload as a Parameter**
+				oContext.setParameter("nominations", nomi_toitem);
+		
+				// **Execute Action**
+				await oContext.execute();
+		
+				// **Success Message**
+				sap.m.MessageToast.show("Nomination updated successfully!");
 			} catch (error) {
 				console.error("Error updating nomination:", error);
 				sap.m.MessageBox.error("Failed to update nomination. Please try again.");
+			} finally {
+				oBusyDialog.close(); // Ensure busy dialog is closed in all cases
 			}
 		},
+		
+		
+		
+	
+		
+		
+		
+
+
 
 
 
