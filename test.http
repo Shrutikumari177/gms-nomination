@@ -5,7 +5,7 @@ GET http://localhost:4004/odata/v4/nomination-services/getNominationsByCustomer?
 
 ###
 
-GET http://localhost:4004/odata/v4/nomination-services/getContractDetailsAndPastNom?DocNo=40000932
+GET http://localhost:4004/odata/v4/nomination-services/getContractDetailsAndPastNom?DocNo='40000932'
 
 ####
 GET http://localhost:4004/odata/v4/nomination-services/getContractMatDetailsByGasday?DocNo=40000942&Gasday=2025-03-15
@@ -158,3 +158,24 @@ Content-Type: application/json
 # ]
 
 # }
+
+
+#####
+POST http://localhost:4004/odata/v4/nomination-services/systemNomination
+Content-Type: application/json
+
+{
+ 
+  "Vbeln": "1234567890",
+  "soldToParty": "100001",
+  "Material": "M-12345",
+  "Rdcq": 500,
+  "Uom": "MT",
+  "RedelivryPoint": "RDP-001",
+  "Rpdnq": 200,
+  "ValidTo": "09:06:00",
+  "ValidFrom": "10:06:08"
+}
+
+#######
+GET http://localhost:4004/odata/v4/nomination-services/getContractDetail?DocNo= '40000932' &Material='2000000068'&Redelivery_Point='C1100003'

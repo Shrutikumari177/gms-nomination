@@ -11,15 +11,23 @@
     "@sap-cloud-sdk/http-client": "^3.24.0",
     "@sap-cloud-sdk/resilience": "^3.24.0",
     "@sap/cds": "^8.5.1",
+    "@sap/jobs-client": "^1.8.6",
+    "@sap/xssec": "^4",
     "express": "^4.21.2"
   },
   "devDependencies": {
     "@cap-js/cds-types": "^0.7.0",
-    "@cap-js/sqlite": "^1"
+    "@cap-js/sqlite": "^1",
+    "@sap/cds-dk": "^8.8.1",
+    "rimraf": "^5.0.5",
+    "mbt": "^1.2.29"
   },
   "scripts": {
     "start": "cds-serve",
-    "watch-salesnomination": "cds watch --open salesnomination/webapp/index.html?sap-ui-xx-viewCache=false"
+    "watch-salesnomination": "cds watch --open salesnomination/webapp/index.html?sap-ui-xx-viewCache=false",
+    "undeploy": "cf undeploy iGMS_NOMINATION --delete-services --delete-service-keys --delete-service-brokers",
+    "build": "rimraf resources mta_archives && mbt build --mtar archive",
+    "deploy": "cf deploy mta_archives/archive.mtar --retries 1"
   },
   "cds": {
     "sql": {
@@ -106,6 +114,10 @@
         },
         "csrf": true,
         "csrfInBatch": true
+      },
+      "[production]": {
+        "auth": "xsuaa",
+        "db": "hana"
       }
     }
   }

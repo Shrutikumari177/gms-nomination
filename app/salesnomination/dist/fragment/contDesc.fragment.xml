@@ -1,0 +1,25 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+
+    <SelectDialog
+        id="contDesc1"
+        noDataText="No Description Found"
+        title="Select Contract Description"
+        search="onValueHelpSearchContDesc"
+        liveChange="onValueHelpSearchContDesc"
+        confirm="onValueHelpConfirmContDesc"
+        cancel="onValueHelpCancelContDesc"
+            items="{
+            path: '/ZNOMMASTER8',
+            parameters: {
+                $expand: 'to_contract($filter=DocType eq \'S\';$expand=to_material($expand=to_rdp))'
+            }
+        }">
+        <StandardListItem id="_IDGenStandardListItemContDesc"
+            title="{customerModel>ContractDescription}"
+            iconDensityAware="false"
+            iconInset="false"
+            type="Active" />
+    </SelectDialog>
+</core:FragmentDefinition>

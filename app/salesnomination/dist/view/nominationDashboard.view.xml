@@ -1,0 +1,96 @@
+<mvc:View xmlns:tnt="sap.tnt"
+    controllerName="com.ingenx.nomination.salesnomination.controller.nominationDashboard"
+    xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true"
+    xmlns="sap.m"
+>
+    <tnt:ToolHeader
+            id="IdSalesNominationDashToolheader"
+            class="sapUiTinyMarginBottom sapUiTinyMarginTop"
+        >
+            <Title
+                id="IdSalesNominationDash"
+                textAlign="Center"
+                text="Sales Nomination"
+                wrapping="false"
+                width="100%"
+                level="H1"
+            >
+            </Title>
+            <ToolbarSpacer id="IdSalehNomToolbarSpacer" />
+</tnt:ToolHeader>
+    <Page
+        id="page"
+        showHeader="false"
+    >
+        <content>
+            <GenericTile
+                id="_IDGenGenericTile1"
+                class="sapUiSmallMarginBegin sapUiSmallMarginTop tileLayout"
+                header="Publish Gas Nomination"
+                press="publishNom"
+            >
+                <TileContent id="_IDGenTileContent1">
+                    <ImageContent
+                        id="_IDGenImageContent1"
+                        src="sap-icon://decision"
+                    />
+                </TileContent>
+            </GenericTile>
+
+            <GenericTile
+                id="_IDGenGenericTile2"
+                class="sapUiSmallMarginBegin sapUiSmallMarginTop tileLayout"
+                header="ReNomination"
+                press="publishReNom"
+            >
+                <TileContent id="_IDGenTileContent2">
+                    <ImageContent
+                        id="_IDGenImageContent2"
+                        src="sap-icon://clinical-order"
+                    />
+                </TileContent>
+            </GenericTile>
+
+            <GenericTile
+                id="_IDGenGenericTile3"
+                class="sapUiSmallMarginBegin sapUiSmallMarginTop tileLayout"
+                header="Display Gas Nomination"
+                press="publishDisplay"
+            >
+                <TileContent id="_IDGenTileContent3">
+                    <ImageContent
+                        id="_IDGenImageContent3"
+                        src="sap-icon://sys-find"
+                    />
+                </TileContent>
+            </GenericTile>
+            <GenericTile
+                id="_IDGenGenericTile5"
+                class="sapUiSmallMarginBegin sapUiSmallMarginTop tileLayout"
+                header="Import Excel Nomination"
+                press="OnImportNom"
+            >
+                <TileContent id="_IDGenTileContent5">
+                    <ImageContent
+                        id="_IDGenImageContent5"
+                        src="sap-icon://excel-attachment"
+                    />
+                </TileContent>
+            </GenericTile>
+            <GenericTile
+                id="systemAutomation"
+                class="sapUiSmallMarginBegin sapUiSmallMarginTop tileLayout"
+                header="System Nomination"
+                press="OnSysNom"
+            >
+                <TileContent id="_IDGenTileContent6">
+                    <ImageContent
+                        id="_IDGenImageContent6"
+                        src="sap-icon://list"
+                    />
+                </TileContent>
+            </GenericTile>
+        </content>
+    </Page>
+</mvc:View>
