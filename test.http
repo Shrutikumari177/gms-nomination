@@ -28,10 +28,10 @@ Content-Type: application/json
 GET http://localhost:4004/odata/v4/nomination-services/getContractDetailsAndPastNom?DocNo=40000941
 
 ####
-GET http://localhost:4004/odata/v4/nomination-services/getContractDetail?DocNo=40000945&Material=2000000068&Redelivery_Point=BENGALURU
+GET http://localhost:4004/odata/v4/nomination-services/getContractDetail?DocNo=40000932&Material=2000000068&Redelivery_Point=C1100003
 ###
 
-GET http://localhost:4004/odata/v4/nomination-services/getRenominationContractData?DocNo=40000945&Material=2000000068&Redelivery_Point=BENGALURU&Gasday=2025-03-24
+GET http://localhost:4004/odata/v4/nomination-services/getRenominationContractData?DocNo=40000932&Material=2000000068&Redelivery_Point=BENGALURU&Gasday=2025-03-24
 
 
 

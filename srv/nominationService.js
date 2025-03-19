@@ -382,7 +382,6 @@ module.exports = cds.service.impl(async (srv) => {
             const { nominations } = req.data;  // Explicitly extract `nominations`
             console.log("Received Data:", nominations);
     
-            // Expecting an array
             if (!Array.isArray(nominations) || nominations.length === 0) {
                 return req.error(400, "Invalid nominations data. Expected a non-empty array.");
             }
@@ -398,13 +397,11 @@ module.exports = cds.service.impl(async (srv) => {
     
                 if (!Gasday || !Vbeln) {
                     updateResults.push({ Gasday, Vbeln, status: "Missing required fields: Gasday or Vbeln" });
-                    continue;  // Skip this iteration instead of stopping execution
+                    continue;
                 }
     
-                // Format Gasday properly
                 const formattedGasday = new Date(Gasday).toISOString().split("T")[0];
     
-                // Construct update query
                 const query = UPDATE('nomi_SaveSet')
                     .set({
                         ItemNo, NomItem, DeliveryPoint, RedelivryPoint, ValidTo, ValidFrom,
@@ -413,8 +410,7 @@ module.exports = cds.service.impl(async (srv) => {
                     })
                     .where({ Gasday: formattedGasday, Vbeln });
     
-                // Execute update
-                const affectedRows = await GMSNOMINATIONS_SRV.run(query) // Use `cds.run(query)` instead of `GMSNOMINATIONS_SRV.run(query)`
+                const affectedRows = await GMSNOMINATIONS_SRV.run(query) 
     
                 updateResults.push({
                     Gasday, 

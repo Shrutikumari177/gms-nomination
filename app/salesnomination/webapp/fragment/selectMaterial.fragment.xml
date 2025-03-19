@@ -6,12 +6,12 @@
         id="selectMaterial"
         noDataText="Loading ..."
         title="Select Material"
-        confirm="onConfirmMat"
-        items="{path: 'materialModel>/selectedMaterials'}">
+        confirm="onValueHelpConfirmMaterial"
+        items="{materialModel>/data}">
 
         <StandardListItem id="selectMaterials"
             title="{materialModel>Material}"
-            description="{materialModel>RedeliveryPt}"
+            description="{materialModel>Redelivery_Point}"
             type="Active" />
     </SelectDialog>
 </core:FragmentDefinition>

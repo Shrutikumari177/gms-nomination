@@ -1,84 +1,123 @@
-<mvc:View xmlns:tnt="sap.tnt"
-    controllerName="com.ingenx.nomination.salesnomination.controller.systemNom"
-    xmlns:mvc="sap.ui.core.mvc"
-    xmlns="sap.m"
+<mvc:View
+    xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns:semantic="sap.m.semantic"
     xmlns:core="sap.ui.core"
+    xmlns:tnt="sap.tnt"
+    xmlns:cards="sap.f.cards"
     xmlns:form="sap.ui.layout.form"
-    xmlns:layout="sap.ui.layout">
+    xmlns:ui="sap.ui.table"
+    xmlns:u="sap.ui.unified"
+    xmlns:c="sap.ui.core"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:l="sap.ui.layout"
+    xmlns="sap.m"
+    controllerName="com.ingenx.nomination.salesnomination.controller.systemNom"
+    displayBlock="true"
+>
+<ScrollContainer
+        id="vendorRegistorGen_ScrollContainer"
+        vertical="true"
+        height="100%"
+    >
+       <tnt:ToolHeader  id="vendorRegistorGen_ToolHeader" class="sapUiTinyMargin">
+          
+            <Title id="vendorRegistorGen_Title" textAlign="Center"  class="page_title" text="System Nomination" wrapping="false">
+                <layoutData>
+                    <OverflowToolbarLayoutData id="vendorRegistorGen_OverflowToolbarLayoutData" priority="Disappear"/>
+                </layoutData>
+            </Title>
+            <ToolbarSpacer id="vendorRegistorGen_ToolbarSpacer" />
+              </tnt:ToolHeader>
 
-    <Page id="automationPage" showHeader="false">
-        
-        <tnt:ToolHeader id="toolHeader">
-            <Title text="System Nomination" level="H1"/>
-        </tnt:ToolHeader>
-       
-        <content>
-            <ScrollContainer width="100%" height="100%" fitContainer="true" vertical="true">
-                <VBox alignItems="Center" width="100%" height="100%" class="sapUiContentPadding">
-                    <form:SimpleForm
-                        id="dailyNominationForm"
-                        layout="ResponsiveGridLayout"
-                        class="sapUiSmallMargin"
-                        labelSpanL="3" labelSpanM="3" labelSpanS="12">
-                        
-                        <form:content>
-                            <Label text="Select Customer" />
-                            <Input id="customerInput" value="{/selectedCustomer}" 
-                                showValueHelp="true" 
-                                valueHelpRequest="onValueHelpCustomer" />
+           <l:VerticalLayout id="vendirRegistration_VerticalLayout" width="100%">
+            <l:BlockLayout id="vendirRegistration_BlockLayout" background="Dashboard">
+
+             <l:BlockLayoutRow id="vendirRegistration_BlockLayoutRow">
+                     <l:BlockLayoutCell id="registrationGenBlockLayoutCell" width="90%">
+
+                         <form:SimpleForm id="GenSimpleForm1"  class="" editable="false">
+                            <form:toolbar>
+                                <Toolbar id="registrationToolbar">
+                                    <Title id="registrationTitle1" text="Nomination Details"/>
+                                    <ToolbarSpacer id="GenToolbarSpacer4"/>
+                                   <Button  id="submitButton" text="Submit" type="Emphasized" press="onSubmitSysNomDData"/>
+                                    <Button  id="cancelButton" text="Cancel" type="Emphasized" press="onCancelSysNomDData"/>
+
+                                </Toolbar>
+                            </form:toolbar>
+                            <form:content>
+                                <core:Title id="GenTitle1"/>
+                                <Label id="Label2" text="Customer" design="Bold" class="sapUiTinyMarginTop"/>
+                                <HBox id="registrationMapping_ocCodeInputBox" >
+                                    <Input id="registrationMapping_retailerName" value="" width="200px"  showValueHelp="true"  valueHelpRequest="soldToPartyValueHelp"/>
+                                </HBox>
+                                <Label id="Label4" text="Contract No." design="Bold" class="sapUiTinyMarginTop"/>
+                                <HBox id="registrationMapping_emailHBox">
+                                    <Input id="registrationMapping_emailID" value="" width="200px" showValueHelp="true" valueHelpRequest="contractValueHelp" />
+                                </HBox>
+                                <Label id="Label6" text="Material" design="Bold" class="sapUiTinyMarginTop"/>
+                                <HBox id="registrationMapping_batchIdInputHBox">
+                                    <Input id="registrationMapping_contactNo" value="" width="200px" showValueHelp="true" valueHelpRequest="materialValueHelp" />
+                                </HBox>
+                                <Label id="Labe" text="DCQ" design="Bold" class="sapUiTinyMarginTop"/>
+                                <HBox id="contractRDPDCQHBox">
+                                    <Input id="contractRDPDCQ" width="200px" value="" editable="false" />
+                                </HBox>
+                                <Label id="GenLabel9" text="UOM" design="Bold" class="sapUiTinyMarginTop"/>
+                                <Input id="contractUOM"  value="" width="200px" editable="false"  />
+
+
+
+                                <core:Title id="registrationTitle2"/>
+                                <Label id="GenLa7" text="Redelivery Point" design="Bold" class="sapUiTinyMarginTop"/>
+                                <Input id="ContractRedeliveryPoint"  value="" width="200px" editable="false" />    
                             
-                            <Label text="Select Contract" />
-                            <Input id="contractInput" value="{selectedContract>/Vbeln}" 
-                                showValueHelp="true" 
-                                valueHelpRequest="onValueHelpContract" />
 
-                            <Label text="Select Material" />
-                            <Input id="materialInput" value="{modelData>/Material}"  
-                                showValueHelp="true" 
-                                valueHelpRequest="onValueHelpMaterial"/>
-                            
-                            <Label text="" />
+                                <!-- <Label id="registrationnLabel3" text="Gas Day" design="Bold" class="sapUiTinyMarginTop"/>
+                                <HBox id="IGenHBox5">
+                                    <DatePicker
+                                id="IdSysPubNomGasDayPicker"
+                                placeholder="Select Gas Day"
+                                valueFormat="{ YYYY-MM-dd }"
+                                minDate="{}"
+                                liveChange="onSelectedDate"
+                               
+                                width="200px"
+                            />
+                                </HBox> -->
+                                
 
-                            <!-- Static Fields -->
-                            <VBox id="_IDGenVBox11" width="100%">
-                                <List id="displayitems" width="100%">
-                                    <items>
-                                        <DisplayListItem id="contract" label="Contract ID" value="{modelData>/Vbeln}" />
-                                    </items>
-                                    <items>
-                                        <DisplayListItem id="mat" label="Material" value="{modelData>/Material}" />
-                                    </items>
-                                    <items>
-                                        <DisplayListItem id="conDes" label="Contract Description" value="{modelData>/ContractDescription}" />
-                                    </items>
-                                </List>
-                                <List id="dynamicFieldLists" showNoData="false" items="{modelData>/dynamicFields}">
-                                    <items>
-                                        <DisplayListItem id="minMaxDcq" label="{modelData>label}" value="{modelData>value}" />
-                                    </items>
-                                </List>
-                            </VBox>
-
-                            <!-- Dynamic Fields -->
-                            <Label text="DNQ" />
-                            <Input id="dnqInput" placeholder="Enter DNQ" editable="true"/>
-
-                            <Label text="Valid From" />
-                            <DatePicker id="validFromPicker" />
-
-                            <Label text="Valid To" />
-                            <DatePicker id="validToPicker" />
-                        </form:content>
-                    </form:SimpleForm>
-
-                    <!-- Buttons in HBox -->
-                    <HBox class="sapUiSmallMarginTop myHBox" height="50%" width="10%">
-                        <Button text="Submit" type="Emphasized" press="onSubmit" />
-                       
-                        <Button text="Cancel" press="onCancel" />
-                    </HBox>
-                </VBox>
-            </ScrollContainer> 
-        </content>
-    </Page>
+                                <Label id="GenLab7" text="DNQ" design="Bold" class="sapUiTinyMarginTop"/>
+                                <Input id="registrationMapping_district"  value="" width="200px" />    
+                                <Label id="GenLabel7" text="Valid From" design="Bold" class="sapUiTinyMarginTop"/>
+                                <TimePicker
+                                    id="IdsysPubNomDelvFromTimePicker"
+                                    value=""
+                                    placeholder="HH:mm"
+                                    valueFormat="HH:mm:ss"
+                                    displayFormat="HH:mm"
+                                    change="onTimeChange"
+                                   width="200px"
+                                />                         
+                               <Label id="GenLabel8" text="Valid To" design="Bold" class="sapUiTinyMarginTop"/>
+                               <TimePicker
+                                    id="IdsysPubNomDelvtoTimePicker"
+                                    value=""
+                                    placeholder="HH:mm"
+                                    valueFormat="HH:mm:ss"
+                                    displayFormat="HH:mm"
+                                    change="onTimeChange"
+                                   width="200px"
+                                />
+                            </form:content>
+                        </form:SimpleForm>
+                        </l:BlockLayoutCell>
+             </l:BlockLayoutRow> 
+           </l:BlockLayout>
+        </l:VerticalLayout>
+     
+            
+      
+        </ScrollContainer>
+   
 </mvc:View>

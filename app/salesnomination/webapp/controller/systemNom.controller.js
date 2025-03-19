@@ -1,381 +1,312 @@
 sap.ui.define([
-    "sap/ui/core/mvc/Controller",
-     "sap/m/MessageToast"
-  ],(BaseController,MessageToast) => {
-    "use strict";
-    let oView;
-  
-    return BaseController.extend("com.ingenx.nomination.salesnomination.controller.systemNom", {
-        onInit() {
-            oView = this.getView();
-            var today = new Date();
-    today.setHours(0, 0, 0, 0); // Ensure no time component is set
+	'sap/ui/Device',
+	'sap/ui/core/Fragment',
+	'sap/ui/core/mvc/Controller',
+	'sap/ui/model/json/JSONModel',
+	'com/ingenx/nomination/salesnomination/utils/HelperFunction',
+	'sap/m/Popover',
+	'sap/m/Button',
+	'sap/m/library',
+	"sap/viz/ui5/controls/common/feeds/FeedItem",
+	"sap/viz/ui5/data/FlattenedDataset",
+	"sap/m/MessageBox",
+	"sap/m/MessageToast",
+	"external/ChartJSAdapterDateFns",
+	"external/ChartJS"
 
-    // Set minDate for Valid From
-    var validFromPicker = oView.byId("validFromPicker");
-    if (validFromPicker) {
-        validFromPicker.setMinDate(today);
-    }
 
-    // Set minDate for Valid To
-    var validToPicker = oView.byId("validToPicker");
-    if (validToPicker) {
-        validToPicker.setMinDate(today);
-    }
-        },
 
-        onValueHelpCustomer: function () {
+], function (Device, Fragment, Controller, JSONModel, HelperFunction, Popover, Button, mobileLibrary, FeedItem, FlattenedDataset, MessageBox, MessageToast, ChartJSAdapterDateFns, ChartJS) {
+	"use strict";
 
-			if (!this._oInfoDialogSTP) {
-				this._oInfoDialogSTP = sap.ui.xmlfragment(
-					oView.getId(),
-					"com.ingenx.nomination.salesnomination.fragment.soldToParty",
-					this
-				);
-				oView.addDependent(this._oInfoDialogSTP);
+	let material;
+
+	
+	let minDCQVal = Number.MAX_SAFE_INTEGER;
+	let maxDCQVal = 0;
+	let remainingDCQ = 0;
+	let sContract;
+	let customerValue;
+    let contractValue;
+
+	return Controller.extend("com.ingenx.nomination.salesnomination.controller.systemNom", {
+
+		onInit: function () {
+
+			
+
+			
+			
+		},
+
+		
+
+
+		
+
+
+		soldToPartyValueHelp: async function (oEvent) {
+			try {
+				let sDialogId = "_customerSelectDialog";
+				let sFragmentName = "com.ingenx.nomination.salesnomination.fragment.soldToParty";
+
+				this._currentValueHelpSource = oEvent.getSource();
+
+				await HelperFunction._openValueHelpDialog(this, sDialogId, sFragmentName);
+			} catch (error) {
+				console.error("Error opening value help dialog:", error);
+				sap.m.MessageBox.error("Could not open value help. Please contact support.");
 			}
-			this._oInfoDialogSTP.open();
 		},
-        onValueHelpSearchSTP1: function (oEvent) {
-			var sValue = oEvent.getParameter("value");
-			var oFilter = new sap.ui.model.Filter("Customer", sap.ui.model.FilterOperator.Contains, sValue);
-			oEvent.getSource().getBinding("items").filter([oFilter]);
-		},
+        onValueHelpConfirmSTP: async function (oEvent) {
 
-		onValueHelpSearchSTP: function (oEvent) {
+			try {
+				let oSource = this._currentValueHelpSource;
+				 customerValue = HelperFunction._valueHelpSelectedValue(oEvent, this, oSource.getId());
+				if (!customerValue) return;
 
+				let oView = this.getView();
+				
 
-			var sValue1 = oEvent.getParameter("value").toUpperCase();
+				let oData = await HelperFunction._getSingleEntityDataWithParam(
+					this,
+					"getNominationsByCustomer",
+					"SoldToParty",
+					customerValue
+				);
 
-			var oFilter1 = new sap.ui.model.Filter("Customer", sap.ui.model.FilterOperator.Contains, sValue1);
-			var oBinding = oEvent.getSource().getBinding("items");
-			var oSelectDialog = oEvent.getSource();
-
-			oBinding.filter([oFilter1]);
-
-			oBinding.attachEventOnce("dataReceived", function () {
-				var aItems = oBinding.getCurrentContexts();
-
-				if (aItems.length === 0) {
-					oSelectDialog.setNoDataText("No data found");
-				} else {
-					oSelectDialog.setNoDataText("Loading");
+				if (oData && oData.length) {
+					let newModelForContracts = new sap.ui.model.json.JSONModel({ data: oData });
+					oView.setModel(newModelForContracts, "newModelForContracts");
+					oView.getModel("newModelForContracts").refresh();
 				}
-			});
-		},
-
-		onValueHelpConfirmSTP: function (oEvent) {
-            let oSelectedItem = oEvent.getParameter("selectedItem");
-            if (!oSelectedItem) {
-                console.warn("No item selected.");
-                return;
-            }
-        
-            // Get the selected customer
-            let selectedCustomer = oSelectedItem.getBindingContext().getObject().Customer;
-            let oCustomerModel = new sap.ui.model.json.JSONModel({ selectedCustomer });
-            this.getView().setModel(oCustomerModel, "customerModel");
-            this.loadContractsForCustomer();
-
-// Bind input field to the model in the View (XML)
-           this.byId("customerInput").bindValue("customerModel>/selectedCustomer");
-        },
-
-        onValueHelpContract: function () {
-            let oView = this.getView();
-            
-            // Get selected customer
-            let selectedCustomer = oView.getModel("customerModel")?.getProperty("/selectedCustomer");
-            if (!selectedCustomer) {
-                sap.m.MessageToast.show("Please select a customer first.");
-                return;
-            }
-        
-            // Load contracts
-            this.loadContractsForCustomer(selectedCustomer);
-        
-            // Open the fragment
-            if (!this._oInfoDialog) {
-                this._oInfoDialog = sap.ui.xmlfragment(
-                    oView.getId(),
-                    "com.ingenx.nomination.salesnomination.fragment.selectContract",
-                    this
-                );
-                oView.addDependent(this._oInfoDialog);
-            }
-        
-            this._oInfoDialog.open();
-        },
-        
-        
-        
-        loadContractsForCustomer: async function () {
-            try {
-                let oView = this.getView();
-                let oCustomerModel = oView.getModel("customerModel");
-                let selectedCustomer = oCustomerModel.getProperty("/selectedCustomer");
-        
-                if (!selectedCustomer) {
-                    MessageToast.show("Please select a customer first.");
-                    return;
-                }
-        
-                oView.byId("contractInput").setBusy(true);
-        
-                // Fetch contracts using query
-                let path = `/getNominationsByCustomer?DocType=S&Customer=${encodeURIComponent(selectedCustomer)}`;
-                let oModel = this.getOwnerComponent().getModel();
-        
-                let batchContexts;
-                try {
-                    let oBindList = oModel.bindList(path, null, null, null);
-                    batchContexts = await oBindList.requestContexts(0, Infinity);
-                } catch (error) {
-                    console.error("Error fetching contracts:", error.message || error);
-                    oView.byId("contractInput").setBusy(false);
-                    return;
-                }
-        
-                let contractsList = batchContexts.map(oContext => oContext.getObject());
-                console.log("Fetched Contracts:", contractsList);
-        
-                // Set data in "contractModel"
-                let contractModel = new sap.ui.model.json.JSONModel({ data: contractsList });
-                oView.setModel(contractModel, "contractModel");
-                console.log(contractModel);
-
-              //  oView.getModel("oContractModel").refresh();
-        
-                oView.byId("contractInput").setBusy(false);
-        
-            } catch (error) {
-                console.error("Unexpected error in loadContractsForCustomer:", error.message || error);
-                this.getView().byId("contractInput").setBusy(false);
-            }
-        },
-
-        onValueHelpConfirmContract: async function (oEvent) {
-            const oView = this.getView();
-            const oModel = this.getOwnerComponent().getModel();
-        
-            // Get the selected contract from the dialog
-            const oSelectedItem = oEvent.getParameter("selectedItem");
-            if (!oSelectedItem) {
-                sap.m.MessageToast.show("No contract selected.");
-                return;
-            }
-        
-            const sContract = oSelectedItem.getBindingContext("contractModel").getObject();
-            console.log("Selected Contract:", sContract);
-        
-            // Set busy indicator
-            oView.byId("selectContract").setBusy(true);
-        
-            try {
-                // Construct the backend path to fetch materials for the selected contract
-                const sPath = `/getContractDetailsAndPastNom?Vbeln=${encodeURIComponent(sContract.Vbeln)}`;
-        
-                // Bind list and fetch data
-                const oBindList = oModel.bindList(sPath);
-                const aContexts = await oBindList.requestContexts(0, Infinity);
-                const aMaterials = aContexts.map(oContext => oContext.getObject());
-        
-                if (!aMaterials || aMaterials.length === 0) {
-                    sap.m.MessageToast.show("No materials found for the selected contract.");
-                    return;
-                }
-        
-                // Update material model
-                let oMaterialModel = oView.getModel("materialModel");
-                if (!oMaterialModel) {
-                    oMaterialModel = new sap.ui.model.json.JSONModel();
-                    oView.setModel(oMaterialModel, "materialModel");
-                }
-                oMaterialModel.setProperty("/selectedMaterials", aMaterials);
-
-                const oSelectedContractModel = new sap.ui.model.json.JSONModel({});
-    this.getView().setModel(oSelectedContractModel, "selectedContract");
-    oSelectedContractModel.setData(sContract);
-        
-                console.log("Fetched Materials:", aMaterials);
-            } catch (oError) {
-                console.error("Error fetching materials:", oError.message || oError);
-                sap.m.MessageBox.error("Failed to fetch materials. Please try again later.");
-            } finally {
-                // Ensure the busy indicator is turned off
-                oView.byId("selectContract").setBusy(false);
-            }
-        },
-        onValueHelpSearchContract: function (oEvent) {
-            var sQuery = oEvent.getParameter("value").toUpperCase(); // Convert input to uppercase for consistency
-        
-            var oFilter1 = new sap.ui.model.Filter("Vbeln", sap.ui.model.FilterOperator.Contains, sQuery);
-            var oFilter2 = new sap.ui.model.Filter("ContractDescription", sap.ui.model.FilterOperator.Contains, sQuery);
-        
-            var oBinding = oEvent.getSource().getBinding("items"); // Get binding from source
-            if (!oBinding) {
-                console.error("Binding not found!");
-                return;
-            }
-        
-            var oSelectDialog = oEvent.getSource(); // Get the dialog control (if applicable)
-            oBinding.filter([new sap.ui.model.Filter([oFilter1, oFilter2], false)]); // Apply OR filter
-        },
-        
-        
-        onValueHelpMaterial:function () {
-
-            var oView = this.getView();
-    var oContractInput = oView.byId("contractInput"); // Adjust the ID as per your input field for contract
-
-    // Check if a contract is selected
-    if (!oContractInput || !oContractInput.getValue()) {
-        sap.m.MessageToast.show("Please select a contract first.");
-        return;
-    }
-
-			if (!this._oInfoDialogMat) {
-				this._oInfoDialogMat = sap.ui.xmlfragment(
-					oView.getId(),
-					"com.ingenx.nomination.salesnomination.fragment.selectMaterial",
-					this
-				);
-				oView.addDependent(this._oInfoDialogMat);
+			} catch (error) {
+				console.error("Unexpected error:", error.message || error);
+				sap.m.MessageBox.error("An unexpected error occurred. Please try again.");
+			} finally {
+				
+				this._customerSelectDialog.getBinding("items").filter([]);
 			}
-			this._oInfoDialogMat.open();
 		},
-        onConfirmMat: function (oEvent) {
-            const oView = this.getView();
-            const oModel = oView.getModel("materialModel");
-        
-            // Get selected material data from the dialog selection
-            const oSelectedItem = oEvent.getParameter("selectedItem");
-            if (!oSelectedItem) {
-                sap.m.MessageBox.warning("No material selected.");
-                return;
-            }
-        
-            // Retrieve the selected material object
-            const sPath = oSelectedItem.getBindingContext("materialModel").getPath();
-            const oSelectedMaterial = oModel.getProperty(sPath);
-        
-            if (!oSelectedMaterial) {
-                console.error("No data found for the selected material.");
-                sap.m.MessageBox.warning("No data available.");
-                return;
-            }
-        
-            console.log("Selected Material Data:", oSelectedMaterial);
-        
-            // Set the selected material data into a new model
-            let oModelData = oView.getModel("modelData");
-            if (!oModelData) {
-                oModelData = new sap.ui.model.json.JSONModel();
-                oView.setModel(oModelData, "modelData");
-            }
-            oModelData.setData(oSelectedMaterial);
-  var DCQ;
-            var dynamicFields = oModelData.getProperty("/dynamicFields");
-            dynamicFields.forEach(function(field) {
-                if (field.label === "DCQ") {
-                    DCQ = field.value;
-                }
-            });
-            console.log("DCQ",DCQ);
-            var oInputField = this.getView().byId("dnqInput"); 
-            oInputField.setValue(DCQ);
-           // this.getView().byId("dynamicFieldLists").setData(DCQ);
+		onValueHelpSearchSTP: function (oEvent) {
+			HelperFunction._valueHelpLiveSearch(oEvent, "Customer", "soldToParty", this);
+		},
+        contractValueHelp: async function (oEvent) {
+			try {
+				let sDialogId = "_contractSelectDialog";
+				let sFragmentName = "com.ingenx.nomination.salesnomination.fragment.selectContract";
 
-           
-        },
-        onSubmit: async function () {
-            // Retrieve the view and model
-            var oView = this.getView();
-            var oModel = oView.getModel();
-            
-            // Get the input values
-            var customer = oView.byId("customerInput").getValue();
-            var contract = oView.byId("contractInput").getValue();
-            var material = oView.byId("materialInput").getValue();
-            var dnq = oView.byId("dnqInput").getValue();
-            var validFrom = oView.byId("validFromPicker").getDateValue();
-            var validTo = oView.byId("validToPicker").getDateValue();
-        
-            let oModelData = oView.getModel("modelData");// Fetching the model data (adjust the path as needed)
-            let oData = oModelData.getData();
-            console.log(oData);
-     
-            let contractDescription = oModelData.getProperty("/ContractDescription");
-            var dynamicFields = oModelData.getProperty("/dynamicFields");
+				this._currentValueHelpSource = oEvent.getSource();
 
-    // Initialize variables to hold the values
-    var maxDCQ, minDCQ;
-
-    // Iterate through dynamicFields to find the Max DCQ and Min DCQ
-    dynamicFields.forEach(function(field) {
-        if (field.label === "Max DCQ") {
-            maxDCQ = field.value;
-        }
-        if (field.label === "Min DCQ") {
-            minDCQ = field.value;
-        }
-    });
-
-            var formatDate = function(date) {
-                if (date) {
-                    var oDateFormat = sap.ui.core.format.DateFormat.getInstance({pattern: "yyyy-MM-dd"});
-                    return oDateFormat.format(date);
-                }
-                return null; // Return null if no date is provided
-            };
-
-            if (!customer || !contract || !material || !dnq || !validFrom || !validTo) {
-                sap.m.MessageToast.show("Please fill in all required fields before submitting.");
-                return;
-            }
-
-           
-            // Assuming these values should be saved in the SystemNominations table
-            var oSystemNominationData = {
-                Customer: customer,
-                ContractID: contract,
-                ContractDescription: contractDescription, // Assuming you will fill this in later or fetch it
-                Material: material,
-                DNQ: parseFloat(dnq), // Convert DNQ to Decimal (ensure it's a number)
-                ValidFrom: formatDate(validFrom),
-                ValidTo: formatDate(validTo),
-                MaxDCQ: maxDCQ,  // You can set MaxDCQ and MinDCQ based on your business logic
-                MinDCQ: minDCQ
-            };
-        
+				await HelperFunction._openValueHelpDialog(this, sDialogId, sFragmentName);
+			} catch (error) {
+				console.error("Error opening value help dialog:", error);
+				sap.m.MessageBox.error("Could not open value help. Please contact support.");
+			}
+		},
+        onValueHelpConfirmContract: async function (oEvent) {
             try {
-                let oBinding = oModel.bindList("/SystemNominations");
-                await oBinding.create(oSystemNominationData);
-                sap.m.MessageToast.show("Successfully submitted!");
-            } catch (error) {
-                sap.m.MessageBox.error("Submission failed. Please try again.");
-                console.error(error);
+                let oSource = this._currentValueHelpSource;
+                let sContract = HelperFunction._valueHelpSelectedValue(oEvent, this, oSource.getId());
+        
+                if (!sContract) {
+                    console.error("No contract selected.");
+                    return;
+                }
+        
+                console.log("Selected Contract:", sContract);
+                const sPath = `/getContractDetailsAndPastNom?DocNo=${sContract}`;
+                console.log("Fetching from path:", sPath);
+        
+                let oModelgetCust = this.getOwnerComponent().getModel();
+                const oBindinggetCust = oModelgetCust.bindContext(sPath, null, {});
+        
+                try {
+                    const oData = await oBindinggetCust.requestObject();
+                    console.log("Fetched Data:", oData);
+        
+                    if (!oData || !oData.value || oData.value.length === 0) {
+                        console.error("No data received or empty data array!");
+                        sap.m.MessageToast.show("No materials found.");
+                        return;
+                    }
+        
+                    let oView = this.getView();
+                    let oMaterialModel = oView.getModel("materialModel");
+        
+                    if (!oMaterialModel) {
+                        oMaterialModel = new sap.ui.model.json.JSONModel();
+                        oView.setModel(oMaterialModel, "materialModel");
+                    }
+        
+                    
+                    oMaterialModel.setProperty("/data", oData.value);
+                    oMaterialModel.updateBindings(true);
+                    oMaterialModel.refresh(true);
+        
+                    console.log("Updated Model Data:", oMaterialModel.getData());
+        
+                   
+                   
+        
+                } catch (error) {
+                    console.error("Error fetching contract details:", error);
+                    sap.m.MessageBox.error("Failed to fetch contract details. Please try again later.");
+                }
+            } catch (oError) {
+                console.error("Unexpected error:", oError);
+                sap.m.MessageBox.error("An unexpected error occurred.");
             }
-           
         },
-        onCancel: function () {
-            // Reset individual fields
-            this.getView().byId("customerInput").setValue("");
-            this.getView().byId("contractInput").setValue("");
-            this.getView().byId("materialInput").setValue("");
-            this.getView().byId("validFromPicker").setDateValue(null);
-            this.getView().byId("dnqInput").setValue("");
-            this.getView().byId("contract").setValue("");
-            this.getView().byId("mat").setValue("");
-            this.getView().byId("conDes").setValue("");
-            this.getView().byId("minMaxDcq").setValue("");
-            this.getView().byId("dynamicFieldLists").setVisible(false);
-            this.getView().byId("validToPicker").setDateValue(null);
-        }
         
         
+        onValueHelpSearchContract: function (oEvent) {
+			HelperFunction._valueHelpLiveSearch(oEvent, "DocNo", "DocNo", this);
+		},
+        materialValueHelp: async function (oEvent) {
+			try {
+				let sDialogId = "_materialSelectDialog";
+				let sFragmentName = "com.ingenx.nomination.salesnomination.fragment.selectMaterial";
+
+				this._currentValueHelpSource = oEvent.getSource();
+
+				await HelperFunction._openValueHelpDialog(this, sDialogId, sFragmentName);
+			} catch (error) {
+				console.error("Error opening value help dialog:", error);
+				sap.m.MessageBox.error("Could not open value help. Please contact support.");
+			}
+		},
+      
+        onValueHelpConfirmMaterial: async function (oEvent) {
+            try {
+                let oSource = this._currentValueHelpSource;
+				let  material1 = HelperFunction._valueHelpSelectedValue(oEvent, this, oSource.getId());
+				if (!material1) return;
+                let oSelectedItem = oEvent.getParameter("selectedItem");
+                if (!oSelectedItem) return;
         
+                let oContext = oSelectedItem.getBindingContext("materialModel");
+                if (!oContext) return;
         
-   
-    });
-  });
+                let oSelectedMaterial = oContext.getObject();
+                let material = oSelectedMaterial.Material;
+                let redeliveryPoint = oSelectedMaterial.Redelivery_Point;
+                let docNo = oSelectedMaterial.DocNo;
+        
+                if (!docNo || !material || !redeliveryPoint) {
+                    sap.m.MessageBox.error("Missing required data: DocNo, Material, or Redelivery_Point.");
+                    return;
+                }
+        
+                // Construct API path
+                const sPath = `/getContractDetail?DocNo=${docNo}&Material=${material}&Redelivery_Point=${redeliveryPoint}`;
+                console.log("API Call:", sPath);
+        
+                // Fetch contract details
+                let oModel = this.getOwnerComponent().getModel();
+                let oBinding = oModel.bindContext(sPath, null, {});
+        
+                const oData = await oBinding.requestObject();
+                console.log("Fetched Contract Data:", oData.value);
+        
+                if (!oData.value || oData.value.length === 0) {
+                    sap.m.MessageBox.warning("No contract details found for the selected material.");
+                    return;
+                }
+        
+                let contractDetails = oData.value[0];
+        
+                // **Update UI fields**
+                this.getView().byId("contractRDPDCQ").setValue(contractDetails.Redelivery_Dcq || ""); 
+                this.getView().byId("contractUOM").setValue(contractDetails.UOM || "");  
+                this.getView().byId("ContractRedeliveryPoint").setValue(contractDetails.Redelivery_Point || "");  
+                
+                // // **Handle Clause Codes and Values**
+                // let oClauseMap = {};
+                // if (contractDetails.data) {
+                //     contractDetails.data.forEach(entry => {
+                //         oClauseMap[entry.Clause_Code] = entry.Calculated_Value;
+                //     });
+                // }
+        
+                // // Update fields based on Clause Codes
+                // this.getView().byId("maxRdpDcq").setValue(oClauseMap["Max RDP DCQ"] || ""); 
+                // this.getView().byId("minDpDcq").setValue(oClauseMap["Min DP DCQ"] || ""); 
+                // this.getView().byId("maxDpDcq").setValue(oClauseMap["Max DP DCQ"] || ""); 
+                // this.getView().byId("minRdpDcq").setValue(oClauseMap["Min RDP DCQ"] || ""); 
+        
+            } catch (error) {
+                console.error("Error fetching contract details:", error);
+                sap.m.MessageBox.error("Failed to fetch contract details. Please try again.");
+            }
+        },
+		onSubmitSysNomDData: function () {
+			var oView = this.getView();
+			var oModel = this.getOwnerComponent().getModel(); 
+			var oListBinding = oModel.bindList("/systemNomination");
+		
+			var oPayload = {
+				Vbeln: oView.byId("registrationMapping_emailID").getValue(), 
+				soldToParty: oView.byId("registrationMapping_retailerName").getValue(), 
+				Material: oView.byId("registrationMapping_contactNo").getValue(), 
+				Rdcq: parseFloat(oView.byId("contractRDPDCQ").getValue()) || 0, 
+				Uom: oView.byId("contractUOM").getValue(),
+				RedelivryPoint: oView.byId("ContractRedeliveryPoint").getValue(),
+				Rpdnq: parseFloat(oView.byId("registrationMapping_district").getValue()) || 0,
+				ValidTo: oView.byId("IdsysPubNomDelvtoTimePicker").getValue(), 
+				ValidFrom: oView.byId("IdsysPubNomDelvFromTimePicker").getValue()
+			};
+		
+			// Validate required fields
+			if (!oPayload.Vbeln) {
+				MessageBox.error("Contract No. is required!");
+				return;
+			}
+		
+			// Create new entry using bindList (OData V4)
+			var oContext = oListBinding.create(oPayload);
+		
+			oContext.created()
+				.then(() => {
+					MessageBox.success("System Nomination created successfully!");
+					oModel.refresh(); // Refresh UI to show new data
+				})
+				.catch((oError) => {
+					MessageBox.error("Failed to create System Nomination: " + oError.message);
+				});
+		}
+		
+		
+        
+
+       
+
+
+
+      
+
+
+		
+		
+
+
+
+
+
+
+
+
+
+
+
+
+	
+		
+
+
+
+	
+
+
+	});
+});

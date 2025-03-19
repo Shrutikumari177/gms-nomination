@@ -3,17 +3,17 @@
 	xmlns:core="sap.ui.core">
 
     <SelectDialog
-        id="selectContract"
+        id="Contract"
         noDataText="Loading ..."
         title="Select Contract"
         search="onValueHelpSearchContract"
         liveChange="onValueHelpSearchContract"
         confirm="onValueHelpConfirmContract"
-            items="{contractModel>/data}"> 
+            items="{newModelForContracts>/data}"> 
         
         <StandardListItem id="selectContracts"
-            title="{contractModel>Vbeln}" 
-    description="{contractModel>ContractDescription}"
+            title="{newModelForContracts>DocNo}" 
+    description="{newModelForContracts>Contracttype}"
             iconDensityAware="false"
             iconInset="false"
             type="Active" />
