@@ -6,6 +6,9 @@ using GMSNOMINATIONS_SRV from './external/GMSNOMINATIONS_SRV.cds';
 
 
 service nominationServices {
+  
+
+
 
 
     function getNominationsByCustomer(SoldToParty : String)                                                           returns array of String;
@@ -13,6 +16,8 @@ service nominationServices {
     function getContractDetail(DocNo : String, Material : String, Redelivery_Point : String)                          returns array of String;
     function getContractMatDetailsByGasday(Gasday : Date, DocNo : String)                                             returns array of String;
     function getRenominationContractData(DocNo : String, Material : String, Redelivery_Point : String, Gasday : Date) returns array of String;
+      action handleSystemNomination ( ) returns String;
+
 
 
     type NominationDataType {
@@ -386,6 +391,7 @@ action updateNomination(nominations : array of NominationDataType) returns Strin
     entity serviceProfileParametersItems as projection on GMS_CONFIG.serviceProfileParametersItems;
     entity ServiceProfileMaster          as projection on GMS_CONFIG.ServiceProfileMaster;
     entity transportAgreementDetail      as projection on db.transportAgreementDetail;
-
+    entity systemNomination      as projection on db.systemNomination;
+    
 
 }

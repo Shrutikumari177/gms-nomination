@@ -109,6 +109,7 @@ module.exports = cds.service.impl(async (srv) => {
             return [];
         }
     });
+   
 
     srv.on('getContractDetailsAndPastNom', async (req) => {
         const { DocNo } = req.data;
@@ -425,9 +426,108 @@ module.exports = cds.service.impl(async (srv) => {
             return req.error(500, "Internal Server Error");
         }
     });
+
+    srv.on('CREATE', 'systemNomination', async (req) => {
+        let { Vbeln, soldToParty, Material, Rdcq, Uom, RedelivryPoint, Rpdnq, ValidTo, ValidFrom } = req.data;
+    
+        if (!Vbeln) {
+            return req.error(400, "Vbeln is required");
+        }
+    
+        if (!ValidFrom || !ValidTo) {
+            return req.error(400, "Valid From and Valid To dates are required");
+        }
+    
+        if (new Date(ValidFrom) > new Date(ValidTo)) {
+            return req.error(400, "Valid From date cannot be later than Valid To date");
+        }
+    
+        ValidFrom = new Date(ValidFrom).toISOString().split("T")[0];
+        ValidTo = new Date(ValidTo).toISOString().split("T")[0];
+    
+        const SystemNomData = { Vbeln, soldToParty, Material, Rdcq, Uom, RedelivryPoint, Rpdnq, ValidTo, ValidFrom };
+    
+        try {
+            await cds.run(INSERT.into('app.gms.nomination.systemNomination').entries(SystemNomData));
+            return SystemNomData;
+        } catch (error) {
+            console.error("Error creating SystemNomData:", error);
+            return req.error(500, `Failed to create SystemNomData: ${error.message}`);
+        }
+    });
+
+    srv.on('handleSystemNomination', async (req) => {
+        const db = cds.transaction(req);
+    
+        const currentDate = new Date();
+        currentDate.setDate(currentDate.getDate() + 1);
+        const tomorrow = currentDate.toISOString().split('T')[0];
+    
+        try {
+            const contracts = await db.run(SELECT.from('app.gms.nomination.systemNomination'));
+
+            console.log("contracts",contracts);
+            
+    
+            const validContracts = contracts.filter(c =>
+                tomorrow >= c.ValidFrom && tomorrow <= c.ValidTo
+            );
+    
+            if (validContracts.length === 0) {
+                return "No contracts found for tomorrow.";
+            }
+    
+            let createdNominations = [];
+    
+            for (const contract of validContracts) {
+               
+                
+                let nomi_toitem = [];
+    
+                
+                nomi_toitem.push({
+                    Gasday: tomorrow,
+                    Vbeln: contract.Vbeln,
+                    ItemNo: "10",
+                    NomItem: "10",
+                    Versn: "",
+                    DeliveryPoint: "",
+                    RedelivryPoint: contract.RedelivryPoint,
+                    ValidTo: "06:00:00",
+                    ValidFrom: "06:00:00",
+                    Material: contract.Material,
+                    Auart: "ZGSA",
+                    Ddcq: "0.000",
+                    Rdcq: contract.Rdcq,
+                    Uom1: contract.Uom,
+                    Event: "No-Event",
+                    Adnq: "0.000",
+                    Rpdnq: contract.Rpdnq
+                });
+    
+                let createNomPayload = {
+                    Gasday: tomorrow,
+                    Vbeln: contract.Vbeln,
+                    nomi_toitem
+                };
+                const newNomination = await GMSNOMINATIONS_SRV.run(INSERT.into('znom_headSet').entries(createNomPayload));
+                createdNominations.push(newNomination);
+                
+            }
+    
+            return `${createdNominations.length} nominations created successfully.`;
+    
+        } catch (error) {
+            console.error(error);
+            return "Error while processing nominations.";
+        }
+    });
+
+
     
 
 
+    
 
 
     

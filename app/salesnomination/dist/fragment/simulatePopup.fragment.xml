@@ -1,0 +1,17 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+    <Dialog id="simulateDialog" title="Simulation Data" stretch="false" resizable="true">
+        <VBox class="simulateVbox">
+            <Label text="Projected Imbalance" />
+            <Input value="+ Imbalance"  editable="false" />
+
+            <Label text="Probable Penalty" />
+            <Input id="probablePenalty" value="4%" editable="false" />
+        </VBox>
+        <!-- <beginButton>
+            <Button text="Confirm" press=".onConfirmSimulate" />
+        </beginButton> -->
+        <endButton>
+            <Button text="Cancel" press=".onCloseSimulateDialog" />
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>
