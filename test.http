@@ -32,7 +32,7 @@ GET http://localhost:4004/odata/v4/nomination-services/getContractDetail?DocNo='
 ###
 
 ####
-GET http://localhost:4004/odata/v4/nomination-services
+GET http://localhost:4004/odata/v4/nomination-services/VirtualNominations
 #######
 
 GET http://localhost:4004/odata/v4/nomination-services/getRenominationContractData?DocNo=40000932&Material=2000000068&Redelivery_Point=BENGALURU&Gasday=2025-03-24

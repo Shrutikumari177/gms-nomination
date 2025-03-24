@@ -3,146 +3,148 @@ ID: iGMS_NOMINATION
 description: A simple CAP project.
 version: 1.0.0
 modules:
-- name: iGMS_NOMINATION-srv
-  type: nodejs
-  path: gen/srv
-  requires:
-  - name: iGMS_NOMINATION-connectivity
-  - name: iGMS_NOMINATION-destination
-  - name: iGMS_NOMINATION-db
-  - name: iGMS_NOMINATION-auth
-  provides:
-  - name: srv-api
-    properties:
-      srv-url: ${default-url}
-  parameters:
-    buildpack: nodejs_buildpack
-    instances: 1
-  build-parameters:
-    builder: npm-ci
-- name: iGMS_NOMINATION-db-deployer
-  type: hdb
-  path: gen/db
-  requires:
-  - name: iGMS_NOMINATION-db
-  parameters:
-    buildpack: nodejs_buildpack
-- name: iGMS_NOMINATION-destination-content
-  type: com.sap.application.content
-  requires:
-  - name: iGMS_NOMINATION-destination-service
-    parameters:
-      content-target: true
-  - name: iGMS_NOMINATION_html_repo_host
-    parameters:
-      service-key:
-        name: iGMS_NOMINATION_html_repo_host-key
-  - name: iGMS_NOMINATION-auth
-    parameters:
-      service-key:
-        name: iGMS_NOMINATION-auth-key
-  parameters:
-    content:
-      instance:
-        destinations:
-        - Name: gmsNomSRV_iGMS_NOMINATION_html_repo_host
-          ServiceInstanceName: iGMS_NOMINATION-html5-app-host-service
-          ServiceKeyName: iGMS_NOMINATION_html_repo_host-key
-          sap.cloud.service: gmsNomSRV
-        - Authentication: OAuth2UserTokenExchange
-          Name: gmsNomSRV_iGMS_NOMINATION_auth
-          ServiceInstanceName: iGMS_NOMINATION-auth
-          ServiceKeyName: iGMS_NOMINATION-auth-key
-          sap.cloud.service: gmsNomSRV
-        existing_destinations_policy: ignore
-  build-parameters:
-    no-source: true
-- name: iGMS_NOMINATION-app-content
-  type: com.sap.application.content
-  path: .
-  requires:
-  - name: iGMS_NOMINATION_html_repo_host
-    parameters:
-      content-target: true
-  build-parameters:
-    build-result: resources
+  - name: iGMS_NOMINATION-srv
+    type: nodejs
+    path: gen/srv
     requires:
-    - artifacts:
-      - comingenxnominationsalesnomination.zip
-      name: comingenxnominationsalesnomination
-      target-path: resources/
-- name: comingenxnominationsalesnomination
-  type: html5
-  path: app/salesnomination
-  build-parameters:
-    build-result: dist
-    builder: custom
-    commands:
-    - npm install
-    - npm run build:cf
-    supported-platforms: []
-resources:
-- name: iGMS_NOMINATION-connectivity
-  type: org.cloudfoundry.managed-service
-  parameters:
-    service: connectivity
-    service-plan: lite
-- name: iGMS_NOMINATION-destination
-  type: org.cloudfoundry.managed-service
-  parameters:
-    service: destination
-    service-plan: lite    
-- name: iGMS_NOMINATION-destination-service
-  type: org.cloudfoundry.managed-service
-  parameters:
-    config:
-      HTML5Runtime_enabled: true
-      init_data:
+      - name: iGMS_NOMINATION-connectivity
+      - name: iGMS_NOMINATION-destination
+      - name: iGMS_NOMINATION-db
+      - name: iGMS_NOMINATION-auth
+      - name: iGMS_NOMINATION-destination-service
+    provides:
+      - name: srv-api
+        properties:
+          srv-url: ${default-url}
+    parameters:
+      buildpack: nodejs_buildpack
+      instances: 1
+    build-parameters:
+      builder: npm-ci
+  - name: iGMS_NOMINATION-db-deployer
+    type: hdb
+    path: gen/db
+    requires:
+      - name: iGMS_NOMINATION-db
+    parameters:
+      buildpack: nodejs_buildpack
+  - name: iGMS_NOMINATION-destination-content
+    type: com.sap.application.content
+    requires:
+      - name: iGMS_NOMINATION-destination-service
+        parameters:
+          content-target: true
+      - name: iGMS_NOMINATION_html_repo_host
+        parameters:
+          service-key:
+            name: iGMS_NOMINATION_html_repo_host-key
+      - name: iGMS_NOMINATION-auth
+        parameters:
+          service-key:
+            name: iGMS_NOMINATION-auth-key
+    parameters:
+      content:
         instance:
           destinations:
-          - Authentication: NoAuthentication
-            Name: ui5
-            ProxyType: Internet
-            Type: HTTP
-            URL: https://ui5.sap.com
-          - Authentication: NoAuthentication
-            HTML5.DynamicDestination: true
-            HTML5.ForwardAuthToken: true
-            Name: iGMS_NOMINATION-srv-api
-            ProxyType: Internet
-            Type: HTTP
-            URL: ~{srv-api/srv-url}
-          existing_destinations_policy: update
-    service: destination
-    service-plan: lite
-  requires:
-  - name: srv-api
-- name: iGMS_NOMINATION-db
-  type: com.sap.xs.hdi-container
-  parameters:
-    service: hana
-    service-plan: hdi-shared
-- name: iGMS_NOMINATION-auth
-  type: org.cloudfoundry.managed-service
-  parameters:
-    config:
-      tenant-mode: dedicated
-      xsappname: iGMS_NOMINATION-${org}-${space}
-    path: ./xs-security.json
-    service: xsuaa
-    service-plan: application
-- name: iGMS_NOMINATION_html_repo_host
-  type: org.cloudfoundry.managed-service
-  parameters:
-    service: html5-apps-repo
-    service-name: iGMS_NOMINATION-html5-app-host-service
-    service-plan: app-host
+            - Name: gmsNomSRV_iGMS_NOMINATION_html_repo_host
+              ServiceInstanceName: iGMS_NOMINATION-html5-app-host-service
+              ServiceKeyName: iGMS_NOMINATION_html_repo_host-key
+              sap.cloud.service: gmsNomSRV
+            - Authentication: OAuth2UserTokenExchange
+              Name: gmsNomSRV_iGMS_NOMINATION_auth
+              ServiceInstanceName: iGMS_NOMINATION-auth
+              ServiceKeyName: iGMS_NOMINATION-auth-key
+              sap.cloud.service: gmsNomSRV
+          existing_destinations_policy: ignore
+    build-parameters:
+      no-source: true
+  - name: iGMS_NOMINATION-app-content
+    type: com.sap.application.content
+    path: .
+    requires:
+      - name: iGMS_NOMINATION_html_repo_host
+        parameters:
+          content-target: true
+    build-parameters:
+      build-result: resources
+      requires:
+        - artifacts:
+            - comingenxnominationsalesnomination.zip
+          name: comingenxnominationsalesnomination
+          target-path: resources/
+  - name: comingenxnominationsalesnomination
+    type: html5
+    path: app/salesnomination
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm install
+        - npm run build:cf
+      supported-platforms:
+        []
+resources:
+  - name: iGMS_NOMINATION-connectivity
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: connectivity
+      service-plan: lite
+  - name: iGMS_NOMINATION-destination
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: destination
+      service-plan: lite
+  - name: iGMS_NOMINATION-destination-service
+    type: org.cloudfoundry.managed-service
+    parameters:
+      config:
+        HTML5Runtime_enabled: true
+        init_data:
+          instance:
+            destinations:
+              - Authentication: NoAuthentication
+                Name: ui5
+                ProxyType: Internet
+                Type: HTTP
+                URL: https://ui5.sap.com
+              - Authentication: NoAuthentication
+                HTML5.DynamicDestination: true
+                HTML5.ForwardAuthToken: true
+                Name: iGMS_NOMINATION-srv-api
+                ProxyType: Internet
+                Type: HTTP
+                URL: ~{srv-api/srv-url}
+            existing_destinations_policy: update
+      service: destination
+      service-plan: lite
+    requires:
+      - name: srv-api
+  - name: iGMS_NOMINATION-db
+    type: com.sap.xs.hdi-container
+    parameters:
+      service: hana
+      service-plan: hdi-shared
+  - name: iGMS_NOMINATION-auth
+    type: org.cloudfoundry.managed-service
+    parameters:
+      config:
+        tenant-mode: dedicated
+        xsappname: iGMS_NOMINATION-${org}-${space}
+      path: ./xs-security.json
+      service: xsuaa
+      service-plan: application
+  - name: iGMS_NOMINATION_html_repo_host
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-name: iGMS_NOMINATION-html5-app-host-service
+      service-plan: app-host
 parameters:
   deploy_mode: html5-repo
   enable-parallel-deployments: true
 build-parameters:
   before-all:
-  - builder: custom
-    commands:
-    - npm ci
-    - npx cds build --production
+    - builder: custom
+      commands:
+        - npm ci
+        - npx cds build --production

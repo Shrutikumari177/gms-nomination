@@ -4,9 +4,19 @@ using {app.gms.nomination as db} from '../db/nominationSchema';
 using ZNOM_CREATE_SRV from './external/ZNOM_CREATE_SRV.cds';
 using GMSNOMINATIONS_SRV from './external/GMSNOMINATIONS_SRV.cds';
 
-
+//  @(requires: 'system-user')
 service nominationServices {
+
+
+ entity VirtualNominations : NominationDataType {
+        key Gasday : Date;
+        key Vbeln : String;
+    }
+
   
+    
+// action handleSystemNomination ( ) returns String;
+
 
 
 
@@ -16,7 +26,6 @@ service nominationServices {
     function getContractDetail(DocNo : String, Material : String, Redelivery_Point : String)                          returns array of String;
     function getContractMatDetailsByGasday(Gasday : Date, DocNo : String)                                             returns array of String;
     function getRenominationContractData(DocNo : String, Material : String, Redelivery_Point : String, Gasday : Date) returns array of String;
-      action handleSystemNomination ( ) returns String;
 
 
 
