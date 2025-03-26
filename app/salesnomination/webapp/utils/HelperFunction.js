@@ -83,143 +83,124 @@ sap.ui.define(["sap/ui/core/Fragment","sap/ui/model/Filter","sap/ui/model/Filter
        }
     },
    
-    validateDNQ1: async function (oView, valueMap, customerNo) {
+    validateDNQ2: async function (oView, valueMap, customerValue, bRelaxValidation) {
         try {
             const oModel = oView.getModel();
             if (!oModel) {
                 throw new Error("OData model not found on the view.");
             }
     
-            const oFilter = new sap.ui.model.Filter("CustomerNo", sap.ui.model.FilterOperator.EQ, customerNo);
-            const oBindList = oModel.bindList("/Nominationlogic", null, null, [oFilter]);
-            
+            const oBindList = oModel.bindList("/Nominationlogic");
             const oContext = await oBindList.requestContexts(0, Infinity);
             const customerRules = oContext.map((context) => context.getObject());
     
             if (!customerRules.length) {
-                console.info(`No rules found for CustomerNo: ${customerNo}`);
-                return;
+                console.info("No rules found for customer.");
+                return true;
             }
     
-            const groupedRules = customerRules.reduce((groups, rule) => {
-                const key = rule.logic || "NONE"; // Defaults to "NONE" for standalone rules
-                (groups[key] ||= []).push(rule); 
-                return groups;
-            }, {});
+            let validationFailed = false;
     
-            // Validation logic
-            Object.entries(groupedRules).forEach(([logic, rules]) => {
-                let isValid = logic === "AND";
+            customerRules.forEach((rule) => {
+                const value1 = valueMap[rule.SP1];
+                const value2 = valueMap[rule.SP2];
     
-                rules.forEach((rule) => {
-                    const value1 = valueMap[rule.SP1];
-                    const value2 = valueMap[rule.SP2];
+                if (value1 === undefined || value2 === undefined) {
+                    console.warn(`Values missing for SP1: ${rule.SP1} or SP2: ${rule.SP2}`);
+                    return;
+                }
     
-                    if (value1 === undefined || value2 === undefined) {
-                        console.warn(`Values missing for SP1: ${rule.SP1} or SP2: ${rule.SP2}`);
-                        return;
-                    }
+                // Ignore Min RDP DCQ check if event allows it
+                if (bRelaxValidation && rule.SP1 === "Min RDP DCQ") {
+                    return;
+                }
     
-                    // Logical operator checks
-                    const operatorChecks = {
-                        "<=": value1 <= value2,
-                        ">=": value1 >= value2,
-                        "=": value1 === value2,
-                        "!=": value1 !== value2
-                    };
+                const operatorChecks = {
+                    "<=": value1 <= value2,
+                    ">=": value1 >= value2,
+                    "=": value1 === value2,
+                    "!=": value1 !== value2
+                };
     
-                    const conditionMet = operatorChecks[rule.logicaloperator];
-    
-                    // Validate based on logic type
-                    if (logic === "AND") {
-                        isValid = isValid && conditionMet;
-                    } else if (logic === "OR") {
-                        isValid = isValid || conditionMet;
-                    } else if (!conditionMet) { // for NONE (standalone rules)
-                        MessageBox.error(rule.message || `${rule.SP1} validation failed against ${rule.SP2}`);
-                    }
-                });
-    
-                // Show group-level error messages
-                if ((logic === "AND" && !isValid) || (logic === "OR" && !isValid)) {
-                    MessageBox.error(`Validation failed for rules group with logic: ${logic}`);
+                if (!operatorChecks[rule.logicaloperator]) {
+                    MessageBox.error(rule.message || `${rule.SP1} validation failed`);
+                    validationFailed = true;
                 }
             });
     
+            return !validationFailed;
         } catch (error) {
             console.error("Validation error:", error);
             MessageBox.error("An error occurred during validation.");
+            return false;
         }
     },
-    validateDNQ: async function (oView, valueMap, customerNo) {
-        
+    validateDNQ: async function (oView, valueMap, customerValue,profile, bRelaxValidation) {
+       
         try {
             const oModel = oView.getModel();
             if (!oModel) {
                 throw new Error("OData model not found on the view.");
             }
+            const oFilters = new sap.ui.model.Filter({
+                filters: [
+                    new sap.ui.model.Filter("CustomerNo", sap.ui.model.FilterOperator.EQ, customerValue),
+                    new sap.ui.model.Filter("ServiceProfile", sap.ui.model.FilterOperator.EQ, profile)
+                ],
+                and: true 
+            });
     
-            const oFilter = new sap.ui.model.Filter("CustomerNo", sap.ui.model.FilterOperator.EQ, customerNo);
-            const oBindList = oModel.bindList("/Nominationlogic", null, null, [oFilter]);
-            
+            const oBindList = oModel.bindList("/Nominationlogic", null, null, [oFilters]);
             const oContext = await oBindList.requestContexts(0, Infinity);
             const customerRules = oContext.map((context) => context.getObject());
     
+            
+    
             if (!customerRules.length) {
-                console.info(`No rules found for CustomerNo: ${customerNo}`);
-                return;
+                console.info("No rules found for customer.");
+                return true;
             }
     
-            const groupedRules = customerRules.reduce((groups, rule) => {
-                const key = rule.logic || "NONE"; // Defaults to "NONE" for standalone rules
-                (groups[key] ||= []).push(rule); 
-                return groups;
-            }, {});
+            let validationFailed = false;
     
-            // Validation logic
-            Object.entries(groupedRules).forEach(([logic, rules]) => {
-                let isValid = logic === "AND";
+            customerRules.forEach((rule) => {
+                const value1 = valueMap[rule.SP1];
+                const value2 = valueMap[rule.SP2];
     
-                rules.forEach((rule) => {
-                    const value1 = valueMap[rule.SP1];
-                    const value2 = valueMap[rule.SP2];
+                if (value1 === undefined || value2 === undefined) {
+                    console.warn(`Values missing for SP1: ${rule.SP1} or SP2: ${rule.SP2}`);
+                    return;
+                }
+                console.log("rules ",rule.SP2);
+                
     
-                    if (value1 === undefined || value2 === undefined) {
-                        console.warn(`Values missing for SP1: ${rule.SP1} or SP2: ${rule.SP2}`);
-                        return;
-                    }
+                if (bRelaxValidation && (rule.SP2 === "Min RDP DCQ" || rule.SP2 === "Min DP DCQ")) {
+                    return;
+                }
+                
     
-                    const operatorChecks = {
-                        "<=": value1 <= value2,
-                        ">=": value1 >= value2,
-                        "=": value1 === value2,
-                        "!=": value1 !== value2
-                    };
+                const operatorChecks = {
+                    "<=": value1 <= value2,
+                    ">=": value1 >= value2,
+                    "=": value1 === value2,
+                    "!=": value1 !== value2
+                };
     
-                    const conditionMet = operatorChecks[rule.logicaloperator];
-    
-                    // Validate with dynamic error messages
-                    if (logic === "AND") {
-                        isValid = isValid && conditionMet;
-                    } else if (logic === "OR") {
-                        isValid = isValid || conditionMet;
-                    } else if (!conditionMet) { // for NONE (standalone rules)
-                        MessageBox.error(rule.message || `${rule.SP1} validation failed against ${rule.SP2}`);
-                    }
-                });
-    
-                // Group-level error messages
-                if ((logic === "AND" && !isValid) || (logic === "OR" && !isValid)) {
-                    const groupErrorMsg = rules.map((rule) => rule.message || `${rule.SP1} validation failed`).join("\n");
-                    MessageBox.error(groupErrorMsg);
+                if (!operatorChecks[rule.logicaloperator]) {
+                    MessageBox.error(rule.message || `${rule.SP1} validation failed`);
+                    validationFailed = true;
                 }
             });
     
+            return !validationFailed;
         } catch (error) {
             console.error("Validation error:", error);
             MessageBox.error("An error occurred during validation.");
+            return false;
         }
     },
+    
+    
     
     
     

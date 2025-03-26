@@ -70,8 +70,12 @@ sap.ui.define([
 			this.getView().setModel(oModelReDel, "RedlvModelData");
 
 			// model for TotalDNQ
-			var oModel = new sap.ui.model.json.JSONModel({ CummDNQ: "" });
+			var oModel = new sap.ui.model.json.JSONModel({
+				rdpCummDNQ: "",
+				dpCummDNQ: ""
+			});
 			this.getView().setModel(oModel, "localModel");
+			
 
 			const oDatePicker = this.byId("IdPubNomGasDayPicker");
 
@@ -412,6 +416,7 @@ sap.ui.define([
 				oView.byId("IdPubNomContractRPDCQ").setVisible(false);
 				oView.byId("IdPubNomStaticListfinal").setVisible(false);
 				oView.byId("IdPubNomDelPointTable").setVisible(true);
+				oView.byId("IdPubNomTableHeaderBarForDelv").setVisible(true);
 
 				let oDelvModel = oView.getModel("DelvModelData");
 				let aDeliveryPoints = oDelvModel.getProperty("/DeliveryPoints") || [];
@@ -438,6 +443,9 @@ sap.ui.define([
 			let sValue = oEvent.getParameter("value").trim();
 			let dnqValue = parseFloat(sValue) || 0;
 			let oView = this.getView();
+			let oModel = oView.getModel("localModel");
+		
+			oModel.setProperty("/dpCummDNQ", sValue ? sValue + "MBT" : "");
 		
 			let oContractData = oView.getModel("contDataModel").getData();
 			let maxDCQ = this._getClauseValue(oContractData.data, "Max DP DCQ");
@@ -474,13 +482,14 @@ sap.ui.define([
 				}, 1000); // Debounce time (1000ms)
 			}
 		},
+	
 		OnReDeliveryDNQValidation: function (oEvent) {
 			let sValue = oEvent.getParameter("value").trim();
 			let dnqValue = parseFloat(sValue) || 0;
 			let oView = this.getView();
 			let oModel = oView.getModel("localModel");
 		
-			oModel.setProperty("/CummDNQ", sValue ? sValue + "MBT" : "");
+			oModel.setProperty("/rdpCummDNQ", sValue ? sValue + "MBT" : "");
 		
 			let oContractData = oView.getModel("contDataModel").getData();
 			let maxRDPDCQ = this._getClauseValue(oContractData.data, "Max RDP DCQ");
@@ -488,8 +497,8 @@ sap.ui.define([
 		
 			let valueMap = {
 				"DNQ": dnqValue,
-				"Max DCQ": maxRDPDCQ,
-				"Min DCQ": minRDPDCQ
+				"Max RDP DCQ": maxRDPDCQ,
+				"Min RDP DCQ": minRDPDCQ
 			};
 		
 			if (this._validationTimeout) {
@@ -498,7 +507,7 @@ sap.ui.define([
 		
 			if (sValue === "") {
 				this._lastValidatedValue = null;
-				return; 
+				return;
 			}
 		
 			if (!this._lastValidatedValue || this._lastValidatedValue !== sValue) {
@@ -507,16 +516,22 @@ sap.ui.define([
 				this._validationTimeout = setTimeout(async () => {
 					if (sValue.length >= 1) { 
 						try {
-							await HelperFunction.validateDNQ(oView, valueMap, customerValue);
+							let isValid = await HelperFunction.validateDNQ(oView, valueMap, customerValue);
+							if (!isValid) {
+								oEvent.getSource().setValue(""); 
+							}
 						} catch (err) {
 							console.error("Validation failed:", err);
+							oEvent.getSource().setValue(""); 
 						} finally {
 							this._validationTimeout = null;
 						}
 					}
-				}, 1000); // Debounce time (1000ms)
+				}, 1000); 
 			}
 		},
+		
+		
 		
 		
 		_getClauseValue: function (data, clauseCode) {

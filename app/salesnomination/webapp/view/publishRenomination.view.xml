@@ -240,20 +240,22 @@
                                 text="Nominate Quantity For Delivery"
                             />
                         </contentLeft>
-                        <contentMiddle>
+                        <contentMiddle >
                             <Label
                                 id="IdDelCummDNQ"
                                 text="Total. DNQ"
                                 design="Bold"
+                                visible="false"
                             />
                             <Input
                                 id="IdDelCummDNQInput"
                                 value="{}"
                                 width="150px"
                                 editable="false"
+                                visible="false"
                             />
                         </contentMiddle>
-                        <contentRight>
+                        <!-- <contentRight>
                             <Button
                                 id="IdRePubNomAddBtnForDelv"
                                 icon="sap-icon://add"
@@ -266,7 +268,7 @@
                                 type="Reject"
                                 press="onDeleteRowDlvPress"
                             />
-                        </contentRight>
+                        </contentRight> -->
                     </Bar>
                     <Table
                         id="IdRePubNomDelPointTable"
@@ -352,7 +354,8 @@
                                     id="IdRePubNomEventSelect"
 
                                     selectedKey="{DelvModelData>Event}"
-
+                                    change="DpEventSelected"
+                                    selectedItem="{DelvModelData>Event}"
                                     forceSelection="false"
                                     width="200px"
                                     
@@ -394,6 +397,7 @@
                                 id="IdCummDNQ"
                                 text="Total. DNQ"
                                 design="Bold"
+                                visible="false"
                             />
                             <!-- <Input
                                 id="IdCummDNQInput"
@@ -406,9 +410,10 @@
                                 value="{localModel>/CummDNQ}"
                                 width="150px"
                                 editable="false"
+                                visible="false"
                             />
                         </contentMiddle>
-                        <contentRight>
+                        <!-- <contentRight>
                             <Button
                                 id="IdRePubNomAddBtnForRedlv"
                                 icon="sap-icon://add"
@@ -422,7 +427,7 @@
                                 type="Reject"
                                 press="onDeletePress"
                             />
-                        </contentRight>
+                        </contentRight> -->
                     </Bar>
                     <Table
                         id="IdRePubNomRedPointTable"
@@ -507,7 +512,9 @@
                                 <Select
                                     id="IdRePubNomEventSelect2"
                                     selectedKey="{RedlvModelData>Event}"
-                                      forceSelection="false"
+                                    selectedItem="{RedlvModelData>Event}"
+                                    forceSelection="false"
+                                    change="RDPeventSelected"
 
                                 >
                                     <core:ListItem id="IdPubNomNneEvent" key="" text=""/>

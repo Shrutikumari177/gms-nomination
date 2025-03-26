@@ -27,7 +27,8 @@ sap.ui.define([
 	let remainingDCQ = 0;
 	let sContract;
 	let customerValue;
-
+	let RDPSelectedEvent ;
+	let dpSelectedEvent
 	return Controller.extend("com.ingenx.nomination.salesnomination.controller.publishNomination", {
 
 		onInit: function () {
@@ -70,8 +71,12 @@ sap.ui.define([
 			this.getView().setModel(oModelReDel, "RedlvModelData");
 
 			// model for TotalDNQ
-			var oModel = new sap.ui.model.json.JSONModel({ CummDNQ: "" });
+			var oModel = new sap.ui.model.json.JSONModel({
+				rdpCummDNQ: "",
+				dpCummDNQ: ""
+			});
 			this.getView().setModel(oModel, "localModel");
+			
 
 			const oDatePicker = this.byId("IdPubNomGasDayPicker");
 
@@ -320,39 +325,7 @@ sap.ui.define([
 			}
 		},
 		
-		
-
-
-
-		onSelectMaterial1: async function (oEvent) {
-			let oSelectedItem = oEvent.getSource();
-			let oContext = oSelectedItem.getBindingContext("materialModel");
-			if (!oContext) return;
-
-			let oSelectedMaterial = oContext.getObject();
-			let material = oSelectedMaterial.Material;
-			let Redelivery_Point = oSelectedMaterial.Redelivery_Point;
-
-			const sPath = `/getContractDetail?DocNo=${sContract.DocNo}&Material=${material}&Redelivery_Point=${Redelivery_Point}`;
-			console.log("sPath", sPath);
-
-			let oModelgetCust = this.getOwnerComponent().getModel();
-			let oBindinggetCust = oModelgetCust.bindContext(sPath, null, {});
-
-			try {
-				const oData = await oBindinggetCust.requestObject();
-				console.log("Fetched Data:", oData.value);
-
-				let oNewJsonModel = new sap.ui.model.json.JSONModel(oData.value[0]);
-				this.getView().setModel(oNewJsonModel, "contDataModel");
-
-				this._updateRedeliveryData(oData.value[0]);
-				this._updateDeliveryData(oData.value[0]);
-
-			} catch (error) {
-				console.error("Error fetching contract details:", error);
-			}
-		},
+	
 		onSelectMaterial: async function (oEvent) {
 			let oSelectedItem = oEvent.getSource();
 			let oContext = oSelectedItem.getBindingContext("materialModel");
@@ -385,7 +358,6 @@ sap.ui.define([
 		},
 		
 
-		// to show redilivery data
 		_updateRedeliveryData: function (oData) {
 			const hasRedeliveryDcq = oData.Redelivery_Point && oData.Redelivery_Point.trim() !== "";
 			if (hasRedeliveryDcq) {
@@ -401,7 +373,7 @@ sap.ui.define([
 				oRedlvModel.setProperty("/RedeliveryPoints", aRedeliveryPoints);
 			}
 		},
-		// to show delivery data 
+		
 		_updateDeliveryData: function (oData) {
 			const hasDeliveryDcq = !!(oData.Delivery_Point && oData.Delivery_Point.trim());
 			if (hasDeliveryDcq) {
@@ -412,6 +384,7 @@ sap.ui.define([
 				oView.byId("IdPubNomContractRPDCQ").setVisible(false);
 				oView.byId("IdPubNomStaticListfinal").setVisible(false);
 				oView.byId("IdPubNomDelPointTable").setVisible(true);
+				oView.byId("IdPubNomTableHeaderBarForDelv").setVisible(true);
 
 				let oDelvModel = oView.getModel("DelvModelData");
 				let aDeliveryPoints = oDelvModel.getProperty("/DeliveryPoints") || [];
@@ -438,17 +411,29 @@ sap.ui.define([
 			let sValue = oEvent.getParameter("value").trim();
 			let dnqValue = parseFloat(sValue) || 0;
 			let oView = this.getView();
+			let oModel = oView.getModel("localModel");
+		
+			if (!sValue){
+				oModel.setProperty("/rdpCummDNQ", "");
+				this._lastValidatedValue = null;
+				return;
+			}
+			oModel.setProperty("/dpCummDNQ", sValue ? sValue + "MBT" : "");
 		
 			let oContractData = oView.getModel("contDataModel").getData();
+			let  profile = oContractData.Profile;
 			let maxDCQ = this._getClauseValue(oContractData.data, "Max DP DCQ");
 			let minDCQ = this._getClauseValue(oContractData.data, "Min DP DCQ");
 		
 			let valueMap = {
 				"DNQ": dnqValue,
-				"Max DCQ": maxDCQ,
-				"Min DCQ": minDCQ
+				"Max DP DCQ": maxDCQ,
+				"Min DP DCQ": minDCQ
 			};
 		
+			let isRelaxedValidation = (dpSelectedEvent === "Force-Majeure" || dpSelectedEvent === "Under-Maintenance");
+			console.log("isrelax",isRelaxedValidation);
+			
 			if (this._validationTimeout) {
 				clearTimeout(this._validationTimeout);
 			}
@@ -462,61 +447,103 @@ sap.ui.define([
 				this._lastValidatedValue = sValue;
 		
 				this._validationTimeout = setTimeout(async () => {
-					if (sValue.length >= 1) { 
+					if (sValue.length >= 1) {
 						try {
-							await HelperFunction.validateDNQ(oView, valueMap, customerValue);
+							let isValid = await HelperFunction.validateDNQ(oView, valueMap, customerValue,profile, isRelaxedValidation);
+							if (!isValid) {
+								oEvent.getSource().setValue("");
+								oModel.setProperty("/dpCummDNQ", "");
+							}
 						} catch (err) {
 							console.error("Validation failed:", err);
+							oEvent.getSource().setValue("");
+							oModel.setProperty("/dpCummDNQ", "");
 						} finally {
 							this._validationTimeout = null;
 						}
 					}
-				}, 1000); // Debounce time (1000ms)
+				}, 1000); 
 			}
 		},
+		
+		
+		RDPeventSelected:function(oEvent){
+        let event = oEvent.getSource().getSelectedItem();
+		if(event){
+			RDPSelectedEvent = event.getText();
+			return RDPSelectedEvent
+		}
+		},
+		DpEventSelected:function(oEvent){
+			let event = oEvent.getSource().getSelectedItem();
+			if(event){
+				dpSelectedEvent = event.getText();
+				return dpSelectedEvent
+			}
+		},
+		
 		OnReDeliveryDNQValidation: function (oEvent) {
+			
 			let sValue = oEvent.getParameter("value").trim();
 			let dnqValue = parseFloat(sValue) || 0;
 			let oView = this.getView();
 			let oModel = oView.getModel("localModel");
 		
-			oModel.setProperty("/CummDNQ", sValue ? sValue + "MBT" : "");
+			if (!sValue) {
+				oModel.setProperty("/rdpCummDNQ", "");
+				this._lastValidatedValue = null;
+				return;
+			}
+		
+			oModel.setProperty("/rdpCummDNQ", sValue + "MBT");
 		
 			let oContractData = oView.getModel("contDataModel").getData();
+		
+			let  profile = oContractData.Profile; 
+			
 			let maxRDPDCQ = this._getClauseValue(oContractData.data, "Max RDP DCQ");
 			let minRDPDCQ = this._getClauseValue(oContractData.data, "Min RDP DCQ");
 		
 			let valueMap = {
 				"DNQ": dnqValue,
-				"Max DCQ": maxRDPDCQ,
-				"Min DCQ": minRDPDCQ
+				"Max RDP DCQ": maxRDPDCQ,
+				"Min RDP DCQ": minRDPDCQ
 			};
+		
+			let isRelaxedValidation = (RDPSelectedEvent === "Force-Majeure" || RDPSelectedEvent === "Under-Maintenance");
+			console.log("isrelax",isRelaxedValidation);
+			
 		
 			if (this._validationTimeout) {
 				clearTimeout(this._validationTimeout);
-			}
-		
-			if (sValue === "") {
-				this._lastValidatedValue = null;
-				return; 
 			}
 		
 			if (!this._lastValidatedValue || this._lastValidatedValue !== sValue) {
 				this._lastValidatedValue = sValue;
 		
 				this._validationTimeout = setTimeout(async () => {
-					if (sValue.length >= 1) { 
+					if (sValue.length >= 1) {
 						try {
-							await HelperFunction.validateDNQ(oView, valueMap, customerValue);
+							let isValid = await HelperFunction.validateDNQ(oView, valueMap, customerValue,profile, isRelaxedValidation);
+							if (!isValid) {
+								oEvent.getSource().setValue("");
+								oModel.setProperty("/rdpCummDNQ", "");
+							}
 						} catch (err) {
 							console.error("Validation failed:", err);
+							oEvent.getSource().setValue("");
+							oModel.setProperty("/rdpCummDNQ", "");
 						} finally {
 							this._validationTimeout = null;
 						}
 					}
-				}, 1000); // Debounce time (1000ms)
+				}, 1000);
 			}
 		},
+		
+		
+		
+		
 		
 		
 		_getClauseValue: function (data, clauseCode) {

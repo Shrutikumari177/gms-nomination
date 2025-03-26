@@ -82,77 +82,7 @@ sap.ui.define(["sap/ui/core/Fragment","sap/ui/model/Filter","sap/ui/model/Filter
         console.log(`Error occurred while reading data from the '${url}' entity : `, error)
        }
     },
-   
-    validateDNQ1: async function (oView, valueMap, customerNo) {
-        try {
-            const oModel = oView.getModel();
-            if (!oModel) {
-                throw new Error("OData model not found on the view.");
-            }
-    
-            const oFilter = new sap.ui.model.Filter("CustomerNo", sap.ui.model.FilterOperator.EQ, customerNo);
-            const oBindList = oModel.bindList("/Nominationlogic", null, null, [oFilter]);
-            
-            const oContext = await oBindList.requestContexts(0, Infinity);
-            const customerRules = oContext.map((context) => context.getObject());
-    
-            if (!customerRules.length) {
-                console.info(`No rules found for CustomerNo: ${customerNo}`);
-                return;
-            }
-    
-            const groupedRules = customerRules.reduce((groups, rule) => {
-                const key = rule.logic || "NONE"; // Defaults to "NONE" for standalone rules
-                (groups[key] ||= []).push(rule); 
-                return groups;
-            }, {});
-    
-            // Validation logic
-            Object.entries(groupedRules).forEach(([logic, rules]) => {
-                let isValid = logic === "AND";
-    
-                rules.forEach((rule) => {
-                    const value1 = valueMap[rule.SP1];
-                    const value2 = valueMap[rule.SP2];
-    
-                    if (value1 === undefined || value2 === undefined) {
-                        console.warn(`Values missing for SP1: ${rule.SP1} or SP2: ${rule.SP2}`);
-                        return;
-                    }
-    
-                    // Logical operator checks
-                    const operatorChecks = {
-                        "<=": value1 <= value2,
-                        ">=": value1 >= value2,
-                        "=": value1 === value2,
-                        "!=": value1 !== value2
-                    };
-    
-                    const conditionMet = operatorChecks[rule.logicaloperator];
-    
-                    // Validate based on logic type
-                    if (logic === "AND") {
-                        isValid = isValid && conditionMet;
-                    } else if (logic === "OR") {
-                        isValid = isValid || conditionMet;
-                    } else if (!conditionMet) { // for NONE (standalone rules)
-                        MessageBox.error(rule.message || `${rule.SP1} validation failed against ${rule.SP2}`);
-                    }
-                });
-    
-                // Show group-level error messages
-                if ((logic === "AND" && !isValid) || (logic === "OR" && !isValid)) {
-                    MessageBox.error(`Validation failed for rules group with logic: ${logic}`);
-                }
-            });
-    
-        } catch (error) {
-            console.error("Validation error:", error);
-            MessageBox.error("An error occurred during validation.");
-        }
-    },
     validateDNQ: async function (oView, valueMap, customerNo) {
-        
         try {
             const oModel = oView.getModel();
             if (!oModel) {
@@ -167,16 +97,17 @@ sap.ui.define(["sap/ui/core/Fragment","sap/ui/model/Filter","sap/ui/model/Filter
     
             if (!customerRules.length) {
                 console.info(`No rules found for CustomerNo: ${customerNo}`);
-                return;
+                return true; // No rules, so no validation errors
             }
     
             const groupedRules = customerRules.reduce((groups, rule) => {
-                const key = rule.logic || "NONE"; // Defaults to "NONE" for standalone rules
+                const key = rule.logic || "NONE"; 
                 (groups[key] ||= []).push(rule); 
                 return groups;
             }, {});
+            
+            let validationFailed = false; 
     
-            // Validation logic
             Object.entries(groupedRules).forEach(([logic, rules]) => {
                 let isValid = logic === "AND";
     
@@ -203,8 +134,9 @@ sap.ui.define(["sap/ui/core/Fragment","sap/ui/model/Filter","sap/ui/model/Filter
                         isValid = isValid && conditionMet;
                     } else if (logic === "OR") {
                         isValid = isValid || conditionMet;
-                    } else if (!conditionMet) { // for NONE (standalone rules)
+                    } else if (!conditionMet) { 
                         MessageBox.error(rule.message || `${rule.SP1} validation failed against ${rule.SP2}`);
+                        validationFailed = true;
                     }
                 });
     
@@ -212,14 +144,21 @@ sap.ui.define(["sap/ui/core/Fragment","sap/ui/model/Filter","sap/ui/model/Filter
                 if ((logic === "AND" && !isValid) || (logic === "OR" && !isValid)) {
                     const groupErrorMsg = rules.map((rule) => rule.message || `${rule.SP1} validation failed`).join("\n");
                     MessageBox.error(groupErrorMsg);
+                    validationFailed = true;
                 }
             });
+    
+            return !validationFailed; 
     
         } catch (error) {
             console.error("Validation error:", error);
             MessageBox.error("An error occurred during validation.");
+            return false;
         }
     },
+    
+ 
+    
     
     
     

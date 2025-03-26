@@ -1,7 +1,6 @@
 const cds = require('@sap/cds');
 
-const axios = require('axios');
-
+const cron = require('node-cron');
 
 module.exports = cds.service.impl(async (srv) => {
     const externalService = await cds.connect.to('GMS_CONFIG');
@@ -53,15 +52,32 @@ module.exports = cds.service.impl(async (srv) => {
             req.error(500, 'Failed to fetch data from external service.');
         }
     })
+    // srv.on('READ', 'Nominationlogic', async (req) => {
+    //     try {
+    //         const result = await externalService.run(SELECT.from('Nominationlogic'));
+    //         return result;
+    //     } catch (err) {
+    //         console.error('Error fetching data from external service:', err);
+    //         req.error(500, 'Failed to fetch data from external service.');
+    //     }
+    // })
     srv.on('READ', 'Nominationlogic', async (req) => {
         try {
-            const result = await externalService.run(SELECT.from('Nominationlogic'));
+            // Extract filters from the request
+            const query = SELECT.from('Nominationlogic');
+            
+            if (req.query.SELECT.where) {
+                query.where(req.query.SELECT.where);
+            }
+    
+            const result = await externalService.run(query);
             return result;
         } catch (err) {
             console.error('Error fetching data from external service:', err);
             req.error(500, 'Failed to fetch data from external service.');
         }
-    })
+    });
+    
 
     const GMSNOMCP_GMS_SRV = await cds.connect.to("GMSNOMCP_GMS_SRV");
 
@@ -153,7 +169,7 @@ module.exports = cds.service.impl(async (srv) => {
             .columns(
                 'DocNo', 'Item', 'Material', 'Redelivery_Point', 'Delivery_Point', 
                 'Delivery_Dcq', 'Redelivery_Dcq', 'Valid_Form', 'Valid_To', 
-                'Calculated_Value', 'Clause_Code', 'SoldToParty', 'UOM', 'Contracttype'
+                'Calculated_Value', 'Clause_Code', 'SoldToParty', 'UOM', 'Contracttype','Profile'
             )
             .where({ DocNo });
     
@@ -203,7 +219,8 @@ module.exports = cds.service.impl(async (srv) => {
             Valid_To,
             SoldToParty,
             UOM,
-            Contracttype
+            Contracttype,
+            Profile
         } = filteredResults[0];
     
         // Remove duplicates from 'data' array
@@ -231,6 +248,7 @@ module.exports = cds.service.impl(async (srv) => {
             SoldToParty,
             UOM,
             Contracttype,
+            Profile,
             data: uniqueData
         };
     });
@@ -459,93 +477,6 @@ module.exports = cds.service.impl(async (srv) => {
         }
     });
 
-    srv.on('READ', 'VirtualNominations', async (req) => {
-        const db = cds.transaction(req);
-        const currentDate = new Date();
-        currentDate.setDate(currentDate.getDate() + 1);
-        const tomorrow = currentDate.toISOString().split('T')[0];
-    
-        try {
-            console.log("🔹 Fetching contracts from systemNomination table...");
-    
-            // Fetch contracts from another table
-            const contracts = await db.run(SELECT.from('app.gms.nomination.systemNomination'));
-    
-            console.log("✅ Contracts retrieved:", contracts.length);
-    
-            // Filter contracts valid for tomorrow
-            const validContracts = contracts.filter(c =>
-                tomorrow >= c.ValidFrom && tomorrow <= c.ValidTo
-            );
-    
-            console.log("✅ Valid contracts for tomorrow:", validContracts.length);
-    
-            if (validContracts.length === 0) {
-                console.log("⚠ No valid contracts found for tomorrow.");
-                return [];
-            }
-    
-            let createdNominations = [];
-    
-            for (const contract of validContracts) {
-                let nomi_toitem = [{
-                    Gasday: tomorrow,
-                    Vbeln: contract.Vbeln,
-                    ItemNo: "10",
-                    NomItem: "10",
-                    Versn: "",
-                    DeliveryPoint: "",
-                    RedelivryPoint: contract.RedelivryPoint,
-                    ValidTo: "06:00:00",
-                    ValidFrom: "06:00:00",
-                    Material: contract.Material,
-                    Auart: "ZGSA",
-                    Ddcq: "0.000",
-                    Rdcq: contract.Rdcq,
-                    Uom1: contract.Uom,
-                    Event: "No-Event",
-                    Adnq: "0.000",
-                    Rpdnq: contract.Rpdnq
-                }];
-    
-                let createNomPayload = {
-                    Gasday: tomorrow,
-                    Vbeln: contract.Vbeln,
-                    nomi_toitem
-                };
-    
-                console.log("🔹 Creating nomination entry:", createNomPayload);
-    
-                try {
-                    // Call external service to insert the nomination
-                    const newNomination = await GMSNOMINATIONS_SRV.run(
-                        INSERT.into('znom_headSet').entries(createNomPayload)
-                    );
-    
-                    console.log("✅ Nomination created successfully:", newNomination);
-                    createdNominations.push(newNomination);
-                } catch (error) {
-                    console.error("❌ Error while creating nomination:", error.message);
-                }
-            }
-    
-            console.log("✅ Total nominations created:", createdNominations.length);
-    
-            // Return created nominations for display but do not store in VirtualNominations
-            return createdNominations;
-    
-        } catch (error) {
-            console.error("❌ Error in VirtualNominations READ handler:", error.message);
-            return [];
-        }
-    });
-    
-
-
-
-
-
-
     // srv.on('READ', 'VirtualNominations', async (req) => {
     //     const db = cds.transaction(req);
     //     const currentDate = new Date();
@@ -575,10 +506,7 @@ module.exports = cds.service.impl(async (srv) => {
     //         let createdNominations = [];
     
     //         for (const contract of validContracts) {
-    //             let nomi_toitem = [];
-    
-    //             // Wrap data inside nomi_toitem array
-    //             nomi_toitem.push({
+    //             let nomi_toitem = [{
     //                 Gasday: tomorrow,
     //                 Vbeln: contract.Vbeln,
     //                 ItemNo: "10",
@@ -596,12 +524,12 @@ module.exports = cds.service.impl(async (srv) => {
     //                 Event: "No-Event",
     //                 Adnq: "0.000",
     //                 Rpdnq: contract.Rpdnq
-    //             });
+    //             }];
     
     //             let createNomPayload = {
     //                 Gasday: tomorrow,
     //                 Vbeln: contract.Vbeln,
-    //                 nomi_toitem // Ensures this is an array inside the payload
+    //                 nomi_toitem
     //             };
     
     //             console.log("🔹 Creating nomination entry:", createNomPayload);
@@ -620,6 +548,8 @@ module.exports = cds.service.impl(async (srv) => {
     //         }
     
     //         console.log("✅ Total nominations created:", createdNominations.length);
+    
+    //         // Return created nominations for display but do not store in VirtualNominations
     //         return createdNominations;
     
     //     } catch (error) {
@@ -627,7 +557,103 @@ module.exports = cds.service.impl(async (srv) => {
     //         return [];
     //     }
     // });
+
+
+    async function generateVirtualNominations(req = null) {
+        const db = cds.transaction(req || this); // Initialize transaction inside function
+        const currentDate = new Date();
+        currentDate.setDate(currentDate.getDate() + 1);
+        const tomorrow = currentDate.toISOString().split('T')[0];
+
+        try {
+            console.log("🔹 Fetching contracts from systemNomination table...");
+
+            const contracts = await db.run(SELECT.from('app.gms.nomination.systemNomination'));
+
+            console.log("✅ Contracts retrieved:", contracts.length);
+
+            const validContracts = contracts.filter(c =>
+                tomorrow >= c.ValidFrom && tomorrow <= c.ValidTo
+            );
+
+            console.log("✅ Valid contracts for tomorrow:", validContracts.length);
+
+            if (validContracts.length === 0) {
+                console.log("⚠ No valid contracts found for tomorrow.");
+                return [];
+            }
+
+            let createdNominations = [];
+
+            for (const contract of validContracts) {
+                let nomi_toitem = [{
+                    Gasday: tomorrow,
+                    Vbeln: contract.Vbeln,
+                    ItemNo: "10",
+                    NomItem: "10",
+                    Versn: "",
+                    DeliveryPoint: "",
+                    RedelivryPoint: contract.RedelivryPoint,
+                    ValidTo: "06:00:00",
+                    ValidFrom: "06:00:00",
+                    Material: contract.Material,
+                    Auart: "ZGSA",
+                    Ddcq: "0.000",
+                    Rdcq: contract.Rdcq,
+                    Uom1: contract.Uom,
+                    Event: "No-Event",
+                    Adnq: "0.000",
+                    Rpdnq: contract.Rpdnq
+                }];
+
+                let createNomPayload = {
+                    Gasday: tomorrow,
+                    Vbeln: contract.Vbeln,
+                    nomi_toitem
+                };
+
+                console.log("🔹 Creating nomination entry:", createNomPayload);
+
+                try {
+                    
+                    const newNomination = await GMSNOMINATIONS_SRV.run(INSERT.into('znom_headSet').entries(createNomPayload));
+             
+                    console.log("✅ Nomination created successfully:", newNomination);
+                    createdNominations.push(newNomination);
+                } catch (error) {
+                    console.error("❌ Error while creating nomination:", error.message);
+                }
+            }
+
+            console.log("✅ Total nominations created:", createdNominations.length);
+            return createdNominations;
+
+        } catch (error) {
+            console.error("❌ Error in VirtualNominations Job:", error.message);
+            return [];
+        }
+    }
+
+    cron.schedule('00 06 * * *', async () => {
+        console.log(" Running VirtualNominations job at 11:30 IST...");
+        await generateVirtualNominations();
+    });
     
+    
+    
+
+    srv.on('READ', 'VirtualNominations', async (req) => {
+        console.log("🔹 Manually triggering VirtualNominations job...");
+        return await generateVirtualNominations(req);
+    });
+
+    
+
+
+
+
+
+
     
     
 

@@ -309,11 +309,9 @@ sap.ui.define([
 			try {
 				const sPath = `/getContractMatDetailsByGasday?DocNo='${encodeURIComponent(selectedContract)}'&Gasday=${encodeURIComponent(selectedGasDay)}`;
 
-				// Bind the list and fetch data with error handling
 				const oBindList = oModel.bindList(sPath);
 				const aContexts = await oBindList.requestContexts(0, Infinity);
 
-				// Map the fetched contexts to objects
 				const aContracts = aContexts.map(oContext => oContext.getObject());
 				console.log("aContracts", aContracts);
 
@@ -322,7 +320,6 @@ sap.ui.define([
 					return;
 				}
 
-				// Update the material model with the fetched data
 				let oMaterialModel = oView.getModel("materialModel");
 				if (!oMaterialModel) {
 					oMaterialModel = new sap.ui.model.json.JSONModel();
@@ -331,79 +328,13 @@ sap.ui.define([
 				oMaterialModel.setProperty("/selectedMaterials", aContracts);
 
 			} catch (oError) {
-				// Log the error and show a user-friendly message
-				console.error("Error fetching contract details:", oError.message || oError);
-				sap.m.MessageBox.error("Failed to fetch contract details. Please try again later.");
-			} finally {
-				// Ensure the busy indicator is turned off
-				oContractsControl.setBusy(false);
-			}
-		},
-		fetchNominationsDetails2: async function (selectedContract, selectedGasDay) {
-
-			if (!selectedContract) {
-				sap.m.MessageToast.show("Please select a contract.");
-				return;
-			}
-			if (!selectedGasDay) {
-				sap.m.MessageToast.show("Please select a date before choosing a contract.");
-				return;
-			}
-		
-			const oView = this.getView();
-			const oContractsControl = oView.byId("pubNom_Contracts");
-			const oVboxCon = oView.byId("VboxCon");
-			const oVboxMat = oView.byId("VboxMat");
-		
-			oContractsControl.setBusy(true);
-			oVboxCon.setVisible(false);
-			oVboxMat.setVisible(true);
-		
-			let oModel = this.getOwnerComponent().getModel();
-		
-			try {
-				// Ensure DocNo is a string
-				let sDocNo = encodeURIComponent(String(selectedContract)); 
-				
-				// Ensure Gasday is a valid date string
-				let oGasDay = new Date(selectedGasDay);
-				if (isNaN(oGasDay.getTime())) {
-					sap.m.MessageToast.show("Invalid date format. Please select a valid date.");
-					return;
-				}
-				let sGasDay = encodeURIComponent(oGasDay.toISOString().split("T")[0]); // Format as YYYY-MM-DD
-		
-				// Construct API path
-				const sPath = `/getContractMatDetailsByGasday?DocNo='${sDocNo}'&Gasday=${sGasDay}`;
-				console.log("sPath", sPath);
-		
-				// Fetch data
-				const oBindList = oModel.bindList(sPath);
-				const aContexts = await oBindList.requestContexts(0, Infinity);
-		
-				const aContracts = aContexts.map(oContext => oContext.getObject());
-				console.log("aContracts", aContracts);
-		
-				if (!aContracts || aContracts.length === 0) {
-					sap.m.MessageToast.show("No nominations found for the selected contract.");
-					return;
-				}
-		
-				// Update the material model
-				let oMaterialModel = oView.getModel("materialModel");
-				if (!oMaterialModel) {
-					oMaterialModel = new sap.ui.model.json.JSONModel();
-					oView.setModel(oMaterialModel, "materialModel");
-				}
-				oMaterialModel.setProperty("/selectedMaterials", aContracts);
-		
-			} catch (oError) {
 				console.error("Error fetching contract details:", oError.message || oError);
 				sap.m.MessageBox.error("Failed to fetch contract details. Please try again later.");
 			} finally {
 				oContractsControl.setBusy(false);
 			}
 		},
+	
 		
 
 		debounce: function (fn, delay) {
@@ -474,8 +405,8 @@ sap.ui.define([
 
 			let valueMap = {
 				"DNQ": dnqValue,
-				"Max DCQ": maxRDPDCQ,
-				"Min DCQ": minRDPDCQ
+				"Max RDP DCQ": maxRDPDCQ,
+				"Min RDP DCQ": minRDPDCQ
 			};
 
 			if (this._validationTimeout) {
@@ -493,9 +424,13 @@ sap.ui.define([
 				this._validationTimeout = setTimeout(async () => {
 					if (sValue.length >= 1) {
 						try {
-							await HelperFunction.validateDNQ(oView, valueMap, customerValue);
+						let isValid=	await HelperFunction.validateDNQ(oView, valueMap, customerValue);
+						if (!isValid) {
+							oEvent.getSource().setValue(""); 
+						}
 						} catch (err) {
 							console.error("Validation failed:", err);
+							oEvent.getSource().setValue(""); 
 						} finally {
 							this._validationTimeout = null;
 						}

@@ -20,6 +20,8 @@ sap.ui.define([
 	let oView;
 	let sContract
 	let customerValue;
+	let RDPSelectedEvent ;
+	let dpSelectedEvent
 
 	return Controller.extend("com.ingenx.nomination.salesnomination.controller.publishRenomination", {
 
@@ -309,11 +311,9 @@ sap.ui.define([
 			try {
 				const sPath = `/getContractMatDetailsByGasday?DocNo='${encodeURIComponent(selectedContract)}'&Gasday=${encodeURIComponent(selectedGasDay)}`;
 
-				// Bind the list and fetch data with error handling
 				const oBindList = oModel.bindList(sPath);
 				const aContexts = await oBindList.requestContexts(0, Infinity);
 
-				// Map the fetched contexts to objects
 				const aContracts = aContexts.map(oContext => oContext.getObject());
 				console.log("aContracts", aContracts);
 
@@ -322,7 +322,6 @@ sap.ui.define([
 					return;
 				}
 
-				// Update the material model with the fetched data
 				let oMaterialModel = oView.getModel("materialModel");
 				if (!oMaterialModel) {
 					oMaterialModel = new sap.ui.model.json.JSONModel();
@@ -331,79 +330,13 @@ sap.ui.define([
 				oMaterialModel.setProperty("/selectedMaterials", aContracts);
 
 			} catch (oError) {
-				// Log the error and show a user-friendly message
-				console.error("Error fetching contract details:", oError.message || oError);
-				sap.m.MessageBox.error("Failed to fetch contract details. Please try again later.");
-			} finally {
-				// Ensure the busy indicator is turned off
-				oContractsControl.setBusy(false);
-			}
-		},
-		fetchNominationsDetails2: async function (selectedContract, selectedGasDay) {
-
-			if (!selectedContract) {
-				sap.m.MessageToast.show("Please select a contract.");
-				return;
-			}
-			if (!selectedGasDay) {
-				sap.m.MessageToast.show("Please select a date before choosing a contract.");
-				return;
-			}
-		
-			const oView = this.getView();
-			const oContractsControl = oView.byId("pubNom_Contracts");
-			const oVboxCon = oView.byId("VboxCon");
-			const oVboxMat = oView.byId("VboxMat");
-		
-			oContractsControl.setBusy(true);
-			oVboxCon.setVisible(false);
-			oVboxMat.setVisible(true);
-		
-			let oModel = this.getOwnerComponent().getModel();
-		
-			try {
-				// Ensure DocNo is a string
-				let sDocNo = encodeURIComponent(String(selectedContract)); 
-				
-				// Ensure Gasday is a valid date string
-				let oGasDay = new Date(selectedGasDay);
-				if (isNaN(oGasDay.getTime())) {
-					sap.m.MessageToast.show("Invalid date format. Please select a valid date.");
-					return;
-				}
-				let sGasDay = encodeURIComponent(oGasDay.toISOString().split("T")[0]); // Format as YYYY-MM-DD
-		
-				// Construct API path
-				const sPath = `/getContractMatDetailsByGasday?DocNo='${sDocNo}'&Gasday=${sGasDay}`;
-				console.log("sPath", sPath);
-		
-				// Fetch data
-				const oBindList = oModel.bindList(sPath);
-				const aContexts = await oBindList.requestContexts(0, Infinity);
-		
-				const aContracts = aContexts.map(oContext => oContext.getObject());
-				console.log("aContracts", aContracts);
-		
-				if (!aContracts || aContracts.length === 0) {
-					sap.m.MessageToast.show("No nominations found for the selected contract.");
-					return;
-				}
-		
-				// Update the material model
-				let oMaterialModel = oView.getModel("materialModel");
-				if (!oMaterialModel) {
-					oMaterialModel = new sap.ui.model.json.JSONModel();
-					oView.setModel(oMaterialModel, "materialModel");
-				}
-				oMaterialModel.setProperty("/selectedMaterials", aContracts);
-		
-			} catch (oError) {
 				console.error("Error fetching contract details:", oError.message || oError);
 				sap.m.MessageBox.error("Failed to fetch contract details. Please try again later.");
 			} finally {
 				oContractsControl.setBusy(false);
 			}
 		},
+	
 		
 
 		debounce: function (fn, delay) {
@@ -420,87 +353,136 @@ sap.ui.define([
 
 
 		OnDeliveryDNQValidation: function (oEvent) {
-
-			let sValue = oEvent.getParameter("value").trim();
-			let dnqValue = parseFloat(sValue) || 0;
-			let oView = this.getView();
-
-			let oContractData = oView.getModel("contDataModel").getData();
-			let maxDCQ = this._getClauseValue(oContractData.data, "Max DP DCQ");
-			let minDCQ = this._getClauseValue(oContractData.data, "Min DP DCQ");
-
-			let valueMap = {
-				"DNQ": dnqValue,
-				"Max DCQ": maxDCQ,
-				"Min DCQ": minDCQ
-			};
-
-			if (this._validationTimeout) {
-				clearTimeout(this._validationTimeout);
-			}
-
-			if (sValue === "") {
-				this._lastValidatedValue = null;
-				return; // Skip validation if field is empty
-			}
-
-			if (!this._lastValidatedValue || this._lastValidatedValue !== sValue) {
-				this._lastValidatedValue = sValue;
-
-				this._validationTimeout = setTimeout(async () => {
-					if (sValue.length >= 1) {
-						try {
-							await HelperFunction.validateDNQ(oView, valueMap, customerValue);
-						} catch (err) {
-							console.error("Validation failed:", err);
-						} finally {
-							this._validationTimeout = null;
-						}
-					}
-				}, 1000); // Debounce time (1000ms)
-			}
-		},
-		OnReDeliveryDNQValidation: function (oEvent) {
+			
 			let sValue = oEvent.getParameter("value").trim();
 			let dnqValue = parseFloat(sValue) || 0;
 			let oView = this.getView();
 			let oModel = oView.getModel("localModel");
-
-			oModel.setProperty("/CummDNQ", sValue ? sValue + "MBT" : "");
-
-			let oContractData = oView.getModel("contDataModel").getData();
-			let maxRDPDCQ = this._getClauseValue(oContractData.data, "Max RDP DCQ");
-			let minRDPDCQ = this._getClauseValue(oContractData.data, "Min RDP DCQ");
-
-			let valueMap = {
-				"DNQ": dnqValue,
-				"Max DCQ": maxRDPDCQ,
-				"Min DCQ": minRDPDCQ
-			};
-
-			if (this._validationTimeout) {
-				clearTimeout(this._validationTimeout);
-			}
-
-			if (sValue === "") {
+		
+			if (!sValue){
+			
 				this._lastValidatedValue = null;
 				return;
 			}
-
+		
+			let oContractData = oView.getModel("contDataModel").getData();
+			let  profile = oContractData.Profile;
+			let maxDCQ = this._getClauseValue(oContractData.data, "Max DP DCQ");
+			let minDCQ = this._getClauseValue(oContractData.data, "Min DP DCQ");
+		
+			let valueMap = {
+				"DNQ": dnqValue,
+				"Max DP DCQ": maxDCQ,
+				"Min DP DCQ": minDCQ
+			};
+		
+			let isRelaxedValidation = (dpSelectedEvent === "Force-Majeure" || dpSelectedEvent === "Under-Maintenance");
+			console.log("isrelax",isRelaxedValidation);
+			
+			if (this._validationTimeout) {
+				clearTimeout(this._validationTimeout);
+			}
+		
+			if (sValue === "") {
+				this._lastValidatedValue = null;
+				return; // Skip validation if field is empty
+			}
+		
 			if (!this._lastValidatedValue || this._lastValidatedValue !== sValue) {
 				this._lastValidatedValue = sValue;
-
+		
 				this._validationTimeout = setTimeout(async () => {
 					if (sValue.length >= 1) {
 						try {
-							await HelperFunction.validateDNQ(oView, valueMap, customerValue);
+							let isValid = await HelperFunction.validateDNQ(oView, valueMap, customerValue,profile, isRelaxedValidation);
+							if (!isValid) {
+								oEvent.getSource().setValue("");
+								
+							}
 						} catch (err) {
 							console.error("Validation failed:", err);
+							oEvent.getSource().setValue("");
+							
 						} finally {
 							this._validationTimeout = null;
 						}
 					}
-				}, 1000); // Debounce time (1000ms)
+				}, 1000); 
+			}
+		},
+		
+		
+		RDPeventSelected:function(oEvent){
+        let event = oEvent.getSource().getSelectedItem();
+		if(event){
+			RDPSelectedEvent = event.getText();
+			return RDPSelectedEvent
+		}
+		},
+		DpEventSelected:function(oEvent){
+			let event = oEvent.getSource().getSelectedItem();
+			if(event){
+				dpSelectedEvent = event.getText();
+				return dpSelectedEvent
+			}
+		},
+		
+		OnReDeliveryDNQValidation: function (oEvent) {
+			
+			let sValue = oEvent.getParameter("value").trim();
+			let dnqValue = parseFloat(sValue) || 0;
+			let oView = this.getView();
+			let oModel = oView.getModel("localModel");
+		
+			if (!sValue) {
+			
+				this._lastValidatedValue = null;
+				return;
+			}
+		
+			
+		
+			let oContractData = oView.getModel("contDataModel").getData();
+		
+			let  profile = oContractData.Profile; 
+			
+			let maxRDPDCQ = this._getClauseValue(oContractData.data, "Max RDP DCQ");
+			let minRDPDCQ = this._getClauseValue(oContractData.data, "Min RDP DCQ");
+		
+			let valueMap = {
+				"DNQ": dnqValue,
+				"Max RDP DCQ": maxRDPDCQ,
+				"Min RDP DCQ": minRDPDCQ
+			};
+		
+			let isRelaxedValidation = (RDPSelectedEvent === "Force-Majeure" || RDPSelectedEvent === "Under-Maintenance");
+			console.log("isrelax",isRelaxedValidation);
+			
+		
+			if (this._validationTimeout) {
+				clearTimeout(this._validationTimeout);
+			}
+		
+			if (!this._lastValidatedValue || this._lastValidatedValue !== sValue) {
+				this._lastValidatedValue = sValue;
+		
+				this._validationTimeout = setTimeout(async () => {
+					if (sValue.length >= 1) {
+						try {
+							let isValid = await HelperFunction.validateDNQ(oView, valueMap, customerValue,profile, isRelaxedValidation);
+							if (!isValid) {
+								oEvent.getSource().setValue("");
+								
+							}
+						} catch (err) {
+							console.error("Validation failed:", err);
+							oEvent.getSource().setValue("");
+						
+						} finally {
+							this._validationTimeout = null;
+						}
+					}
+				}, 1000);
 			}
 		},
 

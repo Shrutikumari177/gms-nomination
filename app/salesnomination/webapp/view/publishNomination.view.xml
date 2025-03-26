@@ -242,15 +242,18 @@
                                 id="IdDelCummDNQ"
                                 text="Total. DNQ"
                                 design="Bold"
+                                visible="false"
                             />
                             <Input
                                 id="IdDelCummDNQInput"
-                                value="{}"
+                                value="{localModel>/dpCummDNQ}"
                                 width="150px"
                                 editable="false"
+                                visible="false"
                             />
+                            
                         </contentMiddle>
-                        <contentRight>
+                        <!-- <contentRight>
                             <Button
                                 id="IdPubNomAddBtnForDelv"
                                 icon="sap-icon://add"
@@ -263,7 +266,7 @@
                                 type="Reject"
                                 press="onDeleteRowDlvPress"
                             />
-                        </contentRight>
+                        </contentRight> -->
                     </Bar>
                     <Table
                         id="IdPubNomDelPointTable"
@@ -346,9 +349,12 @@
                                 />
                                 <Select
                                     id="IdPubNomEventSelect"
-                                    selectedItem="{}"
+                                   
                                     forceSelection="false"
                                     width="200px"
+                                     selectedKey="{DelvModelData>Event}"
+                                    selectedItem="{DelvModelData>Event}"
+                                    change="DpEventSelected"
                                 >
                                                                     <core:ListItem id="IdPubNmNoneEvent" key="" text=""/>
     
@@ -387,6 +393,7 @@
                                 id="IdCummDNQ"
                                 text="Total. DNQ"
                                 design="Bold"
+                                visible="false"
                             />
                             <!-- <Input
                                 id="IdCummDNQInput"
@@ -396,12 +403,13 @@
                             /> -->
                             <Input
                                 id="IdCummDNQInput"
-                                value="{localModel>/CummDNQ}"
+                                value="{localModel>/rdpCummDNQ}"
                                 width="150px"
                                 editable="false"
+                                visible="false"
                             />
                         </contentMiddle>
-                        <contentRight>
+                        <!-- <contentRight >
                             <Button
                                 id="IdPubNomAddBtnForRedlv"
                                 icon="sap-icon://add"
@@ -415,7 +423,7 @@
                                 type="Reject"
                                 press="onDeletePress"
                             />
-                        </contentRight>
+                        </contentRight> -->
                     </Bar>
                     <Table
                         id="IdPubNomRedPointTable"
@@ -501,7 +509,8 @@
                                     id="IdPubNomEventSelect2"
                                     selectedKey="{RedlvModelData>Event}"
                                     selectedItem="{RedlvModelData>Event}"
-                                >
+                                    change="RDPeventSelected"
+                                 >
                                     <core:ListItem id="IdPubNomNoneEvent" key="" text=""/>
                                     <core:ListItem
                                         id="IdPubNomReNoEventItem"

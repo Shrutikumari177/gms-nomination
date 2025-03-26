@@ -245,10 +245,11 @@
                             />
                             <Input
                                 id="IdDelCummDNQInput"
-                                value="{}"
+                                value="{localModel>/dpCummDNQ}"
                                 width="150px"
                                 editable="false"
                             />
+                            
                         </contentMiddle>
                         <contentRight>
                             <Button
@@ -396,7 +397,7 @@
                             /> -->
                             <Input
                                 id="IdCummDNQInput"
-                                value="{localModel>/CummDNQ}"
+                                value="{localModel>/rdpCummDNQ}"
                                 width="150px"
                                 editable="false"
                             />
