@@ -8,7 +8,7 @@ GET http://localhost:4004/odata/v4/nomination-services/getNominationsByCustomer?
 GET http://localhost:4004/odata/v4/nomination-services/getContractDetailsAndPastNom?DocNo=40000932
 
 ####
-GET http://localhost:4004/odata/v4/nomination-services/getContractMatDetailsByGasday?DocNo=40000942&Gasday=2025-03-15
+GET http://localhost:4004/odata/v4/nomination-services/getContractMatDetailsByGasday?DocNo='40000942'&Gasday=2025-03-15
 
 
 

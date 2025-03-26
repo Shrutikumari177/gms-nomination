@@ -245,15 +245,22 @@
                                 id="IdDelCummDNQ"
                                 text="Total. DNQ"
                                 design="Bold"
+                                visible ="false"
+
+
+
+
+                            
                             />
                             <Input
                                 id="IdDelCummDNQInput"
                                 value="{}"
                                 width="150px"
                                 editable="false"
+                                  visible ="false"
                             />
                         </contentMiddle>
-                        <contentRight>
+                        <!-- <contentRight>
                             <Button
                                 id="IdRePubNomAddBtnForDelv"
                                 icon="sap-icon://add"
@@ -266,7 +273,7 @@
                                 type="Reject"
                                 press="onDeleteRowDlvPress"
                             />
-                        </contentRight>
+                        </contentRight> -->
                     </Bar>
                     <Table
                         id="IdRePubNomDelPointTable"
@@ -398,6 +405,7 @@
                                 id="IdCummDNQ"
                                 text="Total. DNQ"
                                 design="Bold"
+                                  visible ="false"
                             />
                             <!-- <Input
                                 id="IdCummDNQInput"
@@ -410,6 +418,7 @@
                                 value="{localModel>/CummDNQ}"
                                 width="150px"
                                 editable="false"
+                                  visible ="false"
                             />
                         </contentMiddle>
                         

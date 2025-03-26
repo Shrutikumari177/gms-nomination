@@ -290,7 +290,7 @@ module.exports = cds.service.impl(async (srv) => {
             .columns(
                 'DocNo', 'Item', 'Material', 'Redelivery_Point', 'Delivery_Point',
                 'Delivery_Dcq', 'Redelivery_Dcq', 'Valid_Form', 'Valid_To',
-                'Calculated_Value', 'Clause_Code', 'SoldToParty', 'UOM', 'Contracttype'
+                'Calculated_Value', 'Clause_Code', 'SoldToParty', 'UOM', 'Contracttype','Profile'
             )
             .where({ DocNo });
     
@@ -323,7 +323,6 @@ module.exports = cds.service.impl(async (srv) => {
             return null;
         }
     
-        // Find min/max Valid_Form and Valid_To dates
         const minValidForm = filteredResults.reduce((min, item) => item.Valid_Form < min ? item.Valid_Form : min, filteredResults[0].Valid_Form);
         const maxValidTo = filteredResults.reduce((max, item) => item.Valid_To > max ? item.Valid_To : max, filteredResults[0].Valid_To);
     
@@ -361,7 +360,7 @@ module.exports = cds.service.impl(async (srv) => {
         // Extracting main fields from first matched result
         const {
             Item, Delivery_Point, Delivery_Dcq, Redelivery_Dcq,
-            SoldToParty, UOM, Contracttype
+            SoldToParty, UOM, Contracttype,Profile
         } = filteredResults[0];
     
         // Removing duplicates from 'data'
@@ -389,12 +388,13 @@ module.exports = cds.service.impl(async (srv) => {
             SoldToParty,
             UOM,
             Contracttype,
+            Profile,
             Delivery_ValidFrom: deliveryData?.ValidFrom || null,
             Delivery_ValidTo: deliveryData?.ValidTo || null,
             Redelivery_ValidFrom: redeliveryData?.ValidFrom || null,
             Redelivery_ValidTo: redeliveryData?.ValidTo || null,
             Pdnq: deliveryData?.Pdnq || "0.000",
-            Rpdnq: redeliveryData?.Rpdnq || "0.000", // Picks latest non-zero Rpdnq
+            Rpdnq: redeliveryData?.Rpdnq || "0.000",
             Event: deliveryData?.Event || redeliveryData?.Event || null,
             data: uniqueData
         };

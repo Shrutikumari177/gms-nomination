@@ -250,7 +250,7 @@ sap.ui.define([
 			// Refresh the model bindings if they exist
 			const oGasDayPicker = this.byId("IdRePubNomGasDayPicker");
 			if (oGasDayPicker) {
-				oGasDayPicker.setValue(""); // Clear the selected date
+				oGasDayPicker.setValue(""); 
 			}
 			this.byId("IdDelCummDNQInput").setValue("");
 			this.byId("IdCummDNQInput").setValue("");
@@ -554,6 +554,9 @@ sap.ui.define([
 					this.getView().byId("IdRePubNomContractRPDCQ").setVisible(false);
 					this.getView().byId("IdRePubNomStaticListfinal").setVisible(false);
 					this.getView().byId("IdRePubNomDelPointTable").setVisible(true);
+					this.getView().byId("IdRePubNomTableHeaderBarForDelv").setVisible(true);
+
+
 
 					aDeliveryPoints.forEach(item => {
 						item.DeliveryPt = oData.value[0].Delivery_Point;
