@@ -477,87 +477,7 @@ module.exports = cds.service.impl(async (srv) => {
         }
     });
 
-    // srv.on('READ', 'VirtualNominations', async (req) => {
-    //     const db = cds.transaction(req);
-    //     const currentDate = new Date();
-    //     currentDate.setDate(currentDate.getDate() + 1);
-    //     const tomorrow = currentDate.toISOString().split('T')[0];
-    
-    //     try {
-    //         console.log("🔹 Fetching contracts from systemNomination table...");
-    
-    //         // Fetch contracts from another table
-    //         const contracts = await db.run(SELECT.from('app.gms.nomination.systemNomination'));
-    
-    //         console.log("✅ Contracts retrieved:", contracts.length);
-    
-    //         // Filter contracts valid for tomorrow
-    //         const validContracts = contracts.filter(c =>
-    //             tomorrow >= c.ValidFrom && tomorrow <= c.ValidTo
-    //         );
-    
-    //         console.log("✅ Valid contracts for tomorrow:", validContracts.length);
-    
-    //         if (validContracts.length === 0) {
-    //             console.log("⚠ No valid contracts found for tomorrow.");
-    //             return [];
-    //         }
-    
-    //         let createdNominations = [];
-    
-    //         for (const contract of validContracts) {
-    //             let nomi_toitem = [{
-    //                 Gasday: tomorrow,
-    //                 Vbeln: contract.Vbeln,
-    //                 ItemNo: "10",
-    //                 NomItem: "10",
-    //                 Versn: "",
-    //                 DeliveryPoint: "",
-    //                 RedelivryPoint: contract.RedelivryPoint,
-    //                 ValidTo: "06:00:00",
-    //                 ValidFrom: "06:00:00",
-    //                 Material: contract.Material,
-    //                 Auart: "ZGSA",
-    //                 Ddcq: "0.000",
-    //                 Rdcq: contract.Rdcq,
-    //                 Uom1: contract.Uom,
-    //                 Event: "No-Event",
-    //                 Adnq: "0.000",
-    //                 Rpdnq: contract.Rpdnq
-    //             }];
-    
-    //             let createNomPayload = {
-    //                 Gasday: tomorrow,
-    //                 Vbeln: contract.Vbeln,
-    //                 nomi_toitem
-    //             };
-    
-    //             console.log("🔹 Creating nomination entry:", createNomPayload);
-    
-    //             try {
-    //                 // Call external service to insert the nomination
-    //                 const newNomination = await GMSNOMINATIONS_SRV.run(
-    //                     INSERT.into('znom_headSet').entries(createNomPayload)
-    //                 );
-    
-    //                 console.log("✅ Nomination created successfully:", newNomination);
-    //                 createdNominations.push(newNomination);
-    //             } catch (error) {
-    //                 console.error("❌ Error while creating nomination:", error.message);
-    //             }
-    //         }
-    
-    //         console.log("✅ Total nominations created:", createdNominations.length);
-    
-    //         // Return created nominations for display but do not store in VirtualNominations
-    //         return createdNominations;
-    
-    //     } catch (error) {
-    //         console.error("❌ Error in VirtualNominations READ handler:", error.message);
-    //         return [];
-    //     }
-    // });
-
+/* ******************* function to generate automatic Nomination everyday ******************/
 
     async function generateVirtualNominations(req = null) {
         const db = cds.transaction(req || this); // Initialize transaction inside function
@@ -644,9 +564,9 @@ module.exports = cds.service.impl(async (srv) => {
 
     srv.on('READ', 'VirtualNominations', async (req) => {
         console.log("🔹 Manually triggering VirtualNominations job...");
-        return await generateVirtualNominations(req);
+        // return await generateVirtualNominations(req);
     });
-
+// ******************************************************************************************************
     
 
 
@@ -664,74 +584,7 @@ module.exports = cds.service.impl(async (srv) => {
 
 
 
-    // srv.on('handleSystemNomination', async (req) => {
-    //     const db = cds.transaction(req);
-    
-    //     const currentDate = new Date();
-    //     currentDate.setDate(currentDate.getDate() + 1);
-    //     const tomorrow = currentDate.toISOString().split('T')[0];
-    
-    //     try {
-    //         const contracts = await db.run(SELECT.from('app.gms.nomination.systemNomination'));
-
-    //         console.log("contracts",contracts);
-            
-    
-    //         const validContracts = contracts.filter(c =>
-    //             tomorrow >= c.ValidFrom && tomorrow <= c.ValidTo
-    //         );
-    
-    //         if (validContracts.length === 0) {
-    //             return "No contracts found for tomorrow.";
-    //         }
-    
-    //         let createdNominations = [];
-    
-    //         for (const contract of validContracts) {
-               
-                
-    //             let nomi_toitem = [];
-    
-                
-    //             nomi_toitem.push({
-    //                 Gasday: tomorrow,
-    //                 Vbeln: contract.Vbeln,
-    //                 ItemNo: "10",
-    //                 NomItem: "10",
-    //                 Versn: "",
-    //                 DeliveryPoint: "",
-    //                 RedelivryPoint: contract.RedelivryPoint,
-    //                 ValidTo: "06:00:00",
-    //                 ValidFrom: "06:00:00",
-    //                 Material: contract.Material,
-    //                 Auart: "ZGSA",
-    //                 Ddcq: "0.000",
-    //                 Rdcq: contract.Rdcq,
-    //                 Uom1: contract.Uom,
-    //                 Event: "No-Event",
-    //                 Adnq: "0.000",
-    //                 Rpdnq: contract.Rpdnq
-    //             });
-    
-    //             let createNomPayload = {
-    //                 Gasday: tomorrow,
-    //                 Vbeln: contract.Vbeln,
-    //                 nomi_toitem
-    //             };
-    //             const newNomination = await GMSNOMINATIONS_SRV.run(INSERT.into('znom_headSet').entries(createNomPayload));
-    //             createdNominations.push(newNomination);
-                
-    //         }
-    
-    //         return `${createdNominations.length} nominations created successfully.`;
-    
-    //     } catch (error) {
-    //         console.error(error);
-    //         return "Error while processing nominations.";
-    //     }
-    // });
    
-
 
 
     

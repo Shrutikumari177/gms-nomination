@@ -177,103 +177,67 @@ sap.ui.define([
 			}
 		},
       
-        onValueHelpConfirmMaterial: async function (oEvent) {
-            try {
-                let oSource = this._currentValueHelpSource;
-				let  material1 = HelperFunction._valueHelpSelectedValue(oEvent, this, oSource.getId());
+       
+		
+		onValueHelpConfirmMaterial: async function (oEvent) {
+			try {
+				let oSource = this._currentValueHelpSource;
+				let material1 = HelperFunction._valueHelpSelectedValue(oEvent, this, oSource.getId());
 				if (!material1) return;
-                let oSelectedItem = oEvent.getParameter("selectedItem");
-                if (!oSelectedItem) return;
-        
-                let oContext = oSelectedItem.getBindingContext("materialModel");
-                if (!oContext) return;
-        
-                let oSelectedMaterial = oContext.getObject();
-                let material = oSelectedMaterial.Material;
-                let redeliveryPoint = oSelectedMaterial.Redelivery_Point;
-                let docNo = oSelectedMaterial.DocNo;
-        
-                if (!docNo || !material || !redeliveryPoint) {
-                    sap.m.MessageBox.error("Missing required data: DocNo, Material, or Redelivery_Point.");
-                    return;
-                }
-        
-                // Construct API path
-                const sPath = `/getContractDetail?DocNo='${docNo}'&Material='${material}'&Redelivery_Point='${redeliveryPoint}'`;
-                console.log("API Call:", sPath);
-        
-                // Fetch contract details
-                let oModel = this.getOwnerComponent().getModel();
-                let oBinding = oModel.bindContext(sPath, null, {});
-        
-                const oData = await oBinding.requestObject();
-                console.log("Fetched Contract Data:", oData.value);
-        
-                if (!oData.value || oData.value.length === 0) {
-                    sap.m.MessageBox.warning("No contract details found for the selected material.");
-                    return;
-                }
-        
-                let contractDetails = oData.value[0];
-        
-                // **Update UI fields**
-                this.getView().byId("contractRDPDCQ").setValue(contractDetails.Redelivery_Dcq || ""); 
-                this.getView().byId("contractUOM").setValue(contractDetails.UOM || "");  
-                this.getView().byId("ContractRedeliveryPoint").setValue(contractDetails.Redelivery_Point || "");  
-                
-                // // **Handle Clause Codes and Values**
-                // let oClauseMap = {};
-                // if (contractDetails.data) {
-                //     contractDetails.data.forEach(entry => {
-                //         oClauseMap[entry.Clause_Code] = entry.Calculated_Value;
-                //     });
-                // }
-        
-                // // Update fields based on Clause Codes
-                // this.getView().byId("maxRdpDcq").setValue(oClauseMap["Max RDP DCQ"] || ""); 
-                // this.getView().byId("minDpDcq").setValue(oClauseMap["Min DP DCQ"] || ""); 
-                // this.getView().byId("maxDpDcq").setValue(oClauseMap["Max DP DCQ"] || ""); 
-                // this.getView().byId("minRdpDcq").setValue(oClauseMap["Min RDP DCQ"] || ""); 
-        
-            } catch (error) {
-                console.error("Error fetching contract details:", error);
-                sap.m.MessageBox.error("Failed to fetch contract details. Please try again.");
-            }
-        },
-		onSubmitSysNomDData1: function () {
-			var oView = this.getView();
-			var oModel = this.getOwnerComponent().getModel(); 
-			var oListBinding = oModel.bindList("/systemNomination");
 		
-			var oPayload = {
-				Vbeln: oView.byId("registrationMapping_emailID").getValue(), 
-				soldToParty: oView.byId("registrationMapping_retailerName").getValue(), 
-				Material: oView.byId("registrationMapping_contactNo").getValue(), 
-				Rdcq: parseFloat(oView.byId("contractRDPDCQ").getValue()) || 0, 
-				Uom: oView.byId("contractUOM").getValue(),
-				RedelivryPoint: oView.byId("ContractRedeliveryPoint").getValue(),
-				Rpdnq: parseFloat(oView.byId("registrationMapping_district").getValue()) || 0,
-				ValidTo: oView.byId("IdsysPubNomDelvtoTimePicker").getValue(), 
-				ValidFrom: oView.byId("IdsysPubNomDelvFromTimePicker").getValue()
-			};
+				let oSelectedItem = oEvent.getParameter("selectedItem");
+				if (!oSelectedItem) return;
 		
-			// Validate required fields
-			if (!oPayload.Vbeln) {
-				MessageBox.error("Contract No. is required!");
-				return;
+				let oContext = oSelectedItem.getBindingContext("materialModel");
+				if (!oContext) return;
+		
+				let oSelectedMaterial = oContext.getObject();
+				let material = oSelectedMaterial.Material;
+				let redeliveryPoint = oSelectedMaterial.Redelivery_Point;
+				let docNo = oSelectedMaterial.DocNo;
+		
+				if (!docNo || !material || !redeliveryPoint) {
+					sap.m.MessageBox.error("Missing required data: DocNo, Material, or Redelivery_Point.");
+					return;
+				}
+		
+				const sPath = `/getContractDetail?DocNo='${docNo}'&Material='${material}'&Redelivery_Point='${redeliveryPoint}'`;
+				console.log("API Call:", sPath);
+		
+				let oModel = this.getOwnerComponent().getModel();
+				let oBinding = oModel.bindContext(sPath, null, {});
+		
+				const oData = await oBinding.requestObject();
+				console.log("Fetched Contract Data:", oData.value);
+		
+				if (!oData.value || oData.value.length === 0) {
+					sap.m.MessageBox.warning("No contract details found for the selected material.");
+					return;
+				}
+		
+				let contractDetails = oData.value[0];
+		
+				// Ensure data array exists
+				let contractDataArray = contractDetails.data || [];
+		
+				let maxDCQ = this._getClauseValue(contractDataArray, "Max RDP DCQ");
+				let minDCQ = this._getClauseValue(contractDataArray, "Min RDP DCQ");
+				console.log("Max DCQ:", maxDCQ, "Min DCQ:", minDCQ);
+		
+				this.getView().byId("contractRDPDCQ").setValue(contractDetails.Redelivery_Dcq || ""); 
+				this.getView().byId("contractUOM").setValue(contractDetails.UOM || "");  
+				this.getView().byId("ContractRedeliveryPoint").setValue(contractDetails.Redelivery_Point || "");  
+		
+			} catch (error) {
+				console.error("Error fetching contract details:", error);
+				sap.m.MessageBox.error("Failed to fetch contract details. Please try again.");
 			}
+		},
 		
-			// Create new entry using bindList (OData V4)
-			var oContext = oListBinding.create(oPayload);
-		
-			oContext.created()
-				.then(() => {
-					MessageBox.success("System Nomination created successfully!");
-					oModel.refresh(); // Refresh UI to show new data
-				})
-				.catch((oError) => {
-					MessageBox.error("Failed to create System Nomination: " + oError.message);
-				});
+		_getClauseValue: function (data, clauseCode) {
+			
+			let clause = data.find(item => item.Clause_Code === clauseCode);
+			return clause ? parseFloat(clause.Calculated_Value) || 0 : 0;
 		},
 		onSubmitSysNomDData: function () {
 			var oView = this.getView();
@@ -321,12 +285,25 @@ sap.ui.define([
 			oContext.created()
 				.then(() => {
 					MessageBox.success("System Nomination created successfully!");
+		
+					// Clear input fields after successful nomination
+					oView.byId("registrationMapping_emailID").setValue("");
+					oView.byId("registrationMapping_retailerName").setValue("");
+					oView.byId("registrationMapping_contactNo").setValue("");
+					oView.byId("contractRDPDCQ").setValue("");
+					oView.byId("contractUOM").setValue("");
+					oView.byId("ContractRedeliveryPoint").setValue("");
+					oView.byId("registrationMapping_district").setValue("");
+					oView.byId("IdsysPubNomDelvFromTimePicker").setValue("");
+					oView.byId("IdsysPubNomDelvtoTimePicker").setValue("");
+		
 					oModel.refresh(); // Refresh UI to show new data
 				})
 				.catch((oError) => {
 					MessageBox.error("Failed to create System Nomination: " + oError.message);
 				});
 		}
+		
 		
 		
 		
