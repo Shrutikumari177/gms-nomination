@@ -1,0 +1,169 @@
+<mvc:View
+    controllerName="com.ingenx.nomination.salesnomination.controller.importNomination"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:u="sap.ui.unified"
+    xmlns="sap.m"
+    xmlns:layout="sap.ui.layout"
+    xmlns:tnt="sap.tnt"
+>
+    <Page
+        id="importNominationPage"
+        showHeader="false"
+    >
+        <tnt:ToolHeader
+            id="importNominationToolHeader"
+            class="sapUiTinyMargin header_nav"
+        >
+            <Title
+                id="importNominationTitle"
+                textAlign="Center"
+                text="Import Excel Nomination"
+                wrapping="false"
+            />
+            <ToolbarSpacer id="importNominationToolbarSpacer" />
+        </tnt:ToolHeader>
+
+        <layout:BlockLayout
+            id="importNominationBlockLayout"
+            background="Dashboard"
+        >
+            <layout:BlockLayoutRow id="importNominationBlockLayoutRow">
+                <layout:BlockLayoutCell
+                    id="importNominationBlockLayoutCell1"
+                    width="100%"
+                >
+                    <HBox
+                        id="importNominationHBox"
+                        justifyContent="SpaceBetween"
+                        alignItems="Center"
+                        width="100%"
+                    >
+                        <!-- File Uploader on the left -->
+                        <u:FileUploader
+                            id="importNominationFileUploader"
+                            name="myFileUpload"
+                            tooltip="Upload your file"
+                            change="onFileUpload"
+                        />
+
+                        <!-- Submit Button on the right -->
+                        <Button
+                            id="importNominationSubmitButton"
+                            text="Submit"
+                            press="handleSave"
+                            type="Emphasized"
+                        />
+                    </HBox>
+                </layout:BlockLayoutCell>
+            </layout:BlockLayoutRow>
+
+            <layout:BlockLayoutRow id="importNominationBlockLayoutRow1">
+                <layout:BlockLayoutCell
+                    id="importNominationBlockLayoutCell2"
+                    visible="false"
+                >
+                    <!-- Simple Bordered Table -->
+                    <Table
+                        id="importNominationTable"
+                        width="auto"
+                        contextualWidth="Auto"
+                        class="borderedTable"
+                        sticky="ColumnHeaders"
+                        noDataText="Loading ..."
+                        selectionChange="onSelectionChange"
+                        items="{excelModel>/}"
+                    >
+                        <columns>
+                            <Column id="importNominationColumn">
+                                <Text id="importNominationText"
+                                    text="Gasday"
+                                    class="columnHeader"
+                                />
+                            </Column>
+                            <Column id="importNominationColumn1">
+                                <Text id="importNominationText3"
+                                    text="Document No."
+                                    class="columnHeader"
+                                />
+                            </Column>
+                            <Column id="importNominationColumn2">
+                                <Text id="importNominationText4"
+                                    text="Item No."
+                                    class="columnHeader"
+                                />
+                            </Column>
+                            <Column id="importNominationColumn3">
+                                <Text id="importNominationText5"
+                                    text="Valid To"
+                                    class="columnHeader"
+                                />
+                            </Column>
+                            <Column id="importNominationColumn4">
+                                <Text id="importNominationText6"
+                                    text="Valid From"
+                                    class="columnHeader"
+                                />
+                            </Column>
+                            <Column id="importNominationColumn5">
+                                <Text id="importNominationText7"
+                                    text="Uom"
+                                    class="columnHeader"
+                                />
+                            </Column>
+                            <Column id="importNominationColumn6">
+                                <Text id="importNominationText8"
+                                    text="Doc Type"
+                                    class="columnHeader"
+                                />
+                            </Column>
+
+                            <Column id="importNominationColumn7">
+                                <Text id="importNominationText9"
+                                    text="Proposed DNQ"
+                                    class="columnHeader"
+                                />
+                            </Column>
+
+                            <Column id="importNominationColumn8">
+                                <Text id="importNominationText10"
+                                    text="Redelivery Point"
+                                    class="columnHeader"
+                                />
+                            </Column>
+                            <Column id="importNominationColumn9">
+                                <Text id="importNominationText11"
+                                    text="Material"
+                                    class="columnHeader"
+                                />
+                            </Column>
+
+                            <Column id="importNominationColumn10">
+                                <Text id="importNominationText12"
+                                    text="Delivery Point"
+                                    class="columnHeader"
+                                />
+                            </Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem id="importNominationColumnListItem" class="tableRow">
+                                <cells>
+                                    <Text id="importNominationTextGasday" text="{excelModel>Gasday}" />
+                                    <Text id="importNominationTextVbeln" text="{excelModel>Vbeln}" />
+                                    <Text id="importNominationTextPosnr" text="{excelModel>Posnr}" />
+                                    <Text id="importNominationTextValidTo" text="{excelModel>ValidTo}" />
+                                    <Text id="importNominationTextValidFrom" text="{excelModel>ValidFrom}" />
+                                    <Text id="importNominationTextUom" text="{excelModel>Uom}" />
+                                    <Text id="importNominationTextAuart" text="{excelModel>Auart}" />
+                                    <Text id="importNominationTextPdnq" text="{excelModel>Pdnq}" />
+                                    <Text id="importNominationTextRedelivery" text="{excelModel>Redelivery}" />
+                                    <Text id="importNominationTextMaterial" text="{excelModel>Material}" />
+                                    <Text id="importNominationTextDeliveryPoint" text="{excelModel>deliveryPoint}" />
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                </layout:BlockLayoutCell>
+            </layout:BlockLayoutRow>
+        </layout:BlockLayout>
+    </Page>
+</mvc:View>

@@ -137,6 +137,13 @@
           "target": [
             "TargetsystemNom"
           ]
+        },
+        {
+          "name": "RouteimportExcel",
+          "pattern": "importExcel",
+          "target": [
+            "TargetImportExcel"
+          ]
         }
       ],
       "targets": {
@@ -159,6 +166,10 @@
         "TargetsystemNom": {
           "id": "systemNom",
           "name": "systemNom"
+        },
+        "TargetImportExcel": {
+          "id": "importNomination",
+          "name": "importNomination"
         }
       }
     },

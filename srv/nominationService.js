@@ -1,6 +1,7 @@
 const cds = require('@sap/cds');
 
 const cron = require('node-cron');
+const nodemailer = require('nodemailer');
 
 module.exports = cds.service.impl(async (srv) => {
     const externalService = await cds.connect.to('GMS_CONFIG');
@@ -479,32 +480,218 @@ module.exports = cds.service.impl(async (srv) => {
 
 /* ******************* function to generate automatic Nomination everyday ******************/
 
+    // async function generateVirtualNominations(req = null) {
+    //     const db = cds.transaction(req || this); // Initialize transaction inside function
+    //     const currentDate = new Date();
+    //     currentDate.setDate(currentDate.getDate() + 1);
+    //     const tomorrow = currentDate.toISOString().split('T')[0];
+
+    //     try {
+    //         console.log("🔹 Fetching contracts from systemNomination table...");
+
+    //         const contracts = await db.run(SELECT.from('app.gms.nomination.systemNomination'));
+
+    //         console.log("✅ Contracts retrieved:", contracts.length);
+
+    //         const validContracts = contracts.filter(c =>
+    //             tomorrow >= c.ValidFrom && tomorrow <= c.ValidTo
+    //         );
+
+    //         console.log("✅ Valid contracts for tomorrow:", validContracts.length);
+
+    //         if (validContracts.length === 0) {
+    //             console.log("⚠ No valid contracts found for tomorrow.");
+    //             return [];
+    //         }
+
+    //         let createdNominations = [];
+
+    //         for (const contract of validContracts) {
+    //             let nomi_toitem = [{
+    //                 Gasday: tomorrow,
+    //                 Vbeln: contract.Vbeln,
+    //                 ItemNo: "10",
+    //                 NomItem: "10",
+    //                 Versn: "",
+    //                 DeliveryPoint: "",
+    //                 RedelivryPoint: contract.RedelivryPoint,
+    //                 ValidTo: "06:00:00",
+    //                 ValidFrom: "06:00:00",
+    //                 Material: contract.Material,
+    //                 Auart: "ZGSA",
+    //                 Ddcq: "0.000",
+    //                 Rdcq: contract.Rdcq,
+    //                 Uom1: contract.Uom,
+    //                 Event: "No-Event",
+    //                 Adnq: "0.000",
+    //                 Rpdnq: contract.Rpdnq
+    //             }];
+
+    //             let createNomPayload = {
+    //                 Gasday: tomorrow,
+    //                 Vbeln: contract.Vbeln,
+    //                 nomi_toitem
+    //             };
+
+    //             console.log("🔹 Creating nomination entry:", createNomPayload);
+
+    //             try {
+                    
+    //                 const newNomination = await GMSNOMINATIONS_SRV.run(INSERT.into('znom_headSet').entries(createNomPayload));
+             
+    //                 console.log("✅ Nomination created successfully:", newNomination);
+    //                 createdNominations.push(newNomination);
+    //             } catch (error) {
+    //                 console.error("❌ Error while creating nomination:", error.message);
+    //             }
+    //         }
+
+    //         console.log("✅ Total nominations created:", createdNominations.length);
+    //         return createdNominations;
+
+    //     } catch (error) {
+    //         console.error("❌ Error in VirtualNominations Job:", error.message);
+    //         return [];
+    //     }
+    // }
+
+
+
+    // async function generateVirtualNominations(req = null) {
+    //     const db = cds.transaction(req || this);
+    //     const currentDate = new Date();
+    //     currentDate.setDate(currentDate.getDate() + 1);
+    //     const tomorrow = currentDate.toISOString().split('T')[0];
+    
+    //     try {
+    //         console.log("🔹 Fetching contracts from systemNomination table...");
+    //         const contracts = await db.run(SELECT.from('app.gms.nomination.systemNomination'));
+    
+    //         console.log("✅ Contracts retrieved:", contracts.length);
+    
+    //         const validContracts = contracts.filter(c =>
+    //             tomorrow >= c.ValidFrom && tomorrow <= c.ValidTo
+    //         );
+    
+    //         console.log("✅ Valid contracts for tomorrow:", validContracts.length);
+    
+    //         if (validContracts.length === 0) {
+    //             console.log("⚠ No valid contracts found for tomorrow.");
+    //             return [];
+    //         }
+    
+    //         let createdNominations = [];
+    
+    //         for (const contract of validContracts) {
+    //             let nomi_toitem = [{
+    //                 Gasday: tomorrow,
+    //                 Vbeln: contract.Vbeln,
+    //                 ItemNo: "10",
+    //                 NomItem: "10",
+    //                 Versn: "",
+    //                 DeliveryPoint: "",
+    //                 RedelivryPoint: contract.RedelivryPoint,
+    //                 ValidTo: "06:00:00",
+    //                 ValidFrom: "06:00:00",
+    //                 Material: contract.Material,
+    //                 Auart: "ZGSA",
+    //                 Ddcq: "0.000",
+    //                 Rdcq: contract.Rdcq,
+    //                 Uom1: contract.Uom,
+    //                 Event: "No-Event",
+    //                 Adnq: "0.000",
+    //                 Rpdnq: contract.Rpdnq
+    //             }];
+    
+    //             let createNomPayload = {
+    //                 Gasday: tomorrow,
+    //                 Vbeln: contract.Vbeln,
+    //                 nomi_toitem
+    //             };
+    
+    //             console.log("🔹 Creating nomination entry:", createNomPayload);
+    
+    //             try {
+    //                 const newNomination = await GMSNOMINATIONS_SRV.run(INSERT.into('znom_headSet').entries(createNomPayload));    
+    //                 console.log("✅ Nomination created successfully:", newNomination);
+    //                 createdNominations.push(newNomination);
+    //                 let CustomerEmail ="ashwani.sharma@ingenxtec.com"
+    //                 // Send email notification
+    //                 await sendNominationEmail(CustomerEmail, contract.Vbeln);
+    
+    //             } catch (error) {
+    //                 console.error("❌ Error while creating nomination:", error.message);
+    //             }
+    //         }
+    
+    //         console.log("✅ Total nominations created:", createdNominations.length);
+    //         return createdNominations;
+    
+    //     } catch (error) {
+    //         console.error("❌ Error in VirtualNominations Job:", error.message);
+    //         return [];
+    //     }
+    // }
+    
+    // // Function to send email
+    // async function sendNominationEmail(email, salesOrder) {
+    //     try {
+    //         const transporter = nodemailer.createTransport({
+    //             service: "gmail",
+    //             auth: {
+    //                 user: "deepanshugoyal2906@gmail.com",
+    //                 pass: "oczl lrgb avot vfpv", 
+    //             },
+    //         });
+    
+    //         const mailConfig = {
+    //             from: "deepanshugoyal2906@gmail.com",
+    //             to: email,
+    //             subject: `Notification for Sales Nomination ${salesOrder}`,
+    //             text: `
+    //                 Dear Customer,
+                    
+    //                 Your nomination for Sales Order ${salesOrder} has been successfully created. You can view the details in your account.
+                    
+    //                 Best regards,
+    //                 Ingenx Technology Pvt Ltd
+    //             `,
+    //         };
+    
+    //         const res = await transporter.sendMail(mailConfig);
+    //         console.log(`✅ Email sent successfully to ${email}:`, res.messageId);
+    
+    //     } catch (error) {
+    //         console.error(`❌ Error sending email to ${email}:`, error.message);
+    //     }
+    // }
+
     async function generateVirtualNominations(req = null) {
-        const db = cds.transaction(req || this); // Initialize transaction inside function
+        const db = cds.transaction(req || this);
         const currentDate = new Date();
         currentDate.setDate(currentDate.getDate() + 1);
         const tomorrow = currentDate.toISOString().split('T')[0];
-
+    
         try {
             console.log("🔹 Fetching contracts from systemNomination table...");
-
             const contracts = await db.run(SELECT.from('app.gms.nomination.systemNomination'));
-
+    
             console.log("✅ Contracts retrieved:", contracts.length);
-
+    
             const validContracts = contracts.filter(c =>
                 tomorrow >= c.ValidFrom && tomorrow <= c.ValidTo
             );
-
+    
             console.log("✅ Valid contracts for tomorrow:", validContracts.length);
-
+    
             if (validContracts.length === 0) {
                 console.log("⚠ No valid contracts found for tomorrow.");
                 return [];
             }
-
+    
             let createdNominations = [];
-
+            let nominationDetails = [];
+    
             for (const contract of validContracts) {
                 let nomi_toitem = [{
                     Gasday: tomorrow,
@@ -525,39 +712,112 @@ module.exports = cds.service.impl(async (srv) => {
                     Adnq: "0.000",
                     Rpdnq: contract.Rpdnq
                 }];
-
+    
                 let createNomPayload = {
                     Gasday: tomorrow,
                     Vbeln: contract.Vbeln,
                     nomi_toitem
                 };
-
+    
                 console.log("🔹 Creating nomination entry:", createNomPayload);
-
+    
                 try {
-                    
                     const newNomination = await GMSNOMINATIONS_SRV.run(INSERT.into('znom_headSet').entries(createNomPayload));
-             
                     console.log("✅ Nomination created successfully:", newNomination);
                     createdNominations.push(newNomination);
+    
+                    // Collect data for email report
+                    nominationDetails.push({
+                        ContractNo: contract.Vbeln,
+                        Gasday: tomorrow,
+                        Material: contract.Material,
+                        DCQ: contract.Rdcq,
+                        RPDNQ: contract.Rpdnq
+                    });
+                    
+    
                 } catch (error) {
                     console.error("❌ Error while creating nomination:", error.message);
                 }
             }
-
+    
+            if (nominationDetails.length > 0) {
+                let CustomerEmail = "ashwani.sharma@ingenxtec.com";
+                await sendNominationEmail(CustomerEmail, nominationDetails);
+            }
+    
             console.log("✅ Total nominations created:", createdNominations.length);
             return createdNominations;
-
+    
         } catch (error) {
             console.error("❌ Error in VirtualNominations Job:", error.message);
             return [];
         }
     }
+    async function sendNominationEmail(email, nominations) {
+        try {
+            const transporter = nodemailer.createTransport({
+                service: "gmail",
+                auth: {
+                    user: "deepanshugoyal2906@gmail.com",
+                    pass: "oczl lrgb avot vfpv",
+                },
+            });
+    
+            // Generate the table
+            let tableRows = nominations.map(nom => `
+                <tr>
+                    <td style="border:1px solid #ddd; padding:8px;">${nom.ContractNo}</td>
+                    <td style="border:1px solid #ddd; padding:8px;">${nom.Gasday}</td>
+                    <td style="border:1px solid #ddd; padding:8px;">${nom.Material}</td>
+                    <td style="border:1px solid #ddd; padding:8px;">${nom.DCQ}</td>
+                    <td style="border:1px solid #ddd; padding:8px;">${nom.RPDNQ}</td>
+                </tr>
+            `).join("");
+    
+            let htmlContent = `
+                <p>Dear Customer,</p>
+                <p>Your nominations have been successfully created. Below are the details:</p>
+                <table style="border-collapse:collapse; width:100%; border:1px solid #ddd;">
+                    <tr>
+                        <th style="border:1px solid #ddd; padding:8px; background-color:#f2f2f2;">Contract No</th>
+                        <th style="border:1px solid #ddd; padding:8px; background-color:#f2f2f2;">Gas Day</th>
+                        <th style="border:1px solid #ddd; padding:8px; background-color:#f2f2f2;">Material</th>
+                        <th style="border:1px solid #ddd; padding:8px; background-color:#f2f2f2;">DCQ</th>
+                        <th style="border:1px solid #ddd; padding:8px; background-color:#f2f2f2;">RPDNQ</th>
+                    </tr>
+                    ${tableRows}
+                </table>
+                <p>Best regards,</p>
+                <p>Ingenx Technology Pvt Ltd</p>
+            `;
+    
+            const mailConfig = {
+                from: "deepanshugoyal2906@gmail.com",
+                to: email,
+                subject: "Nomination Report",
+                html: htmlContent
+            };
+    
+            const res = await transporter.sendMail(mailConfig);
+            console.log(`✅ Email sent successfully to ${email}:`, res.messageId);
+    
+        } catch (error) {
+            console.error(`❌ Error sending email to ${email}:`, error.message);
+        }
+    }
+    
+    
+    
+    
 
-    cron.schedule('00 06 * * *', async () => {
-        console.log(" Running VirtualNominations job at 11:30 IST...");
+    cron.schedule("45 07 * * *", async () => {
+        console.log("⏳ Running VirtualNominations job at 12:50 IST...");
         await generateVirtualNominations();
     });
+    
+    
+    
     
     
     

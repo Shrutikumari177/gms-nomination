@@ -29,7 +29,7 @@
     <l:ResponsiveSplitter
         defaultPane="IdPubNomSplitterContainer"
         id='IdPubNomMainScrollContainer'
-    >
+     >
         <l:PaneContainer
             id="IdPubNomPaneContainer"
             resize=".onRootContainerResize"
