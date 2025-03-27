@@ -1,4 +1,4 @@
-/* checksum : b364c31aea17b8718b6ea3caaf5af0e4 */
+/* checksum : e7bac0bf944c079dd3138359336a2326 */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -484,6 +484,10 @@ entity GMSNOMINATIONS_SRV.xGMSxFETCHNOMINATION {
   @sap.display.format : 'UpperCase'
   @sap.label : 'Service Profile'
   Profile : String(40);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Sales Contract Descr'
+  @sap.quickinfo : 'Sales Contract Description'
+  Contract_Description : String(20);
   @sap.label : 'Target Quantity UoM'
   @sap.semantics : 'unit-of-measure'
   UOM : String(3);
@@ -491,8 +495,6 @@ entity GMSNOMINATIONS_SRV.xGMSxFETCHNOMINATION {
   @sap.label : 'Nomination key'
   @sap.quickinfo : 'Nomination (technical) Key'
   nomtk : String(20);
-  @sap.label : 'Contract Name'
-  ContractDescription : String(40);
   @sap.display.format : 'UpperCase'
   @sap.label : 'Calculated Value'
   Calculated_Value : String(20);

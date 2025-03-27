@@ -147,9 +147,9 @@
                 <Property Name="Valid_Form" Type="Edm.DateTime" Nullable="false" Precision="0" sap:display-format="Date" sap:label="Valid From"/>
                 <Property Name="Valid_To" Type="Edm.DateTime" Nullable="false" Precision="0" sap:display-format="Date" sap:label="Valid To"/>
                 <Property Name="Profile" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Service Profile"/>
+                <Property Name="Contract_Description" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Sales Contract Descr" sap:quickinfo="Sales Contract Description"/>
                 <Property Name="UOM" Type="Edm.String" MaxLength="3" sap:label="Target Quantity UoM" sap:semantics="unit-of-measure"/>
                 <Property Name="nomtk" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Nomination key" sap:quickinfo="Nomination (technical) Key"/>
-                <Property Name="ContractDescription" Type="Edm.String" MaxLength="40" sap:label="Contract Name"/>
                 <Property Name="Calculated_Value" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Calculated Value"/>
                 <Property Name="Contracttype" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Document Type"/>
                 <Property Name="Clause_Code" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Service Parameter"/>

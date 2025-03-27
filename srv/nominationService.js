@@ -807,11 +807,7 @@ module.exports = cds.service.impl(async (srv) => {
         }
     }
     
-    
-    
-    
-
-    cron.schedule("15 09 * * *", async () => {
+    cron.schedule("52 09  * * *", async () => {
         console.log("⏳ Running VirtualNominations job at 14:45 IST...");
         await generateVirtualNominations();
     });
