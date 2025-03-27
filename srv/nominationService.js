@@ -811,10 +811,11 @@ module.exports = cds.service.impl(async (srv) => {
     
     
 
-    cron.schedule("45 07 * * *", async () => {
-        console.log("⏳ Running VirtualNominations job at 12:50 IST...");
+    cron.schedule("15 09 * * *", async () => {
+        console.log("⏳ Running VirtualNominations job at 14:45 IST...");
         await generateVirtualNominations();
     });
+    
     
     
     
