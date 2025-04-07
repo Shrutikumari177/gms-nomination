@@ -556,19 +556,7 @@ sap.ui.define([
 
 
 
-		calculateDCQStatsByLabels: function (dynamicArray, label) {
-			if (dynamicArray.length === 0) {
-				return;
-			}
-			for (let index = 0; index < dynamicArray.length; index++) {
-				const minMaxDcqVal = dynamicArray[index].value;
-				maxDCQVal = Math.max(maxDCQVal, minMaxDcqVal);
-				minDCQVal = Math.min(minDCQVal, minMaxDcqVal);
-
-			}
-			remainingDCQ = maxDCQVal;
-		},
-
+		
 		onSelectedDate: function () {
 			var oDatePicker = this.getView().byId("IdPubNomGasDayPicker");
 			var sDate = oDatePicker.getDateValue();
@@ -576,55 +564,58 @@ sap.ui.define([
 
 		},
 
-		onChangeAddDecimal: function (oEvent) {
-			var oInput = oEvent.getSource(); // Get Input field
-			var sValue = oInput.getValue().trim(); // Trim spaces
-			var fValue = parseFloat(sValue); // Convert to float
-
-			if (!sValue) {
-				oInput.setValue("0.000");
-				return;
-			}
-
-			if (!isNaN(fValue)) {
-				var sFormattedValue = fValue.toFixed(3);
-				oInput.setValue(sFormattedValue);
-
-				var sPath = oInput.getBinding("value") ? oInput.getBinding("value").getPath() : null;
-				var oModel = oInput.getModel();
-
-				if (oModel && sPath) {
-					oModel.setProperty(sPath, sFormattedValue);
-				}
-			} else {
-				oInput.setValue("0.000");
-			}
-		},
-
-
+	
+		
 		createNomination: async function () {
 			try {
-				let Gasday = this.getView().byId("IdPubNomGasDayPicker").getDateValue();
-				const oDateFormat = sap.ui.core.format.DateFormat.getDateInstance({ pattern: "yyyy-MM-dd" });
-				Gasday = oDateFormat.format(Gasday);
-
+				let oGasdayPicker = this.getView().byId("IdPubNomGasDayPicker");
+				let Gasday = oGasdayPicker ? oGasdayPicker.getDateValue() : null;
+		
 				if (!Gasday) {
 					sap.m.MessageBox.error("Please select a Gas Day!");
 					return;
 				}
-
+		
+				const oDateFormat = sap.ui.core.format.DateFormat.getDateInstance({ pattern: "yyyy-MM-dd" });
+				Gasday = oDateFormat.format(Gasday);
+		
 				const oModelDataRedlv = this.getView().getModel("RedlvModelData").getData();
 				const oModelDataDelv = this.getView().getModel("DelvModelData").getData();
 				const selectedMaterialData = this.getView().getModel("contDataModel").getData();
-
+		
+				if (!selectedMaterialData || !selectedMaterialData.DocNo) {
+					sap.m.MessageBox.error("Invalid contract data. Please check and try again.");
+					return;
+				}
+		
 				let nomi_toitem = [];
-
+				let oModel2 = this.getOwnerComponent().getModel();
+				let purchaseContract = selectedMaterialData.DocNo;
+		
+				try {
+					let oListBinding = oModel2.bindContext(`/TransAgreemSet(Salescontract='${selectedMaterialData.DocNo}')`);
+					let oContext = await oListBinding.requestObject();
+		
+					if (oContext && oContext.Purchasecontract) {
+						purchaseContract = oContext.Purchasecontract;
+					}
+				} catch (err) {
+					console.log("Failed to fetch Purchase Contract:", err);
+				}
+		
+				
+				
+		
 				if (selectedMaterialData.Delivery_Point) {
 					nomi_toitem.push({
+						Contracttype: selectedMaterialData.Contracttype,
+						Source: "Manual",
 						Gasday,
-						Vbeln: selectedMaterialData.DocNo,
+						Vbeln: purchaseContract,
 						ItemNo: "10",
 						NomItem: "20",
+						Shiptoparty:customerValue,
+						Vendor:selectedMaterialData.Vendor,
 						Versn: "",
 						DeliveryPoint: selectedMaterialData.Delivery_Point,
 						RedelivryPoint: "",
@@ -632,7 +623,7 @@ sap.ui.define([
 						ValidFrom: oModelDataDelv.DeliveryPoints[0].FromT,
 						Material: selectedMaterialData.Material,
 						Kunnr: "",
-						Auart: "ZGSA",
+						Auart: selectedMaterialData.Auart,
 						Ddcq: selectedMaterialData.Delivery_Dcq,
 						Uom1: oModelDataDelv.DeliveryPoints[0].UOM,
 						Pdnq: oModelDataDelv.DeliveryPoints[0].DNQ,
@@ -645,14 +636,17 @@ sap.ui.define([
 						Action: "",
 						Path: "",
 						CustGrp: "",
-						SrvProfile: "",
+						SrvProfile: selectedMaterialData.Profile,
 					});
-
 					nomi_toitem.push({
+						Contracttype: selectedMaterialData.Contracttype,
+						Source: "Manual",
 						Gasday,
 						Vbeln: selectedMaterialData.DocNo,
 						ItemNo: "10",
 						NomItem: "10",
+						Shiptoparty:customerValue,
+						Vendor:selectedMaterialData.Vendor,
 						Versn: "",
 						DeliveryPoint: "",
 						RedelivryPoint: selectedMaterialData.Redelivery_Point,
@@ -660,13 +654,13 @@ sap.ui.define([
 						ValidFrom: oModelDataRedlv.RedeliveryPoints[0].FromT,
 						Material: selectedMaterialData.Material,
 						Kunnr: "",
-						Auart: "ZGSA",
+						Auart: selectedMaterialData.Auart,
 						Ddcq: "0.000",
 						Rdcq: selectedMaterialData.Redelivery_Dcq,
 						Uom1: oModelDataRedlv.RedeliveryPoints[0].UOM,
 						Event: oModelDataRedlv.RedeliveryPoints[0].Event,
 						Adnq: "0.000",
-						Rpdnq: oModelDataRedlv.RedeliveryPoints[0].DNQ,
+						Pdnq: oModelDataRedlv.RedeliveryPoints[0].DNQ,
 						Znomtk: "",
 						Src: "",
 						Remarks: "",
@@ -674,54 +668,62 @@ sap.ui.define([
 						Action: "",
 						Path: "",
 						CustGrp: "",
-						SrvProfile: "",
-					});
-				} else {
-					nomi_toitem.push({
-						Gasday,
-						Vbeln: selectedMaterialData.DocNo,
-						ItemNo: "10",
-						NomItem: "10",
-						Versn: "",
-						DeliveryPoint: "",
-						RedelivryPoint: selectedMaterialData.Redelivery_Point,
-						ValidTo: oModelDataRedlv.RedeliveryPoints[0].ToT,
-						ValidFrom: oModelDataRedlv.RedeliveryPoints[0].FromT,
-						Material: selectedMaterialData.Material,
-						Kunnr: "",
-						Auart: "ZGSA",
-						Ddcq: "0.000",
-						Rdcq: selectedMaterialData.Redelivery_Dcq,
-						Uom1: oModelDataRedlv.RedeliveryPoints[0].UOM,
-						Event: oModelDataRedlv.RedeliveryPoints[0].Event,
-						Adnq: "0.000",
-						Rpdnq: oModelDataRedlv.RedeliveryPoints[0].DNQ,
-						Znomtk: "",
-						Src: "",
-						Remarks: "",
-						Flag: "",
-						Action: "",
-						Path: "",
-						CustGrp: "",
-						SrvProfile: "",
+						SrvProfile: selectedMaterialData.Profile,
 					});
 				}
-
-				console.log("nomi_toitem", nomi_toitem);
-
+		
+				
+				else {
+					nomi_toitem.push({
+						Contracttype: selectedMaterialData.Contracttype,
+						Source: "Manual",
+						Gasday,
+						Vbeln: selectedMaterialData.DocNo, 
+						ItemNo: "10",
+						NomItem: "10",
+						Shiptoparty:customerValue,
+						Vendor:selectedMaterialData.Vendor,
+						Versn: "",
+						DeliveryPoint: "",
+						RedelivryPoint: selectedMaterialData.Redelivery_Point,
+						ValidTo: oModelDataRedlv.RedeliveryPoints[0].ToT,
+						ValidFrom: oModelDataRedlv.RedeliveryPoints[0].FromT,
+						Material: selectedMaterialData.Material,
+						Kunnr: "",
+						Auart: selectedMaterialData.Auart,
+						Ddcq: "0.000",
+						Rdcq: selectedMaterialData.Redelivery_Dcq,
+						Uom1: oModelDataRedlv.RedeliveryPoints[0].UOM,
+						Event: oModelDataRedlv.RedeliveryPoints[0].Event,
+						Adnq: "0.000",
+						Pdnq: oModelDataRedlv.RedeliveryPoints[0].DNQ,
+						Znomtk: "",
+						Src: "",
+						Remarks: "",
+						Flag: "",
+						Action: "",
+						Path: "",
+						CustGrp: "",
+						SrvProfile: selectedMaterialData.Profile,
+					});
+				}
+		
+				console.log("Nomination Items:", nomi_toitem);
+		        
+				// Create payload
 				let createNomPayLoad = {
 					Gasday,
 					Vbeln: selectedMaterialData.DocNo,
 					nomi_toitem
 				};
-
-
+		
+				// Submit data
 				let oModel = this.getOwnerComponent().getModel();
 				let oBindList = oModel.bindList("/znom_headSet");
-
+		
 				const newContext = await oBindList.create(createNomPayLoad, true);
 				await newContext.created();
-
+		
 				sap.m.MessageBox.success("Nomination Successfully Submitted");
 				this.clearMaterialModels();
 			} catch (error) {
@@ -729,6 +731,8 @@ sap.ui.define([
 				sap.m.MessageBox.error("Failed to submit nomination. Please try again.");
 			}
 		},
+		
+		
 
 		
 		onCloseSimulateDialog: function () {

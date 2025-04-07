@@ -47,6 +47,10 @@
                             </form:toolbar>
                             <form:content>
                                 <core:Title id="GenTitle1"/>
+                                <Label id="Labelcon" text="Contract Type" design="Bold" class="sapUiTinyMarginTop"/>
+                                <HBox id="registratioMapping_ocCodeInputBox" >
+                                    <Input id="registraionMapping_retailerName" value="" width="200px"  showValueHelp="true"  valueHelpRequest="soldToPartyValueHelp"/>
+                                </HBox>
                                 <Label id="Label2" text="Customer" design="Bold" class="sapUiTinyMarginTop"/>
                                 <HBox id="registrationMapping_ocCodeInputBox" >
                                     <Input id="registrationMapping_retailerName" value="" width="200px"  showValueHelp="true"  valueHelpRequest="soldToPartyValueHelp"/>
@@ -73,23 +77,21 @@
                                 <Input id="ContractRedeliveryPoint"  value="" width="200px" editable="false" />    
                             
 
-                                <!-- <Label id="registrationnLabel3" text="Gas Day" design="Bold" class="sapUiTinyMarginTop"/>
-                                <HBox id="IGenHBox5">
-                                    <DatePicker
-                                id="IdSysPubNomGasDayPicker"
-                                placeholder="Select Gas Day"
-                                valueFormat="{ YYYY-MM-dd }"
-                                minDate="{}"
-                                liveChange="onSelectedDate"
                                
-                                width="200px"
-                            />
-                                </HBox> -->
-                                
 
-                                <Label id="GenLab7" text="DNQ" design="Bold" class="sapUiTinyMarginTop"/>
+                                <Label id="GenLab7" text="Redelivery DNQ" design="Bold" class="sapUiTinyMarginTop"/>
                                 <Input id="registrationMapping_district"  value="" width="200px" />    
                                 <Label id="GenLabel7" text="Valid From" design="Bold" class="sapUiTinyMarginTop"/>
+                                <Label id="GeLa7" text="Delivery Point" design="Bold" class="sapUiTinyMarginTop"/>
+                                <Input id="ContactRedeliveryPoint"  value="" width="200px" editable="false" />    
+                            
+
+                               
+
+                                <Label id="GeLab7" text="Delivery DNQ" design="Bold" class="sapUiTinyMarginTop"/>
+                                <Input id="regisrationMapping_district"  value="" width="200px" />    
+                                <Label id="GenLael7" text="Valid From" design="Bold" class="sapUiTinyMarginTop"/>
+
                                 <DatePicker
                                 id="IdsysPubNomDelvFromTimePicker"
                                 placeholder="Select Gas Day"

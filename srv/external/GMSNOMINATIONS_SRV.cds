@@ -1,9 +1,146 @@
-/* checksum : e7bac0bf944c079dd3138359336a2326 */
+/* checksum : 6f8c43a1db02647648abc16f16726f59 */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
 @sap.supported.formats : 'atom json xlsx'
 service GMSNOMINATIONS_SRV {};
+
+@cds.external : true
+@cds.persistence.skip : true
+@sap.creatable : 'false'
+@sap.updatable : 'false'
+@sap.deletable : 'false'
+@sap.pageable : 'false'
+@sap.content.version : '1'
+entity GMSNOMINATIONS_SRV.Nom_DetailSet {
+  @sap.unicode : 'false'
+  @sap.label : 'DocumentNo'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  @sap.sortable : 'false'
+  @sap.filterable : 'false'
+  key Vbeln : String(10) not null;
+  @sap.unicode : 'false'
+  @sap.label : 'Redelivery Point'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  @sap.sortable : 'false'
+  @sap.filterable : 'false'
+  key Redelivrypoint : String(10) not null;
+  @odata.Type : 'Edm.DateTime'
+  @odata.Precision : 7
+  @sap.unicode : 'false'
+  @sap.label : 'Valid From'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  @sap.sortable : 'false'
+  @sap.filterable : 'false'
+  key ValidFrom : Timestamp not null;
+  @odata.Type : 'Edm.DateTime'
+  @odata.Precision : 7
+  @sap.unicode : 'false'
+  @sap.label : 'Valid To'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  @sap.sortable : 'false'
+  @sap.filterable : 'false'
+  key ValidTo : Timestamp not null;
+  @sap.unicode : 'false'
+  @sap.label : 'Sold To Party'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  @sap.sortable : 'false'
+  @sap.filterable : 'false'
+  SoldToParty : String(10) not null;
+  @sap.unicode : 'false'
+  @sap.label : 'Material'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  @sap.sortable : 'false'
+  @sap.filterable : 'false'
+  Material : String(40) not null;
+  @sap.unicode : 'false'
+  @sap.label : 'DNQ'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  @sap.sortable : 'false'
+  @sap.filterable : 'false'
+  DpDnq : Decimal(13, 3) not null;
+  @sap.unicode : 'false'
+  @sap.label : 'UOM'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  @sap.sortable : 'false'
+  @sap.filterable : 'false'
+  Uom : String(5) not null;
+  @sap.unicode : 'false'
+  @sap.label : 'DNQ'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  @sap.sortable : 'false'
+  @sap.filterable : 'false'
+  RpDnq : Decimal(13, 3) not null;
+  @sap.unicode : 'false'
+  @sap.label : 'Delivery Point'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  @sap.sortable : 'false'
+  @sap.filterable : 'false'
+  DeliveryPoint : String(10) not null;
+  @sap.unicode : 'false'
+  @sap.label : 'Event'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  @sap.sortable : 'false'
+  @sap.filterable : 'false'
+  Event : String(100) not null;
+  @sap.unicode : 'false'
+  @sap.label : 'Created By'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  @sap.sortable : 'false'
+  @sap.filterable : 'false'
+  Createdby : String(15);
+  @odata.Type : 'Edm.DateTime'
+  @odata.Precision : 7
+  @sap.unicode : 'false'
+  @sap.label : 'Created Date'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  @sap.sortable : 'false'
+  @sap.filterable : 'false'
+  Createddate : Timestamp;
+  @sap.unicode : 'false'
+  @sap.label : 'Created Time'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  @sap.sortable : 'false'
+  @sap.filterable : 'false'
+  Createdtime : Time;
+  @sap.unicode : 'false'
+  @sap.label : 'Changed By'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  @sap.sortable : 'false'
+  @sap.filterable : 'false'
+  Changedby : String(15);
+  @odata.Type : 'Edm.DateTime'
+  @odata.Precision : 7
+  @sap.unicode : 'false'
+  @sap.label : 'Change Date'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  @sap.sortable : 'false'
+  @sap.filterable : 'false'
+  Changeddate : Timestamp;
+  @sap.unicode : 'false'
+  @sap.label : 'Change Time'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  @sap.sortable : 'false'
+  @sap.filterable : 'false'
+  Changedtime : Time;
+};
 
 @cds.external : true
 @cds.persistence.skip : true
@@ -28,6 +165,50 @@ entity GMSNOMINATIONS_SRV.nomi_SaveSet {
   @sap.sortable : 'false'
   @sap.filterable : 'false'
   key Vbeln : String(10) not null;
+  @odata.Type : 'Edm.DateTime'
+  @sap.unicode : 'false'
+  @sap.label : 'Time Stamp'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  @sap.sortable : 'false'
+  @sap.filterable : 'false'
+  Timestamp : DateTime not null;
+  @sap.unicode : 'false'
+  @sap.label : 'Document Type'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  @sap.sortable : 'false'
+  @sap.filterable : 'false'
+  Contracttype : String(1) not null;
+  @sap.unicode : 'false'
+  @sap.unit : 'Uom1'
+  @sap.label : 'DNQ'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  @sap.sortable : 'false'
+  @sap.filterable : 'false'
+  Pdnq : Decimal(13, 3) not null;
+  @sap.unicode : 'false'
+  @sap.label : 'Source'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  @sap.sortable : 'false'
+  @sap.filterable : 'false'
+  Source : String(10) not null;
+  @sap.unicode : 'false'
+  @sap.label : 'Status'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  @sap.sortable : 'false'
+  @sap.filterable : 'false'
+  Zstat : String(4) not null;
+  @sap.unicode : 'false'
+  @sap.label : 'Trans system'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  @sap.sortable : 'false'
+  @sap.filterable : 'false'
+  Transys : String(10) not null;
   @sap.unicode : 'false'
   @sap.label : 'Item'
   @sap.creatable : 'false'
@@ -98,14 +279,6 @@ entity GMSNOMINATIONS_SRV.nomi_SaveSet {
   @sap.sortable : 'false'
   @sap.filterable : 'false'
   Material : String(40);
-  @odata.Type : 'Edm.DateTime'
-  @sap.unicode : 'false'
-  @sap.label : 'Time Stamp'
-  @sap.creatable : 'false'
-  @sap.updatable : 'false'
-  @sap.sortable : 'false'
-  @sap.filterable : 'false'
-  Timestamp : DateTime;
   @sap.unicode : 'false'
   @sap.label : 'Nomination key'
   @sap.creatable : 'false'
@@ -151,14 +324,6 @@ entity GMSNOMINATIONS_SRV.nomi_SaveSet {
   @sap.filterable : 'false'
   @sap.semantics : 'unit-of-measure'
   Uom1 : String(3);
-  @sap.unicode : 'false'
-  @sap.unit : 'Uom1'
-  @sap.label : 'DNQ'
-  @sap.creatable : 'false'
-  @sap.updatable : 'false'
-  @sap.sortable : 'false'
-  @sap.filterable : 'false'
-  Pdnq : Decimal(13, 3);
   @sap.unicode : 'false'
   @sap.label : 'Event Type'
   @sap.creatable : 'false'
@@ -364,10 +529,6 @@ entity GMSNOMINATIONS_SRV.xGMSxCREATENOMINATION {
   @sap.label : 'Material'
   @sap.quickinfo : 'Material Number'
   Material : String(40);
-  @odata.Type : 'Edm.DateTimeOffset'
-  @sap.label : 'Short Time Stamp'
-  @sap.quickinfo : 'UTC Time Stamp in Short Form (YYYYMMDDhhmmss)'
-  Timestamp : DateTime;
   @sap.display.format : 'UpperCase'
   @sap.label : 'Nomination key'
   @sap.quickinfo : 'Nomination (technical) Key'
@@ -385,15 +546,15 @@ entity GMSNOMINATIONS_SRV.xGMSxCREATENOMINATION {
   @sap.quickinfo : 'RDCQ'
   Rdcq : Decimal(13, 3);
   Uom1 : String(3);
-  @sap.label : 'DNQ'
-  @sap.quickinfo : 'daily nomination Quantity'
-  Pdnq : Decimal(13, 3);
   @sap.display.format : 'UpperCase'
   @sap.label : 'Event Type'
   @sap.quickinfo : 'Nomination Event'
   Event : String(40);
   @sap.label : 'Approved DNQ'
   Adnq : Decimal(13, 3);
+  @sap.label : 'DNQ'
+  @sap.quickinfo : 'daily nomination Quantity'
+  Pdnq : Decimal(13, 3);
   @sap.label : 'RePublish DNQ'
   @sap.quickinfo : 'Re-Publish DNQ'
   Rpdnq : Decimal(13, 3);
@@ -423,6 +584,9 @@ entity GMSNOMINATIONS_SRV.xGMSxCREATENOMINATION {
   @sap.display.format : 'UpperCase'
   @sap.label : 'Service Profile'
   SrvProfile : String(20);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Document Type'
+  ContractType : String(1);
   @sap.display.format : 'UpperCase'
   @sap.label : 'Created By'
   Createdby : String(15);
@@ -496,6 +660,13 @@ entity GMSNOMINATIONS_SRV.xGMSxFETCHNOMINATION {
   @sap.quickinfo : 'Nomination (technical) Key'
   nomtk : String(20);
   @sap.display.format : 'UpperCase'
+  @sap.label : 'Sales Document Type'
+  Auart : String(4);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Vendor'
+  @sap.quickinfo : 'Vendor''s account number'
+  Vendor : String(10);
+  @sap.display.format : 'UpperCase'
   @sap.label : 'Calculated Value'
   Calculated_Value : String(20);
   @sap.display.format : 'UpperCase'
@@ -507,5 +678,70 @@ entity GMSNOMINATIONS_SRV.xGMSxFETCHNOMINATION {
   @sap.display.format : 'UpperCase'
   @sap.label : 'Sold-To Party'
   SoldToParty : String(10);
+};
+
+@cds.external : true
+@cds.persistence.skip : true
+@sap.creatable : 'false'
+@sap.updatable : 'false'
+@sap.deletable : 'false'
+@sap.content.version : '1'
+@sap.label : 'FETCH FOR NOM DETAIL API'
+entity GMSNOMINATIONS_SRV.xGMSxNOMDETAILS {
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'DocumentNo'
+  @sap.quickinfo : 'Document Number'
+  key Vbeln : String(10) not null;
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Redelivery Point'
+  key Redelivrypoint : String(10) not null;
+  @sap.display.format : 'Date'
+  @sap.label : 'Valid From'
+  key ValidFrom : Date not null;
+  @sap.display.format : 'Date'
+  @sap.label : 'Valid To'
+  key ValidTo : Date not null;
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Sold To Party'
+  SoldToParty : String(10);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Material'
+  @sap.quickinfo : 'Material Number'
+  Material : String(40);
+  @sap.label : 'DNQ'
+  @sap.quickinfo : 'daily nomination Quantity'
+  DpDnq : Decimal(13, 3);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'UOM'
+  @sap.quickinfo : 'Unit of Measurment'
+  Uom : String(5);
+  @sap.label : 'DNQ'
+  @sap.quickinfo : 'daily nomination Quantity'
+  RpDnq : Decimal(13, 3);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Delivery Point'
+  DeliveryPoint : String(10);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Event'
+  @sap.quickinfo : 'Capasity Release Event'
+  Event : String(100);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Created By'
+  Createdby : String(15);
+  @sap.display.format : 'Date'
+  @sap.label : 'Created Date'
+  Createddate : Date;
+  @sap.label : 'Created Time'
+  Createdtime : Time;
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Changed By'
+  Changedby : String(15);
+  @sap.display.format : 'Date'
+  @sap.label : 'Change Date'
+  @sap.quickinfo : 'Changed Date'
+  Changeddate : Date;
+  @sap.label : 'Change Time'
+  @sap.quickinfo : 'Changed Time'
+  Changedtime : Time;
 };
 

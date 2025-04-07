@@ -1,6 +1,6 @@
 GET http://localhost:4004/odata/v4/nomination-services/CreateSPSet('40000787')?$expand=toHeaderTable,toservpara,toClausecode,toCustfld,toOrgDetail
 ###
-GET http://localhost:4004/odata/v4/nomination-services/getNominationsByCustomer?SoldToParty=1100000003
+GET http://localhost:4004/odata/v4/nomination-services/getNominationsByCustomer?SoldToParty='1100000003'
 
 
 ###
@@ -28,14 +28,14 @@ Content-Type: application/json
 GET http://localhost:4004/odata/v4/nomination-services/getContractDetailsAndPastNom?DocNo=40000941
 
 ####
-GET http://localhost:4004/odata/v4/nomination-services/getContractDetail?DocNo='40000974'&Material='2000000068'&Redelivery_Point=C1100003
+GET http://localhost:4004/odata/v4/nomination-services/getContractDetail?DocNo='40000945'&Material='2000000068'&Redelivery_Point=BENGALURU
 ###
 
 ####
 GET http://localhost:4004/odata/v4/nomination-services/VirtualNominations
 #######
 
-GET http://localhost:4004/odata/v4/nomination-services/getRenominationContractData?DocNo=40000932&Material=2000000068&Redelivery_Point=BENGALURU&Gasday=2025-03-24
+GET http://localhost:4004/odata/v4/nomination-services/getRenominationContractData?DocNo='40001046'&Material='2000000068'&Redelivery_Point='C1100003'&Gasday=2025-04-16
 
 
 
@@ -44,6 +44,10 @@ GET http://localhost:4004/odata/v4/nomination-services/nomi_SaveSet(Gasday='2025
 
 ###
 GET http://localhost:4004/odata/v4/nomination-services/nomi_SaveSet?$filter=Gasday eq '2025-03-31'&Vbeln eq '40000945'
+ 
+
+#####
+GET http://localhost:4004/odata/v4/nomination-services/xGMSxFETCHNOMINATION?$filter=DocNo eq '4600000374'
 
 
 
@@ -207,6 +211,48 @@ POST http://localhost:4004/odata/v4/nomination-services/handleSystemNomination
 Content-Type: application/json
 
 {}
+
+
+####
+POST http://localhost:4004/odata/v4/nomination-services/znom_headSet
+Content-Type: application/json
+
+{
+  "Gasday": "2025-04-03",
+  "Vbeln": "40000945",
+  "nomi_toitem": [
+    {
+      "Contracttype":"S",
+      "Source":"Manual",
+      "Gasday": "2025-04-03",
+      "Vbeln": "4600000374",
+      "ItemNo": "10",
+      "NomItem": "20",
+      "Versn": "",
+      "DeliveryPoint": "AMRELI",
+      "RedelivryPoint": "",
+      "ValidTo": "06:00:00",
+      "ValidFrom": "06:00:00",
+      "Material": "2000000068",
+      "Kunnr": "",
+      "Auart": "ZGTA",
+      "Ddcq": "2000.000",
+      "Rdcq": "0.000",
+      "Uom1": "MBT",
+      "Event": "No-event",
+      "Adnq": "0.000",
+      "Pdnq": "2000",
+      "Znomtk": "",
+      "Src": "",
+      "Remarks": "",
+      "Flag": "",
+      "Action": "",
+      "Path": "",
+      "CustGrp": "",
+      "SrvProfile": ""
+    }
+  ]
+}
 
 
 

@@ -20,7 +20,7 @@ sap.ui.define([
 	let oView;
 	let sContract
 	let customerValue;
-	let RDPSelectedEvent ;
+	let RDPSelectedEvent;
 	let dpSelectedEvent
 
 	return Controller.extend("com.ingenx.nomination.salesnomination.controller.publishRenomination", {
@@ -250,7 +250,7 @@ sap.ui.define([
 			// Refresh the model bindings if they exist
 			const oGasDayPicker = this.byId("IdRePubNomGasDayPicker");
 			if (oGasDayPicker) {
-				oGasDayPicker.setValue(""); 
+				oGasDayPicker.setValue("");
 			}
 			this.byId("IdDelCummDNQInput").setValue("");
 			this.byId("IdCummDNQInput").setValue("");
@@ -336,8 +336,8 @@ sap.ui.define([
 				oContractsControl.setBusy(false);
 			}
 		},
-	
-		
+
+
 
 		debounce: function (fn, delay) {
 			let timer;
@@ -353,131 +353,131 @@ sap.ui.define([
 
 
 		OnDeliveryDNQValidation: function (oEvent) {
-			
+
 			let sValue = oEvent.getParameter("value").trim();
 			let dnqValue = parseFloat(sValue) || 0;
 			let oView = this.getView();
 			let oModel = oView.getModel("localModel");
-		
-			if (!sValue){
-			
+
+			if (!sValue) {
+
 				this._lastValidatedValue = null;
 				return;
 			}
-		
+
 			let oContractData = oView.getModel("contDataModel").getData();
-			let  profile = oContractData.Profile;
+			let profile = oContractData.Profile;
 			let maxDCQ = this._getClauseValue(oContractData.data, "Max DP DCQ");
 			let minDCQ = this._getClauseValue(oContractData.data, "Min DP DCQ");
-		
+
 			let valueMap = {
 				"DNQ": dnqValue,
 				"Max DP DCQ": maxDCQ,
 				"Min DP DCQ": minDCQ
 			};
-		
+
 			let isRelaxedValidation = (dpSelectedEvent === "Force-Majeure" || dpSelectedEvent === "Under-Maintenance");
-			console.log("isrelax",isRelaxedValidation);
-			
+			console.log("isrelax", isRelaxedValidation);
+
 			if (this._validationTimeout) {
 				clearTimeout(this._validationTimeout);
 			}
-		
+
 			if (sValue === "") {
 				this._lastValidatedValue = null;
 				return; // Skip validation if field is empty
 			}
-		
+
 			if (!this._lastValidatedValue || this._lastValidatedValue !== sValue) {
 				this._lastValidatedValue = sValue;
-		
+
 				this._validationTimeout = setTimeout(async () => {
 					if (sValue.length >= 1) {
 						try {
-							let isValid = await HelperFunction.validateDNQ(oView, valueMap, customerValue,profile, isRelaxedValidation);
+							let isValid = await HelperFunction.validateDNQ(oView, valueMap, customerValue, profile, isRelaxedValidation);
 							if (!isValid) {
 								oEvent.getSource().setValue("");
-								
+
 							}
 						} catch (err) {
 							console.error("Validation failed:", err);
 							oEvent.getSource().setValue("");
-							
+
 						} finally {
 							this._validationTimeout = null;
 						}
 					}
-				}, 1000); 
+				}, 1000);
 			}
 		},
-		
-		
-		RDPeventSelected:function(oEvent){
-        let event = oEvent.getSource().getSelectedItem();
-		if(event){
-			RDPSelectedEvent = event.getText();
-			return RDPSelectedEvent
-		}
-		},
-		DpEventSelected:function(oEvent){
+
+
+		RDPeventSelected: function (oEvent) {
 			let event = oEvent.getSource().getSelectedItem();
-			if(event){
+			if (event) {
+				RDPSelectedEvent = event.getText();
+				return RDPSelectedEvent
+			}
+		},
+		DpEventSelected: function (oEvent) {
+			let event = oEvent.getSource().getSelectedItem();
+			if (event) {
 				dpSelectedEvent = event.getText();
 				return dpSelectedEvent
 			}
 		},
-		
+
 		OnReDeliveryDNQValidation: function (oEvent) {
-			
+
 			let sValue = oEvent.getParameter("value").trim();
 			let dnqValue = parseFloat(sValue) || 0;
 			let oView = this.getView();
 			let oModel = oView.getModel("localModel");
-		
+
 			if (!sValue) {
-			
+
 				this._lastValidatedValue = null;
 				return;
 			}
-		
-			
-		
+
+
+
 			let oContractData = oView.getModel("contDataModel").getData();
-		
-			let  profile = oContractData.Profile; 
-			
+
+			let profile = oContractData.Profile;
+
 			let maxRDPDCQ = this._getClauseValue(oContractData.data, "Max RDP DCQ");
 			let minRDPDCQ = this._getClauseValue(oContractData.data, "Min RDP DCQ");
-		
+
 			let valueMap = {
 				"DNQ": dnqValue,
 				"Max RDP DCQ": maxRDPDCQ,
 				"Min RDP DCQ": minRDPDCQ
 			};
-		
+
 			let isRelaxedValidation = (RDPSelectedEvent === "Force-Majeure" || RDPSelectedEvent === "Under-Maintenance");
-			console.log("isrelax",isRelaxedValidation);
-			
-		
+			console.log("isrelax", isRelaxedValidation);
+
+
 			if (this._validationTimeout) {
 				clearTimeout(this._validationTimeout);
 			}
-		
+
 			if (!this._lastValidatedValue || this._lastValidatedValue !== sValue) {
 				this._lastValidatedValue = sValue;
-		
+
 				this._validationTimeout = setTimeout(async () => {
 					if (sValue.length >= 1) {
 						try {
-							let isValid = await HelperFunction.validateDNQ(oView, valueMap, customerValue,profile, isRelaxedValidation);
+							let isValid = await HelperFunction.validateDNQ(oView, valueMap, customerValue, profile, isRelaxedValidation);
 							if (!isValid) {
 								oEvent.getSource().setValue("");
-								
+
 							}
 						} catch (err) {
 							console.error("Validation failed:", err);
 							oEvent.getSource().setValue("");
-						
+
 						} finally {
 							this._validationTimeout = null;
 						}
@@ -533,11 +533,11 @@ sap.ui.define([
 
 					aRedeliveryPoints.forEach(item => {
 						item.RedeliveryPt = oData.value[0].Redelivery_Point;
-						item.DNQ = oData.value[0].Rpdnq;
+						item.DNQ = oData.value[0].rediliveryDNQ;
 						item.UOM = "MBT";
 						item.FromT = oData.value[0].Redelivery_ValidFrom;
 						item.ToT = oData.value[0].Redelivery_ValidTo;
-						item.Event = oData.value[0].Event;
+						item.Event = oData.value[0].redeliveryEvent;
 
 					});
 					oRedlvModel.setProperty("/RedeliveryPoints", aRedeliveryPoints);
@@ -547,24 +547,30 @@ sap.ui.define([
 				if (hasDeliveryDcq) {
 					var oDelvModel = this.getView().getModel("DelvModelData");
 					var aDeliveryPoints = oDelvModel.getProperty("/DeliveryPoints") || [];
-					this.getView().byId("IdRePubNomStaticListS").setVisible(true);
-					this.getView().byId("IdRePubNomContratRPDCQ").setVisible(true);
-					this.getView().byId("IdRePubNomContractDPDCQ").setVisible(true);
+					const oView = this.getView();
 
-					this.getView().byId("IdRePubNomContractRPDCQ").setVisible(false);
-					this.getView().byId("IdRePubNomStaticListfinal").setVisible(false);
-					this.getView().byId("IdRePubNomDelPointTable").setVisible(true);
-					this.getView().byId("IdRePubNomTableHeaderBarForDelv").setVisible(true);
+				
+					[
+						"IdRePubNomStaticListS","IdRePubNomContratRPDCQ",
+						"IdRePubNomContractDPDCQ",
+						"IdRePubNomDelPointTable",
+						"IdRePubNomTableHeaderBarForDelv"
+					].forEach(id => oView.byId(id).setVisible(true));
 
+					
+					[
+						"IdRePubNomContractRPDCQ",
+						"IdRePubNomStaticListfinal"
+					].forEach(id => oView.byId(id).setVisible(false));
 
 
 					aDeliveryPoints.forEach(item => {
 						item.DeliveryPt = oData.value[0].Delivery_Point;
 						item.UOM = "MBT";
-						item.DNQ = oData.value[0].Pdnq;
+						item.DNQ = oData.value[0].deliveryDNQ;
 						item.FromT = oData.value[0].Delivery_ValidFrom;
 						item.ToT = oData.value[0].Delivery_ValidTo;
-						item.Event = oData.value[0].Event;
+						item.Event = oData.value[0].deliveryEvent;
 					});
 
 					oDelvModel.setProperty("/DeliveryPoints", aDeliveryPoints);
@@ -600,51 +606,66 @@ sap.ui.define([
 
 
 
-		
+
 		updateNomination: async function () {
 			let oBusyDialog = new sap.m.BusyDialog();
-		
+
 			try {
 				oBusyDialog.open(); // Show Busy Dialog
-		
+
 				let Gasday = this.getView().byId("IdRePubNomGasDayPicker").getDateValue();
 				if (!Gasday) {
 					sap.m.MessageBox.error("Please select a Gas Day!");
 					oBusyDialog.close();
 					return;
 				}
-		
+
 				const oDateFormat = sap.ui.core.format.DateFormat.getDateInstance({ pattern: "yyyy-MM-dd" });
 				let formattedGasday = oDateFormat.format(Gasday);
-		
+
 				// Fetch models
 				const oModelDataRedlv = this.getView().getModel("RedlvModelData").getData();
 				const oModelDataDelv = this.getView().getModel("DelvModelData").getData();
 				const selectedMaterialData = this.getView().getModel("contDataModel").getData();
-		
+
 				let nomi_toitem = [];
-		
+				let oModel2 = this.getOwnerComponent().getModel();
+				let purchaseContract = selectedMaterialData.DocNo;
+				try {
+					let oListBinding = oModel2.bindContext(`/TransAgreemSet(Salescontract='${selectedMaterialData.DocNo}')`);
+					let oContext = await oListBinding.requestObject();
+
+					if (oContext && oContext.Purchasecontract) {
+						purchaseContract = oContext.Purchasecontract;
+					}
+				} catch (err) {
+					console.log("Failed to fetch Purchase Contract:", err);
+				}
+
 				if (selectedMaterialData.Delivery_Point) {
 					nomi_toitem.push({
+						Contracttype: selectedMaterialData.Contracttype,
+						Source: "Manual",
 						Gasday: formattedGasday,
-						Vbeln: selectedMaterialData.DocNo,
+						Vbeln: purchaseContract,
 						ItemNo: "10",
 						NomItem: "20",
+						Shiptoparty: customerValue,
+						Vendor: selectedMaterialData.Vendor,
 						DeliveryPoint: selectedMaterialData.Delivery_Point,
 						RedelivryPoint: "",
 						ValidTo: oModelDataDelv.DeliveryPoints[0]?.ToT || "",
 						ValidFrom: oModelDataDelv.DeliveryPoints[0]?.FromT || "",
 						Material: selectedMaterialData.Material,
-						Auart: "ZGSA",
+						Auart: selectedMaterialData.Auart,
 						Ddcq: selectedMaterialData.Delivery_Dcq || 0.000,
 						Uom1: oModelDataDelv.DeliveryPoints[0]?.UOM || "",
-						Pdnq: oModelDataDelv.DeliveryPoints[0]?.DNQ 
-							  && !isNaN(oModelDataDelv.DeliveryPoints[0]?.DNQ) 
-							  ? parseFloat(oModelDataDelv.DeliveryPoints[0]?.DNQ) 
-							  : 0.000,
+						Pdnq: oModelDataDelv.DeliveryPoints[0]?.DNQ
+							&& !isNaN(oModelDataDelv.DeliveryPoints[0]?.DNQ)
+							? parseFloat(oModelDataDelv.DeliveryPoints[0]?.DNQ)
+							: 0.000,
 						Event: oModelDataDelv.DeliveryPoints[0]?.Event || "",
 						Adnq: 0.000,
-						Rpdnq: 0.000, // No redelivery value for this entry
 						Znomtk: "",
 						Src: "",
 						Remarks: "",
@@ -652,29 +673,33 @@ sap.ui.define([
 						Action: "",
 						Path: "",
 						CustGrp: "",
-						SrvProfile: "",
+						SrvProfile: selectedMaterialData.Profile,
 					});
-		
+
 					nomi_toitem.push({
+						Contracttype: selectedMaterialData.Contracttype,
+						Source: "Manual",
 						Gasday: formattedGasday,
 						Vbeln: selectedMaterialData.DocNo,
 						ItemNo: "10",
 						NomItem: "10",
+						Shiptoparty: customerValue,
+						Vendor: selectedMaterialData.Vendor,
 						DeliveryPoint: "",
 						RedelivryPoint: selectedMaterialData.Redelivery_Point,
 						ValidTo: oModelDataRedlv.RedeliveryPoints[0]?.ToT || "",
 						ValidFrom: oModelDataRedlv.RedeliveryPoints[0]?.FromT || "",
 						Material: selectedMaterialData.Material,
-						Auart: "ZGSA",
+						Auart: selectedMaterialData.Auart,
 						Ddcq: 0.000,
 						Rdcq: selectedMaterialData.Redelivery_Dcq || 0.000,
 						Uom1: oModelDataRedlv.RedeliveryPoints[0]?.UOM || "",
 						Event: oModelDataRedlv.RedeliveryPoints[0]?.Event || "",
 						Adnq: 0.000,
-						Rpdnq: oModelDataRedlv.RedeliveryPoints[0]?.DNQ 
-							   && !isNaN(oModelDataRedlv.RedeliveryPoints[0]?.DNQ) 
-							   ? parseFloat(oModelDataRedlv.RedeliveryPoints[0]?.DNQ) 
-							   : 0.000,
+						Pdnq: oModelDataRedlv.RedeliveryPoints[0]?.DNQ
+							&& !isNaN(oModelDataRedlv.RedeliveryPoints[0]?.DNQ)
+							? parseFloat(oModelDataRedlv.RedeliveryPoints[0]?.DNQ)
+							: 0.000,
 						Znomtk: "",
 						Src: "",
 						Remarks: "",
@@ -682,29 +707,33 @@ sap.ui.define([
 						Action: "",
 						Path: "",
 						CustGrp: "",
-						SrvProfile: "",
+						SrvProfile: selectedMaterialData.Profile,
 					});
 				} else {
 					nomi_toitem.push({
+						Contracttype: selectedMaterialData.Contracttype,
+						Source: "Manual",
 						Gasday: formattedGasday,
 						Vbeln: selectedMaterialData.DocNo,
 						ItemNo: "10",
 						NomItem: "10",
+						Shiptoparty: customerValue,
+						Vendor: selectedMaterialData.Vendor,
 						DeliveryPoint: "",
 						RedelivryPoint: selectedMaterialData.Redelivery_Point,
 						ValidTo: oModelDataRedlv.RedeliveryPoints[0]?.ToT || "",
 						ValidFrom: oModelDataRedlv.RedeliveryPoints[0]?.FromT || "",
 						Material: selectedMaterialData.Material,
-						Auart: "ZGSA",
+						Auart: selectedMaterialData.Auart,
 						Ddcq: 0.000,
 						Rdcq: selectedMaterialData.Redelivery_Dcq || 0.000,
 						Uom1: oModelDataRedlv.RedeliveryPoints[0]?.UOM || "",
 						Event: oModelDataRedlv.RedeliveryPoints[0]?.Event || "",
 						Adnq: 0.000,
-						Rpdnq: oModelDataRedlv.RedeliveryPoints[0]?.DNQ 
-							   && !isNaN(oModelDataRedlv.RedeliveryPoints[0]?.DNQ) 
-							   ? parseFloat(oModelDataRedlv.RedeliveryPoints[0]?.DNQ) 
-							   : 0.000,
+						Pdnq: oModelDataRedlv.RedeliveryPoints[0]?.DNQ
+							&& !isNaN(oModelDataRedlv.RedeliveryPoints[0]?.DNQ)
+							? parseFloat(oModelDataRedlv.RedeliveryPoints[0]?.DNQ)
+							: 0.000,
 						Znomtk: "",
 						Src: "",
 						Remarks: "",
@@ -712,42 +741,42 @@ sap.ui.define([
 						Action: "",
 						Path: "",
 						CustGrp: "",
-						SrvProfile: "",
+						SrvProfile: selectedMaterialData.Profile,
 					});
 				}
-		
-				// **Get OData Model**
+				console.log("Nomination Items:", nomi_toitem);
+
 				var oModel = this.getOwnerComponent().getModel();
 				if (!oModel) {
 					throw new Error("OData V4 model not found.");
 				}
-		
-				// **Bind Context to OData Action**
+
+
 				let sAction = "/updateNomination";
 				const oContext = oModel.bindContext(`${sAction}(...)`, undefined);
-		
-				// **Set Payload as a Parameter**
+
+
 				oContext.setParameter("nominations", nomi_toitem);
-		
-				// **Execute Action**
+
+
 				await oContext.execute();
-		
-				// **Success Message**
+
+
 				sap.m.MessageToast.show("Nomination updated successfully!");
 			} catch (error) {
 				console.error("Error updating nomination:", error);
 				sap.m.MessageBox.error("Failed to update nomination. Please try again.");
 			} finally {
-				oBusyDialog.close(); // Ensure busy dialog is closed in all cases
+				oBusyDialog.close();
 			}
 		},
-		
-		
-		
-	
-		
-		
-		
+
+
+
+
+
+
+
 
 
 

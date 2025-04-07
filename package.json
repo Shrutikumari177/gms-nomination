@@ -125,6 +125,24 @@
       "[production]": {
         "db": "hana",
         "auth": "dummy"
+      },
+      "GMSEXCHG_AGRMT_API_SRV": {
+        "kind": "odata-v2",
+        "model": "srv/external/GMSEXCHG_AGRMT_API_SRV",
+        "[production]": {
+          "credentials": {
+            "destination": "Ingenx_OData_SAP",
+            "path": "/sap/opu/odata/gms/EXCHG_AGRMT_API_SRV"
+          }
+        },
+        "[development]": {
+          "credentials": {
+            "destination": "SandboxPO",
+            "path": "/sap/opu/odata/gms/EXCHG_AGRMT_API_SRV"
+          }
+        },
+        "csrf": true,
+        "csrfInBatch": true
       }
     }
   }

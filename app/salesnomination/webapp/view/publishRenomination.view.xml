@@ -162,7 +162,7 @@
                                         <DisplayListItem
                                             id="IdRePubNomContractDesc"
                                             label="Contract Desc:"
-                                            value="{contDataModel>/Contracttype}"
+                                            value="{contDataModel>/Contract_Description}"
                                         />
                                     </List>
                                     <List id="IdRePubNomStaticListS" visible="false">
