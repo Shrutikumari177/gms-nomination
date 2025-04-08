@@ -10,17 +10,13 @@ using GMSEXCHG_AGRMT_API_SRV from './external/GMSEXCHG_AGRMT_API_SRV.cds';
 service nominationServices {
 
 
- entity VirtualNominations : NominationDataType {
+    entity VirtualNominations : NominationDataType {
         key Gasday : Date;
-        key Vbeln : String;
+        key Vbeln  : String;
     }
 
-  
-    
-// action handleSystemNomination ( ) returns String;
 
-
-
+    // action handleSystemNomination ( ) returns String;
 
 
     function getNominationsByCustomer(SoldToParty : String)                                                           returns array of String;
@@ -28,46 +24,46 @@ service nominationServices {
     function getContractDetail(DocNo : String, Material : String, Redelivery_Point : String)                          returns array of String;
     function getContractMatDetailsByGasday(Gasday : Date, DocNo : String)                                             returns array of String;
     function getRenominationContractData(DocNo : String, Material : String, Redelivery_Point : String, Gasday : Date) returns array of String;
-
+    function getContractsByCustomerNDocType(SoldToParty : String, DocTyp : String)                                    returns array of String;
 
 
     type NominationDataType {
-    Contracttype:String;    
-    Source:String;    
-    Gasday : Date;
-    Vbeln : String;
-    ItemNo : String;
-    NomItem : String;
-    DeliveryPoint : String;
-    RedelivryPoint : String;
-    ValidTo : Time;
-    ValidFrom : Time;
-    Material : String;
-    Timestamp : Timestamp;
-    Nomtk : String;
-    Kunnr : String;
-    Auart : String;
-    Ddcq : Decimal;
-    Rdcq : Decimal;
-    Uom1 : String;
-    Pdnq : Decimal;
-    Event : String;
-    Adnq : Decimal;
-    Rpdnq : Decimal;
-    Znomtk : String;
-    Src : String;
-    Remarks : String;
-    Flag : String;
-    Action : String;
-    Path : String;
-    CustGrp : String;
-    SrvProfile : String;
-    Shiptoparty:String;
-    Vendor:String;
+        Contracttype   : String;
+        Source         : String;
+        Gasday         : Date;
+        Vbeln          : String;
+        ItemNo         : String;
+        NomItem        : String;
+        DeliveryPoint  : String;
+        RedelivryPoint : String;
+        ValidTo        : Time;
+        ValidFrom      : Time;
+        Material       : String;
+        Timestamp      : Timestamp;
+        Nomtk          : String;
+        Kunnr          : String;
+        Auart          : String;
+        Ddcq           : Decimal;
+        Rdcq           : Decimal;
+        Uom1           : String;
+        Pdnq           : Decimal;
+        Event          : String;
+        Adnq           : Decimal;
+        Rpdnq          : Decimal;
+        Znomtk         : String;
+        Src            : String;
+        Remarks        : String;
+        Flag           : String;
+        Action         : String;
+        Path           : String;
+        CustGrp        : String;
+        SrvProfile     : String;
+        Shiptoparty    : String;
+        Vendor         : String;
 
-}
+    }
 
-action updateNomination(nominations : array of NominationDataType) returns String;
+    action   updateNomination(nominations : array of NominationDataType)                                              returns String;
 
     entity ZNOMCPDATA                    as
         projection on ZNOM_CREATE_SRV.ZNOMCPDATA {
@@ -175,23 +171,122 @@ action updateNomination(nominations : array of NominationDataType) returns Strin
                 ContractDescription,
                 DocType
         };
-       entity nomi_SaveSet as projection on GMSNOMINATIONS_SRV.nomi_SaveSet
-    {        Timestamp, Contracttype, key Gasday, Pdnq, Source, Zstat, Transys, key Vbeln, ItemNo, NomItem, Versn, DeliveryPoint, RedelivryPoint, Shiptoparty, Vendor, ValidTo, ValidFrom, Material, Nomtk, Kunnr, Auart, Ddcq, Rdcq, Uom1, Event, Adnq, Rpdnq, Znomtk, Src, Remarks, Flag, Action, Path, CustGrp, SrvProfile, Createdby, Createddate, Createdtime, Changedby, Changeddate, Changedtime     }    
-;
-    
-   entity xGMSxCREATENOMINATION as projection on GMSNOMINATIONS_SRV.xGMSxCREATENOMINATION
-    {        key Vbeln, key Gasday, key item_no, NomItem, Versn, DeliveryPoint, RedelivryPoint, shiptoparty, vendor, ValidTo, ValidFrom, Zstat, Material, Nomtk, Kunnr, Auart, Transys, Ddcq, Rdcq, Uom1, Pdnq, Event, Adnq, Rpdnq, Znomtk, Src, Remarks, Flag, Action, Path, Source, CustGrp, Timestamp, SrvProfile, Contracttype     }    
-;
-    
-    entity xGMSxFETCHNOMINATION as projection on GMSNOMINATIONS_SRV.xGMSxFETCHNOMINATION
-    {        key DocNo, key Item, key Delivery_Point, key Redelivery_Point, key Material, key Delivery_Dcq, key Redelivery_Dcq, key Valid_Form, key Valid_To, Profile, Contract_Description, UOM, nomtk, Auart, Vendor, Calculated_Value, Contracttype, Clause_Code, SoldToParty     }    
-;
-    
-    entity znom_headSet as projection on GMSNOMINATIONS_SRV.znom_headSet
-    {        Gasday, key Vbeln,  nomi_toitem      }    
-;
 
-   
+    entity nomi_SaveSet                  as
+        projection on GMSNOMINATIONS_SRV.nomi_SaveSet {
+                Timestamp,
+                Contracttype,
+            key Gasday,
+                Pdnq,
+                Source,
+                Zstat,
+                Transys,
+            key Vbeln,
+                ItemNo,
+                NomItem,
+                Versn,
+                DeliveryPoint,
+                RedelivryPoint,
+                Shiptoparty,
+                Vendor,
+                ValidTo,
+                ValidFrom,
+                Material,
+                Nomtk,
+                Kunnr,
+                Auart,
+                Ddcq,
+                Rdcq,
+                Uom1,
+                Event,
+                Adnq,
+                Rpdnq,
+                Znomtk,
+                Src,
+                Remarks,
+                Flag,
+                Action,
+                Path,
+                CustGrp,
+                SrvProfile,
+                Createdby,
+                Createddate,
+                Createdtime,
+                Changedby,
+                Changeddate,
+                Changedtime
+        };
+
+    entity xGMSxCREATENOMINATION         as
+        projection on GMSNOMINATIONS_SRV.xGMSxCREATENOMINATION {
+            key Vbeln,
+            key Gasday,
+            key item_no,
+                NomItem,
+                Versn,
+                DeliveryPoint,
+                RedelivryPoint,
+                shiptoparty,
+                vendor,
+                ValidTo,
+                ValidFrom,
+                Zstat,
+                Material,
+                Nomtk,
+                Kunnr,
+                Auart,
+                Transys,
+                Ddcq,
+                Rdcq,
+                Uom1,
+                Pdnq,
+                Event,
+                Adnq,
+                Rpdnq,
+                Znomtk,
+                Src,
+                Remarks,
+                Flag,
+                Action,
+                Path,
+                Source,
+                CustGrp,
+                Timestamp,
+                SrvProfile,
+                Contracttype
+        };
+
+    entity xGMSxFETCHNOMINATION          as
+        projection on GMSNOMINATIONS_SRV.xGMSxFETCHNOMINATION {
+            key DocNo,
+            key Item,
+            key Delivery_Point,
+            key Redelivery_Point,
+            key Material,
+            key Delivery_Dcq,
+            key Redelivery_Dcq,
+            key Valid_Form,
+            key Valid_To,
+                Profile,
+                Contract_Description,
+                UOM,
+                nomtk,
+                Auart,
+                Vendor,
+                Calculated_Value,
+                Contracttype,
+                Clause_Code,
+                SoldToParty
+        };
+
+    entity znom_headSet                  as
+        projection on GMSNOMINATIONS_SRV.znom_headSet {
+                Gasday,
+            key Vbeln,
+                nomi_toitem
+        };
+
+
     entity ZNOMMASTER15                  as
         projection on GMSNOMCP_GMS_SRV.ZNOMMASTER15 {
             key ExchangeAgreement,
@@ -306,19 +401,22 @@ action updateNomination(nominations : array of NominationDataType) returns Strin
                 DeliveryPt,
                 RedeliveryPt
         };
-    entity TransAgreemSet as projection on GMSEXCHG_AGRMT_API_SRV.TransAgreemSet
-    {        key Salescontract, Purchasecontract, Exchangecont     }    
-;    
+
+    entity TransAgreemSet                as
+        projection on GMSEXCHG_AGRMT_API_SRV.TransAgreemSet {
+            key Salescontract,
+                Purchasecontract,
+                Exchangecont
+        };
 
 
     entity pathAndFuelMapping            as projection on GMS_CONFIG.pathAndFuelMapping;
-      entity DocumentNoProfileMapping            as projection on GMS_CONFIG.DocumentNoProfileMapping;
-  
+    entity DocumentNoProfileMapping      as projection on GMS_CONFIG.DocumentNoProfileMapping;
     entity Nominationlogic               as projection on GMS_CONFIG.Nominationlogic;
     entity serviceProfileParametersItems as projection on GMS_CONFIG.serviceProfileParametersItems;
     entity ServiceProfileMaster          as projection on GMS_CONFIG.ServiceProfileMaster;
     entity transportAgreementDetail      as projection on db.transportAgreementDetail;
-    entity systemNomination      as projection on db.systemNomination;
-    
+    entity systemNomination              as projection on db.systemNomination;
+
 
 }

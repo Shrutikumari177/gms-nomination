@@ -497,6 +497,49 @@ module.exports = cds.service.impl(async (srv) => {
         }
     });
 
+
+
+
+    // *********************************system Nomination ***********************************************
+
+    srv.on('getContractsByCustomerNDocType', async (req) => {
+        try {
+
+            const { SoldToParty,DocTyp } = req.data;
+            console.log("DocType", SoldToParty)
+
+
+            const query = SELECT.from('xGMSxFETCHNOMINATION')
+                .columns('DocNo', 'Contracttype')
+                .where({ SoldToParty ,Auart:DocTyp});
+
+
+            const resultRes = await GMSNOMINATIONS_SRV.run(query);
+
+            const uniqueResults = [...new Map(resultRes.map(item => [item.DocNo, item])).values()];
+
+            console.log("resultRes after filtering", uniqueResults);
+
+            return uniqueResults;
+
+        } catch (error) {
+
+            req.error(500, error);
+            return [];
+        }
+    });
+
+
+
+
+
+
+
+
+
+
+
+
     srv.on('CREATE', 'systemNomination', async (req) => {
         let { Vbeln, soldToParty, Material, Rdcq, Uom, RedelivryPoint, Rpdnq, ValidTo, ValidFrom } = req.data;
 
@@ -670,7 +713,7 @@ module.exports = cds.service.impl(async (srv) => {
         }
     }
     cron.schedule("52 09  * * *", async () => {
-        console.log("⏳ Running VirtualNominations job at 14:45 IST...");
+        // console.log("⏳ Running VirtualNominations job at 14:45 IST...");
         // await generateVirtualNominations();
     });
 

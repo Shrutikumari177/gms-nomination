@@ -3,6 +3,11 @@ GET http://localhost:4004/odata/v4/nomination-services/CreateSPSet('40000787')?$
 GET http://localhost:4004/odata/v4/nomination-services/getNominationsByCustomer?SoldToParty='1100000003'
 
 
+####
+GET http://localhost:4004/odata/v4/nomination-services/getContractsByCustomerNDocType?SoldToParty='1100000003'&DocTyp='ZGTA'
+
+
+
 ###
 
 GET http://localhost:4004/odata/v4/nomination-services/getContractDetailsAndPastNom?DocNo=40000932

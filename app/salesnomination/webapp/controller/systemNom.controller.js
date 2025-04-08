@@ -19,15 +19,15 @@ sap.ui.define([
 ], function (Device, Fragment, Controller, JSONModel, HelperFunction, Popover, Button, mobileLibrary, FeedItem, FlattenedDataset, MessageBox, MessageToast, ChartJSAdapterDateFns, ChartJS) {
 	"use strict";
 
-	let material;
+	
 
 	
-	let minDCQVal = Number.MAX_SAFE_INTEGER;
-	let maxDCQVal = 0;
-	let remainingDCQ = 0;
-	let sContract;
+	
+	
+
 	let customerValue;
-    let contractValue;
+	let documentValue;
+  
 
 	return Controller.extend("com.ingenx.nomination.salesnomination.controller.systemNom", {
 
@@ -64,6 +64,37 @@ sap.ui.define([
 			
 			
 		},
+		documenttypeValueHelp: async function (oEvent) {
+			try {
+				let sDialogId = "_documentSelectDialog";
+				let sFragmentName = "com.ingenx.nomination.salesnomination.fragment.selectDocumentType";
+
+				this._currentValueHelpSource = oEvent.getSource();
+
+				await HelperFunction._openValueHelpDialog(this, sDialogId, sFragmentName);
+			} catch (error) {
+				console.error("Error opening value help dialog:", error);
+				sap.m.MessageBox.error("Could not open value help. Please contact support.");
+			}
+		},
+		onValueHelpConfirmDocument: async function (oEvent) {
+
+			try {
+				let oSource = this._currentValueHelpSource;
+				 documentValue = HelperFunction._valueHelpSelectedValue(oEvent, this, oSource.getId());
+				if (!documentValue) {
+					return;
+
+				}
+					
+				} 
+				catch (error) {
+				console.error("Unexpected error:", error.message || error);
+			} finally {
+				
+				this._documentSelectDialog.getBinding("items").filter([]);
+			}
+		},
 
 		
 
@@ -85,7 +116,7 @@ sap.ui.define([
 			}
 		},
         onValueHelpConfirmSTP: async function (oEvent) {
-
+          
 			try {
 				let oSource = this._currentValueHelpSource;
 				 customerValue = HelperFunction._valueHelpSelectedValue(oEvent, this, oSource.getId());
@@ -93,13 +124,14 @@ sap.ui.define([
 
 				let oView = this.getView();
 				
+				const sPath = `/getContractsByCustomerNDocType?SoldToParty='${customerValue}'&DocTyp='${documentValue}'`;
+				
+				let oModel = this.getOwnerComponent().getModel();
+				const oBindList = oModel.bindList(sPath);
+				const aContexts = await oBindList.requestContexts(0, Infinity);
 
-				let oData = await HelperFunction._getSingleEntityDataWithParam(
-					this,
-					"getNominationsByCustomer",
-					"SoldToParty",
-					customerValue
-				);
+				const oData = aContexts.map(oContext => oContext.getObject());
+				console.log("aContracts", oData);
 
 				if (oData && oData.length) {
 					let newModelForContracts = new sap.ui.model.json.JSONModel({ data: oData });
@@ -243,22 +275,79 @@ sap.ui.define([
 		
 				let contractDetails = oData.value[0];
 		
-				// Ensure data array exists
 				let contractDataArray = contractDetails.data || [];
 		
-				let maxDCQ = this._getClauseValue(contractDataArray, "Max RDP DCQ");
-				let minDCQ = this._getClauseValue(contractDataArray, "Min RDP DCQ");
-				console.log("Max DCQ:", maxDCQ, "Min DCQ:", minDCQ);
+			
 		
-				this.getView().byId("contractRDPDCQ").setValue(contractDetails.Redelivery_Dcq || ""); 
-				this.getView().byId("contractUOM").setValue(contractDetails.UOM || "");  
-				this.getView().byId("ContractRedeliveryPoint").setValue(contractDetails.Redelivery_Point || "");  
+				let oNewJsonModel = new sap.ui.model.json.JSONModel(oData.value[0]);
+				this.getView().setModel(oNewJsonModel, "contDataModel");
+
+		
+				this._updateRedeliveryData(oData.value[0]);
+				this._updateDeliveryData(oData.value[0]);  
 		
 			} catch (error) {
 				console.error("Error fetching contract details:", error);
 				sap.m.MessageBox.error("Failed to fetch contract details. Please try again.");
 			}
 		},
+		
+		
+
+		
+		_updateRedeliveryData: function (oData) {
+			const hasRedeliveryDcq = oData.Redelivery_Point && oData.Redelivery_Point.trim() !== "";
+			if (hasRedeliveryDcq) {
+				let oRedlvModel = this.getView().getModel("RedlvModelData");
+				let aRedeliveryPoints = oRedlvModel.getProperty("/RedeliveryPoints") || [];
+		
+				const contractDataArray = oData.data || [];
+				const maxDCQ = this._getClauseValue(contractDataArray, "Max RDP DCQ");
+				const minDCQ = this._getClauseValue(contractDataArray, "Min RDP DCQ");
+		
+				aRedeliveryPoints.forEach(item => {
+					item.RedeliveryPt = oData.Redelivery_Point;
+					item.UOM = "MBT";
+					item.MaxRDP_DCQ = maxDCQ || "";
+					item.MinRDP_DCQ = minDCQ || "";
+				});
+		
+				oRedlvModel.setProperty("/RedeliveryPoints", aRedeliveryPoints);
+			}
+		},
+		
+		
+		_updateDeliveryData: function (oData) {
+			const hasDeliveryDcq = !!(oData.Delivery_Point && oData.Delivery_Point.trim());
+			if (hasDeliveryDcq) {
+				let oView = this.getView();
+				
+				oView.byId("IdSysNomDelPointTable").setVisible(true);
+				oView.byId("IdSysNomTableHeaderBarForDelv").setVisible(true);
+
+				let oDelvModel = oView.getModel("DelvModelData");
+				let aDeliveryPoints = oDelvModel.getProperty("/DeliveryPoints") || [];
+				const contractDataArray = oData.data || [];
+				const maxDCQ = this._getClauseValue(contractDataArray, "Max DP DCQ");
+				const minDCQ = this._getClauseValue(contractDataArray, "Min DP DCQ");
+		
+
+				aDeliveryPoints.forEach(item => {
+					item.DeliveryPt = oData.Delivery_Point;
+					item.UOM = "MBT";
+					item.MaxDP_DCQ = maxDCQ || "";
+					item.MinDP_DCQ = minDCQ || "";
+				});
+
+				oDelvModel.setProperty("/DeliveryPoints", aDeliveryPoints);
+			}
+		},
+       
+
+
+
+
+
 		
 		_getClauseValue: function (data, clauseCode) {
 			

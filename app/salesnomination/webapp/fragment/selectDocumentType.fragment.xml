@@ -1,0 +1,22 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+
+    <SelectDialog
+        id="documentType"
+        noDataText="Loading ..."
+        title="Select Document Type"
+        confirm=".onValueHelpConfirmDocument"
+        liveChange="onValueHelpSearchDocumentType"
+      
+            items="{
+            path: '/DocumentNoProfileMapping'
+        }">
+        <StandardListItem id="DocumentTypeStandardListItemSTP"
+            title="{DocumentNo}"
+            description="{serviceProfileName}"
+            iconDensityAware="false"
+            iconInset="false"
+            type="Active" />
+    </SelectDialog>
+</core:FragmentDefinition>
