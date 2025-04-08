@@ -56,8 +56,8 @@
                     <PropertyRef Name="Gasday"/>
                     <PropertyRef Name="Vbeln"/>
                 </Key>
-                <Property Name="Timestamp" Type="Edm.DateTime" Nullable="false" Precision="0" sap:unicode="false" sap:label="Time Stamp" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="Contracttype" Type="Edm.String" Nullable="false" MaxLength="1" sap:unicode="false" sap:label="Document Type" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Timestamp" Type="Edm.DateTime" Precision="0" sap:unicode="false" sap:label="Time Stamp" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="Gasday" Type="Edm.DateTime" Nullable="false" Precision="0" sap:display-format="Date" sap:unicode="false" sap:label="Gas Day" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="Pdnq" Type="Edm.Decimal" Nullable="false" Precision="13" Scale="3" sap:unicode="false" sap:unit="Uom1" sap:label="DNQ" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
                 <Property Name="Source" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Source" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
@@ -108,51 +108,45 @@
             </EntityType>
             <EntityType Name="xGMSxCREATENOMINATIONType" sap:label="Create Nomination Data" sap:content-version="1">
                 <Key>
-                    <PropertyRef Name="Gasday"/>
                     <PropertyRef Name="Vbeln"/>
-                    <PropertyRef Name="ItemNo"/>
-                    <PropertyRef Name="NomItem"/>
-                    <PropertyRef Name="Versn"/>
-                    <PropertyRef Name="DeliveryPoint"/>
-                    <PropertyRef Name="RedelivryPoint"/>
+                    <PropertyRef Name="Gasday"/>
+                    <PropertyRef Name="item_no"/>
                 </Key>
-                <Property Name="Gasday" Type="Edm.DateTime" Nullable="false" Precision="0" sap:display-format="Date" sap:label="Gas Day" sap:quickinfo="Gas Day Date"/>
                 <Property Name="Vbeln" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Sales document" sap:quickinfo="Sales Document"/>
-                <Property Name="ItemNo" Type="Edm.String" Nullable="false" MaxLength="6" sap:display-format="NonNegative" sap:label="Sales Document Item"/>
-                <Property Name="NomItem" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="NonNegative" sap:label="Nomination key item" sap:quickinfo="Nomination Key Item"/>
-                <Property Name="Versn" Type="Edm.String" Nullable="false" MaxLength="3" sap:display-format="UpperCase" sap:label="Version"/>
-                <Property Name="DeliveryPoint" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Delivery Point"/>
-                <Property Name="RedelivryPoint" Type="Edm.String" Nullable="false" MaxLength="20" sap:display-format="UpperCase" sap:label="Redelivery Point" sap:quickinfo="Re-Delivery Ponit"/>
+                <Property Name="Gasday" Type="Edm.DateTime" Nullable="false" Precision="0" sap:display-format="Date" sap:label="Gas Day" sap:quickinfo="Gas Day Date"/>
+                <Property Name="item_no" Type="Edm.String" Nullable="false" MaxLength="6" sap:display-format="NonNegative" sap:label="Sales Document Item"/>
+                <Property Name="NomItem" Type="Edm.String" MaxLength="10" sap:display-format="NonNegative" sap:label="Nomination key item" sap:quickinfo="Nomination Key Item"/>
+                <Property Name="Versn" Type="Edm.String" MaxLength="3"/>
+                <Property Name="DeliveryPoint" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Delivery Point"/>
+                <Property Name="RedelivryPoint" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Redelivery Point" sap:quickinfo="Re-Delivery Ponit"/>
                 <Property Name="shiptoparty" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Customer" sap:quickinfo="Customer Number"/>
                 <Property Name="vendor" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Vendor" sap:quickinfo="Account Number of Vendor or Creditor"/>
                 <Property Name="ValidTo" Type="Edm.Time" Precision="0" sap:label="Time To" sap:quickinfo="Nomination Time"/>
                 <Property Name="ValidFrom" Type="Edm.Time" Precision="0" sap:label="" sap:quickinfo="Time From"/>
+                <Property Name="Zstat" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Status"/>
                 <Property Name="Material" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Material" sap:quickinfo="Material Number"/>
                 <Property Name="Nomtk" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Nomination key" sap:quickinfo="Nomination (technical) Key"/>
                 <Property Name="Kunnr" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Sold-To Party"/>
                 <Property Name="Auart" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Sales Document Type"/>
-                <Property Name="Ddcq" Type="Edm.Decimal" Precision="13" Scale="3" sap:label="Daily ContractQty" sap:quickinfo="DCQ"/>
-                <Property Name="Rdcq" Type="Edm.Decimal" Precision="13" Scale="3" sap:label="" sap:quickinfo="RDCQ"/>
-                <Property Name="Uom1" Type="Edm.String" MaxLength="3"/>
+                <Property Name="Transys" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Transport system"/>
+                <Property Name="Ddcq" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="Uom1" sap:label="Daily ContractQty" sap:quickinfo="DCQ"/>
+                <Property Name="Rdcq" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="Uom1" sap:label="" sap:quickinfo="RDCQ"/>
+                <Property Name="Uom1" Type="Edm.String" MaxLength="3" sap:label="Unit of Measure" sap:quickinfo="Unit of Measurement" sap:semantics="unit-of-measure"/>
+                <Property Name="Pdnq" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="Uom1" sap:label="DNQ" sap:quickinfo="daily nomination Quantity"/>
                 <Property Name="Event" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Event Type" sap:quickinfo="Nomination Event"/>
-                <Property Name="Adnq" Type="Edm.Decimal" Precision="13" Scale="3" sap:label="Approved DNQ"/>
-                <Property Name="Pdnq" Type="Edm.Decimal" Precision="13" Scale="3" sap:label="DNQ" sap:quickinfo="daily nomination Quantity"/>
-                <Property Name="Rpdnq" Type="Edm.Decimal" Precision="13" Scale="3" sap:label="RePublish DNQ" sap:quickinfo="Re-Publish DNQ"/>
+                <Property Name="Adnq" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="Uom1" sap:label="Approved DNQ"/>
+                <Property Name="Rpdnq" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="Uom1" sap:label="RePublish DNQ" sap:quickinfo="Re-Publish DNQ"/>
                 <Property Name="Znomtk" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Nomination Number"/>
                 <Property Name="Src" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="Source"/>
                 <Property Name="Remarks" Type="Edm.String" MaxLength="255" sap:display-format="UpperCase" sap:label="Long comment" sap:quickinfo="iSeries: Long comment of a table, view or table field"/>
                 <Property Name="Flag" Type="Edm.String" MaxLength="6" sap:display-format="UpperCase" sap:label="Nomination Flag" sap:quickinfo="flag for customer nomination"/>
                 <Property Name="Action" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Action"/>
                 <Property Name="Path" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Path"/>
+                <Property Name="Source" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Source"/>
                 <Property Name="CustGrp" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Customer Group"/>
+                <Property Name="Timestamp" Type="Edm.DateTimeOffset" Precision="0" sap:label="Short Time Stamp" sap:quickinfo="UTC Time Stamp in Short Form (YYYYMMDDhhmmss)"/>
                 <Property Name="SrvProfile" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Service Profile"/>
-                <Property Name="ContractType" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Document Type"/>
-                <Property Name="Createdby" Type="Edm.String" MaxLength="15" sap:display-format="UpperCase" sap:label="Created By"/>
-                <Property Name="Createddate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Created Date"/>
-                <Property Name="Createdtime" Type="Edm.Time" Precision="0" sap:label="Created Time"/>
-                <Property Name="Changedby" Type="Edm.String" MaxLength="15" sap:display-format="UpperCase" sap:label="Changed By"/>
-                <Property Name="Changeddate" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Change Date" sap:quickinfo="Changed Date"/>
-                <Property Name="Changedtime" Type="Edm.Time" Precision="0" sap:label="Change Time" sap:quickinfo="Changed Time"/>
+                <Property Name="Contracttype" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Document Type"/>
             </EntityType>
             <EntityType Name="xGMSxFETCHNOMINATIONType" sap:label="Fetch Nomination" sap:content-version="1">
                 <Key>

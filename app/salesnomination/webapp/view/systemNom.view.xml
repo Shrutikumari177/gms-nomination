@@ -33,7 +33,7 @@
             <l:BlockLayout id="vendirRegistration_BlockLayout" background="Dashboard">
 
              <l:BlockLayoutRow id="vendirRegistration_BlockLayoutRow">
-                     <l:BlockLayoutCell id="registrationGenBlockLayoutCell" width="90%">
+                    <l:BlockLayoutCell id="registrationGenBlockLayoutCell" width="90%">
 
                          <form:SimpleForm id="GenSimpleForm1"  class="" editable="false">
                             <form:toolbar>
@@ -49,31 +49,35 @@
                                 <core:Title id="GenTitle1"/>
                                 <Label id="Labelcon" text="Contract Type" design="Bold" class="sapUiTinyMarginTop"/>
                                 <HBox id="registratioMapping_ocCodeInputBox" >
-                                    <Input id="registraionMapping_retailerName" value="" width="200px"  showValueHelp="true"  valueHelpRequest="soldToPartyValueHelp"/>
+                                    <Input id="registraionMapping_retailerName" value="" width="200px" showValueHelp="true"  valueHelpRequest="contracttypeValueHelp" />
                                 </HBox>
+                                
                                 <Label id="Label2" text="Customer" design="Bold" class="sapUiTinyMarginTop"/>
                                 <HBox id="registrationMapping_ocCodeInputBox" >
                                     <Input id="registrationMapping_retailerName" value="" width="200px"  showValueHelp="true"  valueHelpRequest="soldToPartyValueHelp"/>
                                 </HBox>
+                                
                                 <Label id="Label4" text="Contract No." design="Bold" class="sapUiTinyMarginTop"/>
                                 <HBox id="registrationMapping_emailHBox">
                                     <Input id="registrationMapping_emailID" value="" width="200px" showValueHelp="true" valueHelpRequest="contractValueHelp" />
                                 </HBox>
+
                                 <Label id="Label6" text="Material" design="Bold" class="sapUiTinyMarginTop"/>
                                 <HBox id="registrationMapping_batchIdInputHBox">
                                     <Input id="registrationMapping_contactNo" value="" width="200px" showValueHelp="true" valueHelpRequest="materialValueHelp" />
                                 </HBox>
-                                <Label id="Labe" text="DCQ" design="Bold" class="sapUiTinyMarginTop"/>
+                                
+                                <!-- <Label id="Labe" text="DCQ" design="Bold" class="sapUiTinyMarginTop"/>
                                 <HBox id="contractRDPDCQHBox">
                                     <Input id="contractRDPDCQ" width="200px" value="" editable="false" />
                                 </HBox>
                                 <Label id="GenLabel9" text="UOM" design="Bold" class="sapUiTinyMarginTop"/>
-                                <Input id="contractUOM"  value="" width="200px" editable="false"  />
+                                <Input id="contractUOM"  value="" width="200px" editable="false"  /> -->
 
 
 
                                 <core:Title id="registrationTitle2"/>
-                                <Label id="GenLa7" text="Redelivery Point" design="Bold" class="sapUiTinyMarginTop"/>
+                                <!-- <Label id="GenLa7" text="Redelivery Point" design="Bold" class="sapUiTinyMarginTop"/>
                                 <Input id="ContractRedeliveryPoint"  value="" width="200px" editable="false" />    
                             
 
@@ -89,7 +93,7 @@
                                
 
                                 <Label id="GeLab7" text="Delivery DNQ" design="Bold" class="sapUiTinyMarginTop"/>
-                                <Input id="regisrationMapping_district"  value="" width="200px" />    
+                                <Input id="regisrationMapping_district"  value="" width="200px" />     -->
                                 <Label id="GenLael7" text="Valid From" design="Bold" class="sapUiTinyMarginTop"/>
 
                                 <DatePicker
@@ -111,9 +115,204 @@
                                
                                 width="200px"
                             />
+                            
                             </form:content>
                         </form:SimpleForm>
-                        </l:BlockLayoutCell>
+                    </l:BlockLayoutCell>
+
+                    
+             </l:BlockLayoutRow> 
+             <l:BlockLayoutRow id="vendirRegstration_BlockLayoutRow">
+                    <l:BlockLayoutCell id="registratonGenBlockLayoutCell" width="90%">
+                                        <Bar
+                        id="IdPubNomTableHeaderBarForDelv"
+                        visible="false"
+                        class="sapUiSmallMarginTop"
+                    >
+                        <contentLeft>
+                            <Title
+                                id="IdPubNomTableTitleForDelv"
+                                text="Nominate Quantity For Delivery"
+                            />
+                        </contentLeft>
+                        
+                    </Bar>
+                        <Table
+                        id="IdPubNomDelPointTable"
+                        items="{DelvModelData>/DeliveryPoints}"
+                        visible="false"
+                     >
+                        <columns>
+                            <Column id="IdPubNomDelvPointCol">
+                                <Text
+                                    id="IdPubNomDelvPointText"
+                                    text="Delivery Point"
+                                />
+                            </Column>
+                            <Column id="IdPubNomDNQCol">
+                                <Label
+                                    id="IdPubNomDNQLabel"
+                                    required="true"
+                                    text="DNQ"
+                                />
+                            </Column>
+                            <Column id="IdPubNomUOMCol">
+                                <Text
+                                    id="IdPubNomUOMText"
+                                    text="UOM"
+                                />
+                            </Column>
+                            
+                        </columns>
+                        <ColumnListItem id="IdPubNomDelvPointItem">
+                            <cells>
+                                <Input
+                                    id="IdPubNomDelvPointInput"
+                                    editable="false"
+                                    value="{DelvModelData>DeliveryPt}"
+                                />
+                                <Input
+                                    id="IdPubNomDNQInput"
+                                    value="{DelvModelData>DNQ}"
+                                    type="Number"
+                                    liveChange="OnDeliveryDNQValidation"
+        
+                                />
+                                <Input
+                                    id="IdPubNomUOMInput"
+                                    value="{DelvModelData>UOM}"
+                                    editable="false"
+                                />
+                                
+                            </cells>
+                        </ColumnListItem>
+                    </Table>
+                    <Bar
+                        id="IdPubNomTableHeaderBar"
+                        visible="true"
+                        class="sapUiSmallMarginTop"
+                    >
+                        <contentLeft>
+                            <Title
+                                id="IdPubNomTableTitle"
+                                text="Nominate Quantity For Re-Delivery"
+                            />
+                        </contentLeft>
+                        <contentMiddle>
+                            <Label
+                                id="IdCummDNQ"
+                                text="Total. DNQ"
+                                design="Bold"
+                                visible="false"
+                            />
+                            <!-- <Input
+                                id="IdCummDNQInput"
+                                value="{}"
+                                width="150px"
+                                editable="false"
+                            /> -->
+                            <Input
+                                id="IdCummDNQInput"
+                                value="{localModel>/rdpCummDNQ}"
+                                width="150px"
+                                editable="false"
+                                visible="false"
+                            />
+                        </contentMiddle>
+                        <!-- <contentRight >
+                            <Button
+                                id="IdPubNomAddBtnForRedlv"
+                                icon="sap-icon://add"
+                                type="Emphasized"
+                                press="onAddPress"
+                                class=""
+                            />
+                            <Button
+                                id="IdPubNomDeleteBtnForRedlv"
+                                icon="sap-icon://delete"
+                                type="Reject"
+                                press="onDeletePress"
+                            />
+                        </contentRight> -->
+                    </Bar>
+                    <Table
+                        id="IdPubNomRedPointTable"
+                        items="{RedlvModelData>/RedeliveryPoints}"
+                     >
+                        <columns>
+                            <Column id="IdPubNomRedvPointCol">
+                                <Text
+                                    id="IdPubNomRedvPointText"
+                                    text="Re-Delivery Point"
+                                    width="7rem"
+                                />
+                            </Column>
+                            <Column id="IdPubNomDNQCol2">
+                                <Label
+                                    id="IdPubNomDNQLabel2"
+                                    text="DNQ"
+                                    width="15rem"
+                                    required="true"
+                                />
+                            </Column>
+                            <Column id="IdPubNomUOMCol2">
+                                <Text
+                                    id="IdPubNomUOMText2"
+                                    text="UOM"
+                                />
+                            </Column>
+                            <Column id="IdPubNomNQCol2">
+                                <Label
+                                    id="IdPubNomDQLabel2"
+                                    text="Max RDP DCQ"
+                                    width="15rem"
+                                    required="true"
+                                />
+                            </Column>
+                            <Column id="IdPubNomUOCol2">
+                                <Text
+                                    id="IdPubNomUOMext2"
+                                    text="Min RDP DCQ"
+                                />
+                            </Column>
+                            
+                        </columns>
+                        <ColumnListItem id="IdPubNomRedvPointItem">
+                            <cells>
+                                <Input
+                                    id="IdPubNomRedvPointInput"
+                                    editable="false"
+                                    value="{RedlvModelData>RedeliveryPt}"
+                                />
+                                <!-- <Input id="IdPubNomDNQInput2"  value="{RedlvModelData>DNQ}" liveChange=".onLiveInputValidation($event, 'IdPubNomRedPointTable', 'IdCummDNQInput')" /> -->
+                                <Input
+                                    id="IdPubNomDNQInput2"
+                                    value="{RedlvModelData>DNQ}"
+                                    liveChange="OnReDeliveryDNQValidation"
+                                    type="Number"
+                                />
+                                <Input
+                                    id="IdPubNomUOMInput2"
+                                    value="{RedlvModelData>UOM}"
+                                    editable="false"
+                                />
+                                <Input
+                                    id="IdPubNomOMInput2"
+                                    value="{RedlvModelData>UOM}"
+                                    editable="false"
+                                />
+                                <Input
+                                    id="IdPubNomUOMnput2"
+                                    value="{RedlvModelData>UOM}"
+                                    editable="false"
+                                />
+                                
+                            </cells>
+                        </ColumnListItem>
+                    </Table> 
+                    </l:BlockLayoutCell>
+
+                    
              </l:BlockLayoutRow> 
            </l:BlockLayout>
         </l:VerticalLayout>

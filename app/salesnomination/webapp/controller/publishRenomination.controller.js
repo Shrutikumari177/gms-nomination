@@ -167,7 +167,7 @@ sap.ui.define([
 
 
 		onValueHelpSearchSTP: function (oEvent) {
-			HelperFunction._valueHelpLiveSearch(oEvent, "Customer", "soldToParty", this);
+			HelperFunction._valueHelpLiveSearch(oEvent, ["Customer", "CustomerName"], "soldToParty", this);
 		},
 
 		onBackMat: function () {

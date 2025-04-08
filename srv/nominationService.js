@@ -26,6 +26,15 @@ module.exports = cds.service.impl(async (srv) => {
     srv.on('READ', 'TransAgreemSet', req => GMSEXCHG_AGRMT_API_SRV.run(req.query));
 
 
+    srv.on('READ', 'DocumentNoProfileMapping', async (req) => {
+        try {
+            const result = await externalService.run(SELECT.from('DocumentNoProfileMapping'));
+            return result;
+        } catch (err) {
+            console.error('Error fetching data from external service:', err);
+            req.error(500, 'Failed to fetch data from external service.');
+        }
+    })
 
 
 
@@ -58,18 +67,9 @@ module.exports = cds.service.impl(async (srv) => {
             req.error(500, 'Failed to fetch data from external service.');
         }
     })
-    // srv.on('READ', 'Nominationlogic', async (req) => {
-    //     try {
-    //         const result = await externalService.run(SELECT.from('Nominationlogic'));
-    //         return result;
-    //     } catch (err) {
-    //         console.error('Error fetching data from external service:', err);
-    //         req.error(500, 'Failed to fetch data from external service.');
-    //     }
-    // })
+   
     srv.on('READ', 'Nominationlogic', async (req) => {
         try {
-            // Extract filters from the request
             const query = SELECT.from('Nominationlogic');
 
             if (req.query.SELECT.where) {
@@ -350,7 +350,7 @@ module.exports = cds.service.impl(async (srv) => {
         // Fetch from xGMSxCREATENOMINATION (Redelivery side)
         const queryCreateNomination = SELECT.from('xGMSxCREATENOMINATION')
             .columns(
-                'Gasday', 'Vbeln', 'ItemNo', 'NomItem', 'Versn',
+                'Gasday', 'Vbeln', 'item_no', 'NomItem', 'Versn',
                 'DeliveryPoint', 'RedelivryPoint', 'ValidTo', 'ValidFrom',
                 'Material', 'Pdnq', 'Event'
             )
@@ -364,7 +364,7 @@ module.exports = cds.service.impl(async (srv) => {
         if (purchseContract) {
             const queryPurchaseCreateNomination = SELECT.from('xGMSxCREATENOMINATION')
                 .columns(
-                    'Gasday', 'Vbeln', 'ItemNo', 'NomItem', 'Versn',
+                    'Gasday', 'Vbeln', 'item_no', 'NomItem', 'Versn',
                     'DeliveryPoint', 'RedelivryPoint', 'ValidTo', 'ValidFrom',
                     'Material', 'Pdnq', 'Event'
                 )
@@ -669,7 +669,6 @@ module.exports = cds.service.impl(async (srv) => {
             console.error(`❌ Error sending email to ${email}:`, error.message);
         }
     }
-    // to schedule system nomination daily 
     cron.schedule("52 09  * * *", async () => {
         console.log("⏳ Running VirtualNominations job at 14:45 IST...");
         // await generateVirtualNominations();
@@ -683,7 +682,7 @@ module.exports = cds.service.impl(async (srv) => {
 
 
     srv.on('READ', 'VirtualNominations', async (req) => {
-        console.log("🔹 Manually triggering VirtualNominations job...");
+        // console.log("🔹 Manually triggering VirtualNominations job...");
         // return await generateVirtualNominations(req);
     });
     // ******************************************************************************************************

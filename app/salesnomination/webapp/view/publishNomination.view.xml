@@ -272,7 +272,7 @@
                         id="IdPubNomDelPointTable"
                         items="{DelvModelData>/DeliveryPoints}"
                         visible="false"
-                    >
+                     >
                         <columns>
                             <Column id="IdPubNomDelvPointCol">
                                 <Text

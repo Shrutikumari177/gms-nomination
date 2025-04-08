@@ -42,29 +42,67 @@ sap.ui.define(["sap/ui/core/Fragment","sap/ui/model/Filter","sap/ui/model/Filter
     
 
       // code is using for searching the item
-       _valueHelpLiveSearch: function (oEvent, filterField, id,oControl) {
+    //    _valueHelpLiveSearch: function (oEvent, filterField, id,oControl) {
+    //     let sValue = oEvent.getParameter("value") || oEvent.getParameter("query") || oEvent.getParameter("newValue");
+    //     let oBinding = oEvent.getSource().getBinding("items");
+    //     if (sValue) {
+    //         let oFilter = new sap.ui.model.Filter(filterField, FilterOperator.Contains, sValue);
+    //         oBinding.filter([oFilter]);
+    //     } else {
+    //         oBinding.filter([]);
+    //     }
+    //     if(id && oControl){
+    //     let oValueHelp = oControl.getView().byId(id);
+    //     if (oValueHelp) {
+    //         oBinding.attachEventOnce("dataReceived", function (oData) {
+    //             let aItems = oBinding.getCurrentContexts();
+    //             if (!aItems || aItems.length === 0) {
+    //                 oValueHelp.setNoDataText("No Data");
+    //             } else {
+    //                 oValueHelp.setNoDataText(""); 
+    //             }
+    //         });
+    //     }
+    //   }
+    // },
+    _valueHelpLiveSearch: function (oEvent, filterFields, id, oControl) {
         let sValue = oEvent.getParameter("value") || oEvent.getParameter("query") || oEvent.getParameter("newValue");
         let oBinding = oEvent.getSource().getBinding("items");
+    
         if (sValue) {
-            let oFilter = new sap.ui.model.Filter(filterField, FilterOperator.Contains, sValue);
-            oBinding.filter([oFilter]);
+            let aFilters = [];
+    
+            // Support both single field and array of fields
+            if (Array.isArray(filterFields)) {
+                filterFields.forEach(function (field) {
+                    aFilters.push(new sap.ui.model.Filter(field, sap.ui.model.FilterOperator.Contains, sValue));
+                });
+            } else {
+                aFilters.push(new sap.ui.model.Filter(filterFields, sap.ui.model.FilterOperator.Contains, sValue));
+            }
+    
+            let oCombinedFilter = new sap.ui.model.Filter({
+                filters: aFilters,
+                and: false // OR condition
+            });
+    
+            oBinding.filter([oCombinedFilter]);
         } else {
             oBinding.filter([]);
         }
-        if(id && oControl){
-        let oValueHelp = oControl.getView().byId(id);
-        if (oValueHelp) {
-            oBinding.attachEventOnce("dataReceived", function (oData) {
-                let aItems = oBinding.getCurrentContexts();
-                if (!aItems || aItems.length === 0) {
-                    oValueHelp.setNoDataText("No Data");
-                } else {
-                    oValueHelp.setNoDataText(""); 
-                }
-            });
+    
+        // Optional: noDataText handling
+        if (id && oControl) {
+            let oValueHelp = oControl.getView().byId(id);
+            if (oValueHelp) {
+                oBinding.attachEventOnce("dataReceived", function () {
+                    let aItems = oBinding.getCurrentContexts();
+                    oValueHelp.setNoDataText(aItems && aItems.length ? "" : "No Data");
+                });
+            }
         }
-      }
     },
+    
     
 
     // read data based on property 

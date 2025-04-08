@@ -1,4 +1,4 @@
-/* checksum : 6f8c43a1db02647648abc16f16726f59 */
+/* checksum : 595f7727e1f327c36dfa5c5d281c9c78 */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -165,14 +165,6 @@ entity GMSNOMINATIONS_SRV.nomi_SaveSet {
   @sap.sortable : 'false'
   @sap.filterable : 'false'
   key Vbeln : String(10) not null;
-  @odata.Type : 'Edm.DateTime'
-  @sap.unicode : 'false'
-  @sap.label : 'Time Stamp'
-  @sap.creatable : 'false'
-  @sap.updatable : 'false'
-  @sap.sortable : 'false'
-  @sap.filterable : 'false'
-  Timestamp : DateTime not null;
   @sap.unicode : 'false'
   @sap.label : 'Document Type'
   @sap.creatable : 'false'
@@ -180,6 +172,14 @@ entity GMSNOMINATIONS_SRV.nomi_SaveSet {
   @sap.sortable : 'false'
   @sap.filterable : 'false'
   Contracttype : String(1) not null;
+  @odata.Type : 'Edm.DateTime'
+  @sap.unicode : 'false'
+  @sap.label : 'Time Stamp'
+  @sap.creatable : 'false'
+  @sap.updatable : 'false'
+  @sap.sortable : 'false'
+  @sap.filterable : 'false'
+  Timestamp : DateTime;
   @sap.unicode : 'false'
   @sap.unit : 'Uom1'
   @sap.label : 'DNQ'
@@ -486,31 +486,29 @@ entity GMSNOMINATIONS_SRV.znom_headSet {
 @sap.content.version : '1'
 @sap.label : 'Create Nomination Data'
 entity GMSNOMINATIONS_SRV.xGMSxCREATENOMINATION {
-  @sap.display.format : 'Date'
-  @sap.label : 'Gas Day'
-  @sap.quickinfo : 'Gas Day Date'
-  key Gasday : Date not null;
   @sap.display.format : 'UpperCase'
   @sap.label : 'Sales document'
   @sap.quickinfo : 'Sales Document'
   key Vbeln : String(10) not null;
+  @sap.display.format : 'Date'
+  @sap.label : 'Gas Day'
+  @sap.quickinfo : 'Gas Day Date'
+  key Gasday : Date not null;
   @sap.display.format : 'NonNegative'
   @sap.label : 'Sales Document Item'
-  key ItemNo : String(6) not null;
+  key item_no : String(6) not null;
   @sap.display.format : 'NonNegative'
   @sap.label : 'Nomination key item'
   @sap.quickinfo : 'Nomination Key Item'
-  key NomItem : String(10) not null;
-  @sap.display.format : 'UpperCase'
-  @sap.label : 'Version'
-  key Versn : String(3) not null;
+  NomItem : String(10);
+  Versn : String(3);
   @sap.display.format : 'UpperCase'
   @sap.label : 'Delivery Point'
-  key DeliveryPoint : String(10) not null;
+  DeliveryPoint : String(10);
   @sap.display.format : 'UpperCase'
   @sap.label : 'Redelivery Point'
   @sap.quickinfo : 'Re-Delivery Ponit'
-  key RedelivryPoint : String(20) not null;
+  RedelivryPoint : String(20);
   @sap.display.format : 'UpperCase'
   @sap.label : 'Customer'
   @sap.quickinfo : 'Customer Number'
@@ -526,6 +524,9 @@ entity GMSNOMINATIONS_SRV.xGMSxCREATENOMINATION {
   @sap.quickinfo : 'Time From'
   ValidFrom : Time;
   @sap.display.format : 'UpperCase'
+  @sap.label : 'Status'
+  Zstat : String(4);
+  @sap.display.format : 'UpperCase'
   @sap.label : 'Material'
   @sap.quickinfo : 'Material Number'
   Material : String(40);
@@ -539,22 +540,33 @@ entity GMSNOMINATIONS_SRV.xGMSxCREATENOMINATION {
   @sap.display.format : 'UpperCase'
   @sap.label : 'Sales Document Type'
   Auart : String(4);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Transport system'
+  Transys : String(10);
+  @sap.unit : 'Uom1'
   @sap.label : 'Daily ContractQty'
   @sap.quickinfo : 'DCQ'
   Ddcq : Decimal(13, 3);
+  @sap.unit : 'Uom1'
   @sap.label : ''
   @sap.quickinfo : 'RDCQ'
   Rdcq : Decimal(13, 3);
+  @sap.label : 'Unit of Measure'
+  @sap.quickinfo : 'Unit of Measurement'
+  @sap.semantics : 'unit-of-measure'
   Uom1 : String(3);
+  @sap.unit : 'Uom1'
+  @sap.label : 'DNQ'
+  @sap.quickinfo : 'daily nomination Quantity'
+  Pdnq : Decimal(13, 3);
   @sap.display.format : 'UpperCase'
   @sap.label : 'Event Type'
   @sap.quickinfo : 'Nomination Event'
   Event : String(40);
+  @sap.unit : 'Uom1'
   @sap.label : 'Approved DNQ'
   Adnq : Decimal(13, 3);
-  @sap.label : 'DNQ'
-  @sap.quickinfo : 'daily nomination Quantity'
-  Pdnq : Decimal(13, 3);
+  @sap.unit : 'Uom1'
   @sap.label : 'RePublish DNQ'
   @sap.quickinfo : 'Re-Publish DNQ'
   Rpdnq : Decimal(13, 3);
@@ -579,32 +591,21 @@ entity GMSNOMINATIONS_SRV.xGMSxCREATENOMINATION {
   @sap.label : 'Path'
   Path : String(20);
   @sap.display.format : 'UpperCase'
+  @sap.label : 'Source'
+  Source : String(10);
+  @sap.display.format : 'UpperCase'
   @sap.label : 'Customer Group'
   CustGrp : String(10);
+  @odata.Type : 'Edm.DateTimeOffset'
+  @sap.label : 'Short Time Stamp'
+  @sap.quickinfo : 'UTC Time Stamp in Short Form (YYYYMMDDhhmmss)'
+  Timestamp : DateTime;
   @sap.display.format : 'UpperCase'
   @sap.label : 'Service Profile'
   SrvProfile : String(20);
   @sap.display.format : 'UpperCase'
   @sap.label : 'Document Type'
-  ContractType : String(1);
-  @sap.display.format : 'UpperCase'
-  @sap.label : 'Created By'
-  Createdby : String(15);
-  @sap.display.format : 'Date'
-  @sap.label : 'Created Date'
-  Createddate : Date;
-  @sap.label : 'Created Time'
-  Createdtime : Time;
-  @sap.display.format : 'UpperCase'
-  @sap.label : 'Changed By'
-  Changedby : String(15);
-  @sap.display.format : 'Date'
-  @sap.label : 'Change Date'
-  @sap.quickinfo : 'Changed Date'
-  Changeddate : Date;
-  @sap.label : 'Change Time'
-  @sap.quickinfo : 'Changed Time'
-  Changedtime : Time;
+  Contracttype : String(1);
 };
 
 @cds.external : true

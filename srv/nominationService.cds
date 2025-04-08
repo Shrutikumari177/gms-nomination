@@ -179,8 +179,8 @@ action updateNomination(nominations : array of NominationDataType) returns Strin
     {        Timestamp, Contracttype, key Gasday, Pdnq, Source, Zstat, Transys, key Vbeln, ItemNo, NomItem, Versn, DeliveryPoint, RedelivryPoint, Shiptoparty, Vendor, ValidTo, ValidFrom, Material, Nomtk, Kunnr, Auart, Ddcq, Rdcq, Uom1, Event, Adnq, Rpdnq, Znomtk, Src, Remarks, Flag, Action, Path, CustGrp, SrvProfile, Createdby, Createddate, Createdtime, Changedby, Changeddate, Changedtime     }    
 ;
     
-    entity xGMSxCREATENOMINATION as projection on GMSNOMINATIONS_SRV.xGMSxCREATENOMINATION
-    {        key Gasday, key Vbeln, key ItemNo, key NomItem, key Versn, key DeliveryPoint, key RedelivryPoint, shiptoparty, vendor, ValidTo, ValidFrom, Material, Nomtk, Kunnr, Auart, Ddcq, Rdcq, Uom1, Event, Adnq, Pdnq, Rpdnq, Znomtk, Src, Remarks, Flag, Action, Path, CustGrp, SrvProfile, ContractType, Createdby, Createddate, Createdtime, Changedby, Changeddate, Changedtime     }    
+   entity xGMSxCREATENOMINATION as projection on GMSNOMINATIONS_SRV.xGMSxCREATENOMINATION
+    {        key Vbeln, key Gasday, key item_no, NomItem, Versn, DeliveryPoint, RedelivryPoint, shiptoparty, vendor, ValidTo, ValidFrom, Zstat, Material, Nomtk, Kunnr, Auart, Transys, Ddcq, Rdcq, Uom1, Pdnq, Event, Adnq, Rpdnq, Znomtk, Src, Remarks, Flag, Action, Path, Source, CustGrp, Timestamp, SrvProfile, Contracttype     }    
 ;
     
     entity xGMSxFETCHNOMINATION as projection on GMSNOMINATIONS_SRV.xGMSxFETCHNOMINATION
@@ -312,6 +312,8 @@ action updateNomination(nominations : array of NominationDataType) returns Strin
 
 
     entity pathAndFuelMapping            as projection on GMS_CONFIG.pathAndFuelMapping;
+      entity DocumentNoProfileMapping            as projection on GMS_CONFIG.DocumentNoProfileMapping;
+  
     entity Nominationlogic               as projection on GMS_CONFIG.Nominationlogic;
     entity serviceProfileParametersItems as projection on GMS_CONFIG.serviceProfileParametersItems;
     entity ServiceProfileMaster          as projection on GMS_CONFIG.ServiceProfileMaster;

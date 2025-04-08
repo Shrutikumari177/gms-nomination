@@ -32,6 +32,32 @@ sap.ui.define([
 	return Controller.extend("com.ingenx.nomination.salesnomination.controller.systemNom", {
 
 		onInit: function () {
+			const initialDelvData = {
+				DeliveryPoints: [{
+					DeliveryPt: "",
+					DNQ: "",
+					UOM: "",
+					MaxDP_DCQ :"",
+					MinDP_DCQ:""
+					
+				}]
+			};
+
+			const initialRelDelvData = {
+				RedeliveryPoints: [{
+					RedeliveryPt: "",
+					DNQ: "",
+					UOM: "",
+					MaxRDP_DCQ :"",
+					MinRDP_DCQ:""
+					
+				}]
+			};
+
+			const oModelDel = new sap.ui.model.json.JSONModel(initialDelvData);
+			const oModelReDel = new sap.ui.model.json.JSONModel(initialRelDelvData);
+			this.getView().setModel(oModelDel, "DelvModelData");
+			this.getView().setModel(oModelReDel, "RedlvModelData");
 
 			
 
