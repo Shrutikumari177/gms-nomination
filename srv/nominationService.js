@@ -146,7 +146,7 @@ module.exports = cds.service.impl(async (srv) => {
         const resultRes = await GMSNOMINATIONS_SRV.run(query);
 
         if (!resultRes || resultRes.length === 0) {
-            return null; // Return null if no data found
+            return null;
         }
 
         // Filter out duplicates based on Material and Redelivery_Point

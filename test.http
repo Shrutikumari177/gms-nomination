@@ -10,7 +10,7 @@ GET http://localhost:4004/odata/v4/nomination-services/getContractsByCustomerNDo
 
 ###
 
-GET http://localhost:4004/odata/v4/nomination-services/getContractDetailsAndPastNom?DocNo=40000932
+GET http://localhost:4004/odata/v4/nomination-services/getContractDetailsAndPastNom?DocNo='40000932'
 
 ####
 GET http://localhost:4004/odata/v4/nomination-services/getContractMatDetailsByGasday?DocNo='40000942'&Gasday=2025-03-15
@@ -40,7 +40,7 @@ GET http://localhost:4004/odata/v4/nomination-services/getContractDetail?DocNo='
 GET http://localhost:4004/odata/v4/nomination-services/VirtualNominations
 #######
 
-GET http://localhost:4004/odata/v4/nomination-services/getRenominationContractData?DocNo='40001046'&Material='2000000068'&Redelivery_Point='C1100003'&Gasday=2025-04-16
+GET http://localhost:4004/odata/v4/nomination-services/getRenominationContractData?DocNo='40001042'&Material='2000000068'&Redelivery_Point='C1100003'&Gasday=2025-04-17
 
 
 

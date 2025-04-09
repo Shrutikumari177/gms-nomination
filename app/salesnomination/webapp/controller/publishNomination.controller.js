@@ -567,7 +567,7 @@ sap.ui.define([
 
 	
 		
-		createNomination: async function () {
+		createNomination1: async function () {
 			try {
 				let oGasdayPicker = this.getView().byId("IdPubNomGasDayPicker");
 				let Gasday = oGasdayPicker ? oGasdayPicker.getDateValue() : null;
@@ -732,6 +732,171 @@ sap.ui.define([
 				sap.m.MessageBox.error("Failed to submit nomination. Please try again.");
 			}
 		},
+		createNomination: async function () {
+			let oBusyDialog = new sap.m.BusyDialog();
+			try {
+				oBusyDialog.open(); // Show Busy Dialog
+		
+				let oGasdayPicker = this.getView().byId("IdPubNomGasDayPicker");
+				let Gasday = oGasdayPicker ? oGasdayPicker.getDateValue() : null;
+		
+				if (!Gasday) {
+					oBusyDialog.close();
+					sap.m.MessageBox.error("Please select a Gas Day!");
+					return;
+				}
+		
+				const oDateFormat = sap.ui.core.format.DateFormat.getDateInstance({ pattern: "yyyy-MM-dd" });
+				Gasday = oDateFormat.format(Gasday);
+		
+				const oModelDataRedlv = this.getView().getModel("RedlvModelData").getData();
+				const oModelDataDelv = this.getView().getModel("DelvModelData").getData();
+				const selectedMaterialData = this.getView().getModel("contDataModel").getData();
+		
+				if (!selectedMaterialData || !selectedMaterialData.DocNo) {
+					oBusyDialog.close();
+					sap.m.MessageBox.error("Invalid contract data. Please check and try again.");
+					return;
+				}
+		
+				let nomi_toitem = [];
+				let oModel2 = this.getOwnerComponent().getModel();
+				let purchaseContract = selectedMaterialData.DocNo;
+		
+				try {
+					let oListBinding = oModel2.bindContext(`/TransAgreemSet(Salescontract='${selectedMaterialData.DocNo}')`);
+					let oContext = await oListBinding.requestObject();
+		
+					if (oContext && oContext.Purchasecontract) {
+						purchaseContract = oContext.Purchasecontract;
+					}
+				} catch (err) {
+					console.log("Failed to fetch Purchase Contract:", err);
+				}
+		
+				if (selectedMaterialData.Delivery_Point) {
+					nomi_toitem.push({
+						Contracttype: selectedMaterialData.Contracttype,
+						Source: "Manual",
+						Gasday,
+						Vbeln: purchaseContract,
+						ItemNo: "10",
+						NomItem: "20",
+						Shiptoparty: customerValue,
+						Vendor: selectedMaterialData.Vendor,
+						Versn: "",
+						DeliveryPoint: selectedMaterialData.Delivery_Point,
+						RedelivryPoint: "",
+						ValidTo: oModelDataDelv.DeliveryPoints[0].ToT,
+						ValidFrom: oModelDataDelv.DeliveryPoints[0].FromT,
+						Material: selectedMaterialData.Material,
+						Kunnr: "",
+						Auart: selectedMaterialData.Auart,
+						Ddcq: selectedMaterialData.Delivery_Dcq,
+						Uom1: oModelDataDelv.DeliveryPoints[0].UOM,
+						Pdnq: oModelDataDelv.DeliveryPoints[0].DNQ,
+						Event: oModelDataDelv.DeliveryPoints[0].Event,
+						Adnq: "0.000",
+						Znomtk: "",
+						Src: "",
+						Remarks: "",
+						Flag: "",
+						Action: "",
+						Path: "",
+						CustGrp: "",
+						SrvProfile: selectedMaterialData.Profile,
+					});
+					nomi_toitem.push({
+						Contracttype: selectedMaterialData.Contracttype,
+						Source: "Manual",
+						Gasday,
+						Vbeln: selectedMaterialData.DocNo,
+						ItemNo: "10",
+						NomItem: "10",
+						Shiptoparty: customerValue,
+						Vendor: selectedMaterialData.Vendor,
+						Versn: "",
+						DeliveryPoint: "",
+						RedelivryPoint: selectedMaterialData.Redelivery_Point,
+						ValidTo: oModelDataRedlv.RedeliveryPoints[0].ToT,
+						ValidFrom: oModelDataRedlv.RedeliveryPoints[0].FromT,
+						Material: selectedMaterialData.Material,
+						Kunnr: "",
+						Auart: selectedMaterialData.Auart,
+						Ddcq: "0.000",
+						Rdcq: selectedMaterialData.Redelivery_Dcq,
+						Uom1: oModelDataRedlv.RedeliveryPoints[0].UOM,
+						Event: oModelDataRedlv.RedeliveryPoints[0].Event,
+						Adnq: "0.000",
+						Pdnq: oModelDataRedlv.RedeliveryPoints[0].DNQ,
+						Znomtk: "",
+						Src: "",
+						Remarks: "",
+						Flag: "",
+						Action: "",
+						Path: "",
+						CustGrp: "",
+						SrvProfile: selectedMaterialData.Profile,
+					});
+				} else {
+					nomi_toitem.push({
+						Contracttype: selectedMaterialData.Contracttype,
+						Source: "Manual",
+						Gasday,
+						Vbeln: selectedMaterialData.DocNo,
+						ItemNo: "10",
+						NomItem: "10",
+						Shiptoparty: customerValue,
+						Vendor: selectedMaterialData.Vendor,
+						Versn: "",
+						DeliveryPoint: "",
+						RedelivryPoint: selectedMaterialData.Redelivery_Point,
+						ValidTo: oModelDataRedlv.RedeliveryPoints[0].ToT,
+						ValidFrom: oModelDataRedlv.RedeliveryPoints[0].FromT,
+						Material: selectedMaterialData.Material,
+						Kunnr: "",
+						Auart: selectedMaterialData.Auart,
+						Ddcq: "0.000",
+						Rdcq: selectedMaterialData.Redelivery_Dcq,
+						Uom1: oModelDataRedlv.RedeliveryPoints[0].UOM,
+						Event: oModelDataRedlv.RedeliveryPoints[0].Event,
+						Adnq: "0.000",
+						Pdnq: oModelDataRedlv.RedeliveryPoints[0].DNQ,
+						Znomtk: "",
+						Src: "",
+						Remarks: "",
+						Flag: "",
+						Action: "",
+						Path: "",
+						CustGrp: "",
+						SrvProfile: selectedMaterialData.Profile,
+					});
+				}
+		
+				console.log("Nomination Items:", nomi_toitem);
+		
+				let createNomPayLoad = {
+					Gasday,
+					Vbeln: selectedMaterialData.DocNo,
+					nomi_toitem
+				};
+		
+				let oModel = this.getOwnerComponent().getModel();
+				let oBindList = oModel.bindList("/znom_headSet");
+		
+				const newContext = await oBindList.create(createNomPayLoad, true);
+				await newContext.created();
+		
+				sap.m.MessageBox.success("Nomination Successfully Submitted");
+				this.clearMaterialModels();
+			} catch (error) {
+				console.error("Error creating nomination:", error);
+				sap.m.MessageBox.error("Failed to submit nomination. Please try again.");
+			} finally {
+				oBusyDialog.close(); 
+			}
+		},
+		
 		
 		
 
