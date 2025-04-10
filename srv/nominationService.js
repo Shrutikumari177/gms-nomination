@@ -25,19 +25,7 @@ module.exports = cds.service.impl(async (srv) => {
 
     srv.on('CREATE', 'znom_headSet', req => GMSNOMINATIONS_SRV.run(req.query));
     srv.on('CREATE', 'Nom_DetailSet', req => GMSNOMINATIONS_SRV.run(req.query));
-    // srv.on('CREATE', 'Nom_DetailSet', async req => {
-    //     try {
-    //         const result = await GMSNOMINATIONS_SRV.run(req.query);
-    //         return result;
-    //     } catch (error) {
-    //         console.error("Error during Nom_DetailSet CREATE:", error);
-    //         // req.reject(500, `Nomination creation failed: ${error.message || "Unknown error"}`);
-
-    //         return {
-    //             message: error.message
-    //         }
-    //     }
-    // });
+    
 
 
 
@@ -196,102 +184,136 @@ module.exports = cds.service.impl(async (srv) => {
 
 
 
+    // srv.on('getContractDetail', async (req) => {
+    //     const { DocNo, Material, Redelivery_Point } = req.data;
+    //     console.log("Received:", DocNo, Material, Redelivery_Point);
+
+    //     const query = SELECT.from('xGMSxFETCHNOMINATION')
+    //         .columns(
+    //             'DocNo', 'Item', 'Material', 'Redelivery_Point', 'Delivery_Point',
+    //             'Delivery_Dcq', 'Redelivery_Dcq', 'Valid_Form', 'Valid_To',
+    //             'Calculated_Value', 'Clause_Code', 'SoldToParty', 'UOM', 'Contracttype', 'Profile', 'Contract_Description', 'Auart', 'Vendor'
+    //         )
+    //         .where({ DocNo });
+
+    //     const resultRes = await GMSNOMINATIONS_SRV.run(query);
+    //     console.log("Query Result:", resultRes);
+
+    //     if (!resultRes?.length) {
+    //         return null;
+    //     }
+
+    //     const matfilter = resultRes.filter(item =>
+    //         item.Material === Material && item.Redelivery_Point === Redelivery_Point
+    //     );
+    //     console.log("Filtered by Material and Redelivery_Point:", matfilter);
+
+    //     if (!matfilter.length) {
+    //         return null;
+    //     }
+
+    //     const uniqueItems = new Set(matfilter.map(item => item.Item));
+    //     console.log("Unique Items:", uniqueItems);
+
+    //     let filteredResults = matfilter;
+
+       
+    //     if (uniqueItems.size > 1) {
+    //         const currentDate = new Date();
+    //         let minDiff = Infinity;
+        
+    //         const futureEntries = filteredResults
+    //             .map(item => {
+    //                 const validFrom = new Date(item.Valid_Form);
+    //                 const validTo = new Date(item.Valid_To);
+        
+    //                 const fromDiff = validFrom > currentDate ? validFrom - currentDate : Infinity;
+    //                 const toDiff = validTo > currentDate ? validTo - currentDate : Infinity;
+        
+    //                 const minFutureDiff = Math.min(fromDiff, toDiff);
+    //                 return { ...item, diff: minFutureDiff };
+    //             })
+    //             .filter(item => item.diff !== Infinity);
+        
+    //         if (futureEntries.length) {
+    //             minDiff = Math.min(...futureEntries.map(item => item.diff));
+    //             filteredResults = futureEntries.filter(item => item.diff === minDiff);
+    //         } else {
+    //             filteredResults = [];
+    //         }
+    //     }
+        
+    //     console.log("Filtered by closest future Valid date(s):", filteredResults);
+        
+
+    //     if (!filteredResults.length) {
+    //         return null;
+    //     }
+
+    //     // Destructure main fields from the first matched result
+    //     const {
+    //         Item,
+    //         Delivery_Point,
+    //         Delivery_Dcq,
+    //         Redelivery_Dcq,
+    //         Valid_Form,
+    //         Valid_To,
+    //         SoldToParty,
+    //         UOM,
+    //         Contracttype,
+    //         Profile,
+    //         Contract_Description,
+    //         Auart,
+    //         Vendor
+    //     } = filteredResults[0];
+
+    //     // Remove duplicates from 'data' array
+    //     const uniqueData = [];
+    //     const seen = new Set();
+
+    //     filteredResults.forEach(({ Calculated_Value, Clause_Code }) => {
+    //         const key = `${Calculated_Value}-${Clause_Code}`;
+    //         if (!seen.has(key)) {
+    //             seen.add(key);
+    //             uniqueData.push({ Calculated_Value, Clause_Code });
+    //         }
+    //     });
+
+    //     return {
+    //         DocNo,
+    //         Item,
+    //         Material,
+    //         Redelivery_Point,
+    //         Delivery_Point,
+    //         Delivery_Dcq,
+    //         Redelivery_Dcq,
+    //         Valid_Form,
+    //         Valid_To,
+    //         SoldToParty,
+    //         UOM,
+    //         Contracttype,
+    //         Profile,
+    //         Contract_Description,
+    //         Auart,
+    //         Vendor,
+    //         data: uniqueData
+    //     };
+    // });
     srv.on('getContractDetail', async (req) => {
         const { DocNo, Material, Redelivery_Point } = req.data;
         console.log("Received:", DocNo, Material, Redelivery_Point);
-
-        const query = SELECT.from('xGMSxFETCHNOMINATION')
-            .columns(
-                'DocNo', 'Item', 'Material', 'Redelivery_Point', 'Delivery_Point',
-                'Delivery_Dcq', 'Redelivery_Dcq', 'Valid_Form', 'Valid_To',
-                'Calculated_Value', 'Clause_Code', 'SoldToParty', 'UOM', 'Contracttype', 'Profile', 'Contract_Description', 'Auart', 'Vendor'
-            )
-            .where({ DocNo });
-
-        const resultRes = await GMSNOMINATIONS_SRV.run(query);
-        console.log("Query Result:", resultRes);
-
-        if (!resultRes?.length) {
-            return null;
-        }
-
-        // Filter by Material and Redelivery_Point
-        const matfilter = resultRes.filter(item =>
-            item.Material === Material && item.Redelivery_Point === Redelivery_Point
-        );
-        console.log("Filtered by Material and Redelivery_Point:", matfilter);
-
-        if (!matfilter.length) {
-            return null;
-        }
-
-        // Get unique items to check if there’s more than one 'Item'
-        const uniqueItems = new Set(matfilter.map(item => item.Item));
-        console.log("Unique Items:", uniqueItems);
-
-        let filteredResults = matfilter;
-
-        // Apply date logic only if there’s more than one unique 'Item'
-        if (uniqueItems.size > 1) {
-            const currentDate = new Date().toISOString().split('T')[0];
-            filteredResults = matfilter.filter(item =>
-                item.Valid_Form <= currentDate && item.Valid_To >= currentDate
-            );
-        }
-        console.log("Filtered by Date (if multiple items):", filteredResults);
-
-        if (!filteredResults.length) {
-            return null;
-        }
-
-        // Destructure main fields from the first matched result
-        const {
-            Item,
-            Delivery_Point,
-            Delivery_Dcq,
-            Redelivery_Dcq,
-            Valid_Form,
-            Valid_To,
-            SoldToParty,
-            UOM,
-            Contracttype,
-            Profile,
-            Contract_Description,
-            Auart,
-            Vendor
-        } = filteredResults[0];
-
-        // Remove duplicates from 'data' array
-        const uniqueData = [];
-        const seen = new Set();
-
-        filteredResults.forEach(({ Calculated_Value, Clause_Code }) => {
-            const key = `${Calculated_Value}-${Clause_Code}`;
-            if (!seen.has(key)) {
-                seen.add(key);
-                uniqueData.push({ Calculated_Value, Clause_Code });
+    
+        try {
+            const result = await fetchNominationDetails(DocNo, Material, Redelivery_Point);
+            if (!result) {
+                console.log("No valid nomination details found.");
+                return null;
             }
-        });
-
-        return {
-            DocNo,
-            Item,
-            Material,
-            Redelivery_Point,
-            Delivery_Point,
-            Delivery_Dcq,
-            Redelivery_Dcq,
-            Valid_Form,
-            Valid_To,
-            SoldToParty,
-            UOM,
-            Contracttype,
-            Profile,
-            Contract_Description,
-            Auart,
-            Vendor,
-            data: uniqueData
-        };
+            return result;
+        } catch (error) {
+            console.error("Error fetching nomination details:", error);
+            throw new Error("Failed to fetch contract details.");
+        }
     });
 
 
@@ -352,10 +374,33 @@ module.exports = cds.service.impl(async (srv) => {
         let filteredResults = matfilter;
 
         if (uniqueItems.size > 1) {
-            filteredResults = matfilter.filter(item =>
-                item.Valid_Form <= currentDate && item.Valid_To >= currentDate
-            );
+            const currentDate = new Date();
+            let minDiff = Infinity;
+        
+            const futureEntries = filteredResults
+                .map(item => {
+                    const validFrom = new Date(item.Valid_Form);
+                    const validTo = new Date(item.Valid_To);
+        
+                    const fromDiff = validFrom > currentDate ? validFrom - currentDate : Infinity;
+                    const toDiff = validTo > currentDate ? validTo - currentDate : Infinity;
+        
+                    const minFutureDiff = Math.min(fromDiff, toDiff);
+                    return { ...item, diff: minFutureDiff };
+                })
+                .filter(item => item.diff !== Infinity);
+        
+            if (futureEntries.length) {
+                minDiff = Math.min(...futureEntries.map(item => item.diff));
+                filteredResults = futureEntries.filter(item => item.diff === minDiff);
+            } else {
+                filteredResults = [];
+            }
         }
+        
+        console.log("Filtered by closest future Valid date(s):", filteredResults);
+        
+
 
         if (!filteredResults.length) {
             return null;
@@ -388,7 +433,6 @@ module.exports = cds.service.impl(async (srv) => {
         const resultCreateNomination = await GMSNOMINATIONS_SRV.run(queryCreateNomination);
         console.log("resultCreateNomination", resultCreateNomination);
 
-        // Fetch from xGMSxCREATENOMINATION (Delivery side via purchase contract)
         let resultPurchaseCreateNomination = [];
         if (purchseContract) {
             const queryPurchaseCreateNomination = SELECT.from('xGMSxCREATENOMINATION')
@@ -407,7 +451,7 @@ module.exports = cds.service.impl(async (srv) => {
             return null;
         }
 
-        // Safe fallback if no delivery nomination
+       
         const latestPurchaseEntry = resultPurchaseCreateNomination.length
             ? resultPurchaseCreateNomination.reduce((max, entry) =>
                 parseInt(entry.Versn) > parseInt(max.Versn) ? entry : max, resultPurchaseCreateNomination[0])
@@ -569,34 +613,7 @@ module.exports = cds.service.impl(async (srv) => {
 
 
 
-    srv.on('CREATE', 'systemNomination', async (req) => {
-        let { Vbeln, soldToParty, Material, Rdcq, Uom, RedelivryPoint, Rpdnq, ValidTo, ValidFrom } = req.data;
-
-        if (!Vbeln) {
-            return req.error(400, "Vbeln is required");
-        }
-
-        if (!ValidFrom || !ValidTo) {
-            return req.error(400, "Valid From and Valid To dates are required");
-        }
-
-        if (new Date(ValidFrom) > new Date(ValidTo)) {
-            return req.error(400, "Valid From date cannot be later than Valid To date");
-        }
-
-        ValidFrom = new Date(ValidFrom).toISOString().split("T")[0];
-        ValidTo = new Date(ValidTo).toISOString().split("T")[0];
-
-        const SystemNomData = { Vbeln, soldToParty, Material, Rdcq, Uom, RedelivryPoint, Rpdnq, ValidTo, ValidFrom };
-
-        try {
-            await cds.run(INSERT.into('app.gms.nomination.systemNomination').entries(SystemNomData));
-            return SystemNomData;
-        } catch (error) {
-            console.error("Error creating SystemNomData:", error);
-            return req.error(500, `Failed to create SystemNomData: ${error.message}`);
-        }
-    });
+   
 
     /* ******************* function to generate automatic Nomination everyday ******************/
 
@@ -639,10 +656,11 @@ module.exports = cds.service.impl(async (srv) => {
                 if (contract.DeliveryPoint) {
                     try {
                         const result = await GMSEXCHG_AGRMT_API_SRV.run(
-                            SELECT.one.from('TransAgreemSet')
-                                .columns(['Purchasecontract'])
-                                .where({ Salescontract: contract.Vbeln })
-                        );
+                            SELECT.one
+                                .from('TransAgreemSet', { Salescontract: contract.Vbeln })
+                                .columns('Purchasecontract'))
+
+
 
                         if (result?.Purchasecontract) {
                             purchaseContract = result.Purchasecontract;
@@ -673,7 +691,8 @@ module.exports = cds.service.impl(async (srv) => {
                         Uom1: contract.Uom,
                         Event: contract.Event || "No-Event",
                         Adnq: "0.000",
-                        Pdnq: Dpdnq
+                        Pdnq: Dpdnq,
+                        SrvProfile: fetchNom.Profile
                     });
 
 
@@ -698,7 +717,8 @@ module.exports = cds.service.impl(async (srv) => {
                         Uom1: contract.Uom,
                         Event: contract.Event || "No-Event",
                         Adnq: "0.000",
-                        Pdnq: RpDnq
+                        Pdnq: RpDnq,
+                        SrvProfile: fetchNom.Profile
                     });
 
                 } else {
@@ -724,7 +744,8 @@ module.exports = cds.service.impl(async (srv) => {
                         Uom1: contract.Uom,
                         Event: contract.Event || "No-Event",
                         Adnq: "0.000",
-                        Pdnq: RpDnq
+                        Pdnq: RpDnq,
+                        SrvProfile: fetchNom.Profile
                     });
                 }
 
@@ -744,12 +765,21 @@ module.exports = cds.service.impl(async (srv) => {
                     console.log("✅ Nomination created successfully:", newNomination);
                     createdNominations.push(newNomination);
 
+                    // nominationDetails.push({
+                    //     ContractNo: contract.Vbeln,
+                    //     Gasday: tomorrow,
+                    //     Material: contract.Material,
+                    //     DCQ: contract.DpDnq || "0.000",
+                    //     RDP: contract.RpDnq || "0.000"
+                    // });
                     nominationDetails.push({
                         ContractNo: contract.Vbeln,
                         Gasday: tomorrow,
                         Material: contract.Material,
-                        DCQ: contract.DpDnq || "0.000",
-                        RPDNQ: contract.RpDnq || "0.000"
+                        DP_DNQ: Dpdnq || "0.000",
+                        DeliveryPoint: contract.DeliveryPoint,
+                        RedelivryPoint: contract.Redelivrypoint,
+                        RDP_DNQ: RpDnq || "0.000"
                     });
 
                 } catch (error) {
@@ -770,6 +800,7 @@ module.exports = cds.service.impl(async (srv) => {
             return [];
         }
     }
+   
 
     async function sendNominationEmail(email, nominations) {
         try {
@@ -787,8 +818,13 @@ module.exports = cds.service.impl(async (srv) => {
                     <td style="border:1px solid #ddd; padding:8px;">${nom.ContractNo}</td>
                     <td style="border:1px solid #ddd; padding:8px;">${nom.Gasday}</td>
                     <td style="border:1px solid #ddd; padding:8px;">${nom.Material}</td>
-                    <td style="border:1px solid #ddd; padding:8px;">${nom.DCQ}</td>
-                    <td style="border:1px solid #ddd; padding:8px;">${nom.RPDNQ}</td>
+
+                    <td style="border:1px solid #ddd; padding:8px;">${nom.RedelivryPoint}</td>
+                    <td style="border:1px solid #ddd; padding:8px;">${nom.RDP_DNQ}</td>
+                    <td style="border:1px solid #ddd; padding:8px;">${nom.DeliveryPoint}</td>
+
+                    <td style="border:1px solid #ddd; padding:8px;">${nom.DP_DNQ}</td>
+
                 </tr>
             `).join("");
 
@@ -800,8 +836,11 @@ module.exports = cds.service.impl(async (srv) => {
                         <th style="border:1px solid #ddd; padding:8px; background-color:#f2f2f2;">Contract No</th>
                         <th style="border:1px solid #ddd; padding:8px; background-color:#f2f2f2;">Gas Day</th>
                         <th style="border:1px solid #ddd; padding:8px; background-color:#f2f2f2;">Material</th>
-                        <th style="border:1px solid #ddd; padding:8px; background-color:#f2f2f2;">DCQ</th>
-                        <th style="border:1px solid #ddd; padding:8px; background-color:#f2f2f2;">RPDNQ</th>
+                        <th style="border:1px solid #ddd; padding:8px; background-color:#f2f2f2;">RedelivryPoint</th>
+                        <th style="border:1px solid #ddd; padding:8px; background-color:#f2f2f2;">RDP_DNQ</th>
+                        <th style="border:1px solid #ddd; padding:8px; background-color:#f2f2f2;">DeliveryPoint</th>
+                        <th style="border:1px solid #ddd; padding:8px; background-color:#f2f2f2;">DP_DNQ</th>
+                        
                     </tr>
                     ${tableRows}
                 </table>
@@ -836,10 +875,19 @@ module.exports = cds.service.impl(async (srv) => {
 
 
     srv.on('READ', 'VirtualNominations', async (req) => {
-        // console.log("🔹 Manually triggering VirtualNominations job...");
+        console.log("🔹 Manually triggering VirtualNominations job...");
         return await generateVirtualNominations(req);
     });
-    // ******************************************************************************************************
+    // **********************************************Function to fetch nomination details*****************************************
+    
+
+ 
+
+
+
+
+
+    
     async function fetchNominationDetails(DocNo, Material, Redelivery_Point) {
         const query = SELECT.from('xGMSxFETCHNOMINATION')
             .columns(
@@ -870,11 +918,33 @@ module.exports = cds.service.impl(async (srv) => {
         let filteredResults = matfilter;
 
         if (uniqueItems.size > 1) {
-            const currentDate = new Date().toISOString().split('T')[0];
-            filteredResults = matfilter.filter(item =>
-                item.Valid_Form <= currentDate && item.Valid_To >= currentDate
-            );
+            const currentDate = new Date();
+            let minDiff = Infinity;
+        
+            const futureEntries = filteredResults
+                .map(item => {
+                    const validFrom = new Date(item.Valid_Form);
+                    const validTo = new Date(item.Valid_To);
+        
+                    const fromDiff = validFrom > currentDate ? validFrom - currentDate : Infinity;
+                    const toDiff = validTo > currentDate ? validTo - currentDate : Infinity;
+        
+                    const minFutureDiff = Math.min(fromDiff, toDiff);
+                    return { ...item, diff: minFutureDiff };
+                })
+                .filter(item => item.diff !== Infinity);
+        
+            if (futureEntries.length) {
+                minDiff = Math.min(...futureEntries.map(item => item.diff));
+                filteredResults = futureEntries.filter(item => item.diff === minDiff);
+            } else {
+                filteredResults = [];
+            }
         }
+        
+        console.log("Filtered by closest future Valid date(s):", filteredResults);
+        
+
 
         if (!filteredResults.length) {
             return null;
@@ -898,12 +968,15 @@ module.exports = cds.service.impl(async (srv) => {
 
         const uniqueData = [];
         const seen = new Set();
-
+        
         filteredResults.forEach(({ Calculated_Value, Clause_Code }) => {
-            const key = `${Calculated_Value}-${Clause_Code}`;
+            const normalizedValue = String(Calculated_Value).trim();
+            const normalizedClause = String(Clause_Code).trim()
+        
+            const key = `${normalizedValue}-${normalizedClause}`;
             if (!seen.has(key)) {
                 seen.add(key);
-                uniqueData.push({ Calculated_Value, Clause_Code });
+                uniqueData.push({ Calculated_Value: normalizedValue, Clause_Code: normalizedClause });
             }
         });
 

@@ -33,7 +33,7 @@ Content-Type: application/json
 GET http://localhost:4004/odata/v4/nomination-services/getContractDetailsAndPastNom?DocNo=40000941
 
 ####
-GET http://localhost:4004/odata/v4/nomination-services/getContractDetail?DocNo='40000945'&Material='2000000068'&Redelivery_Point=BENGALURU
+GET http://localhost:4004/odata/v4/nomination-services/getContractDetail?DocNo='40001065'&Material='2000000068'&Redelivery_Point='C1100003'
 ###
 
 ####
