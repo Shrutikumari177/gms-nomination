@@ -49,17 +49,17 @@
                                 <core:Title id="GenTitle1"/>
                                 <Label id="Labelcon" text="Document Type" design="Bold" class="sapUiTinyMarginTop"/>
                                 <HBox id="registratioMapping_ocCodeInputBox" >
-                                    <Input id="registraionMapping_retailerName" value="" width="200px" showValueHelp="true"  valueHelpRequest="documenttypeValueHelp" />
+                                    <Input id="sysNom_DocumentType" value="" width="200px" showValueHelp="true"  valueHelpRequest="documenttypeValueHelp" />
                                 </HBox>
                                 
                                 <Label id="Label2" text="Customer" design="Bold" class="sapUiTinyMarginTop"/>
                                 <HBox id="registrationMapping_ocCodeInputBox" >
-                                    <Input id="registrationMapping_retailerName" value="" width="200px"  showValueHelp="true"  valueHelpRequest="soldToPartyValueHelp"/>
+                                    <Input id="sysNom_SoldToParty" value="" width="200px"  showValueHelp="true"  valueHelpRequest="soldToPartyValueHelp"/>
                                 </HBox>
                                 
                                 <Label id="Label4" text="Contract No." design="Bold" class="sapUiTinyMarginTop"/>
                                 <HBox id="registrationMapping_emailHBox">
-                                    <Input id="registrationMapping_emailID" value="" width="200px" showValueHelp="true" valueHelpRequest="contractValueHelp" />
+                                    <Input id="sysNom_Contract" value="" width="200px" showValueHelp="true" valueHelpRequest="contractValueHelp" />
                                 </HBox>
 
                                 
@@ -70,13 +70,13 @@
                                 <core:Title id="registrationTitle2"/>
                                 <Label id="Label6" text="Material" design="Bold" class="sapUiTinyMarginTop"/>
                                 <HBox id="registrationMapping_batchIdInputHBox">
-                                    <Input id="registrationMapping_contactNo" value="" width="200px" showValueHelp="true" valueHelpRequest="materialValueHelp" />
+                                    <Input id="sysNom_Material" value="" width="200px" showValueHelp="true" valueHelpRequest="materialValueHelp" />
                                 </HBox>
                                 
                                 <Label id="GenLael7" required="true" text="Valid From" design="Bold" class="sapUiTinyMarginTop"/>
 
                                 <DatePicker
-                                id="IdsysPubNomDelvFromTimePicker"
+                                id="sysNom_ValidFrom"
                                 placeholder="Select Start Date"
                                 valueFormat="{ YYYY-MM-dd }"
                                 minDate="{}"
@@ -86,7 +86,7 @@
                             />                      
                                <Label id="GenLabel8" required="true" text="Valid To" design="Bold" class="sapUiTinyMarginTop"/>
                                <DatePicker
-                                id="IdsysPubNomDelvtoTimePicker"
+                                id="sysNom_ValidTo"
                                 placeholder="Select End Date"
                                 valueFormat="{ YYYY-MM-dd }"
                                 minDate="{}"

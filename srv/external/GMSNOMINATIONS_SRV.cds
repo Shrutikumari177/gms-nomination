@@ -1,4 +1,4 @@
-/* checksum : 595f7727e1f327c36dfa5c5d281c9c78 */
+/* checksum : b9fcff73a3c8571032679d29ac52552f */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -497,18 +497,13 @@ entity GMSNOMINATIONS_SRV.xGMSxCREATENOMINATION {
   @sap.display.format : 'NonNegative'
   @sap.label : 'Sales Document Item'
   key item_no : String(6) not null;
+  Versn : String(3);
+  @sap.label : 'Name of Supplier'
+  CustomerName : String(80);
   @sap.display.format : 'NonNegative'
   @sap.label : 'Nomination key item'
   @sap.quickinfo : 'Nomination Key Item'
   NomItem : String(10);
-  Versn : String(3);
-  @sap.display.format : 'UpperCase'
-  @sap.label : 'Delivery Point'
-  DeliveryPoint : String(10);
-  @sap.display.format : 'UpperCase'
-  @sap.label : 'Redelivery Point'
-  @sap.quickinfo : 'Re-Delivery Ponit'
-  RedelivryPoint : String(20);
   @sap.display.format : 'UpperCase'
   @sap.label : 'Customer'
   @sap.quickinfo : 'Customer Number'
@@ -517,6 +512,16 @@ entity GMSNOMINATIONS_SRV.xGMSxCREATENOMINATION {
   @sap.label : 'Vendor'
   @sap.quickinfo : 'Account Number of Vendor or Creditor'
   vendor : String(10);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Sold-To Party'
+  kunnr : String(10);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Delivery Point'
+  DeliveryPoint : String(10);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Redelivery Point'
+  @sap.quickinfo : 'Re-Delivery Ponit'
+  RedelivryPoint : String(20);
   @sap.label : 'Time To'
   @sap.quickinfo : 'Nomination Time'
   ValidTo : Time;
@@ -534,9 +539,6 @@ entity GMSNOMINATIONS_SRV.xGMSxCREATENOMINATION {
   @sap.label : 'Nomination key'
   @sap.quickinfo : 'Nomination (technical) Key'
   Nomtk : String(20);
-  @sap.display.format : 'UpperCase'
-  @sap.label : 'Sold-To Party'
-  Kunnr : String(10);
   @sap.display.format : 'UpperCase'
   @sap.label : 'Sales Document Type'
   Auart : String(4);
@@ -731,6 +733,58 @@ entity GMSNOMINATIONS_SRV.xGMSxNOMDETAILS {
   Createdby : String(15);
   @sap.display.format : 'Date'
   @sap.label : 'Created Date'
+  Createddate : Date;
+  @sap.label : 'Created Time'
+  Createdtime : Time;
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Changed By'
+  Changedby : String(15);
+  @sap.display.format : 'Date'
+  @sap.label : 'Change Date'
+  @sap.quickinfo : 'Changed Date'
+  Changeddate : Date;
+  @sap.label : 'Change Time'
+  @sap.quickinfo : 'Changed Time'
+  Changedtime : Time;
+};
+
+@cds.external : true
+@cds.persistence.skip : true
+@sap.creatable : 'false'
+@sap.updatable : 'false'
+@sap.deletable : 'false'
+@sap.content.version : '1'
+@sap.label : 'CDS for Service profile'
+entity GMSNOMINATIONS_SRV.xGMSxSERVPROFILE {
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'DocumentNo'
+  @sap.quickinfo : 'Document Number'
+  key Vbeln : String(10) not null;
+  @sap.display.format : 'NonNegative'
+  @sap.label : 'Sales Document Item'
+  key ItemNo : String(6) not null;
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Service Parameter'
+  key ServiceParam : String(20) not null;
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Version'
+  key Versn : String(3) not null;
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Service Profile'
+  ServProfile : String(40);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Parameter Type'
+  ParamType : String(20);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Parameter Value'
+  @sap.quickinfo : 'Service Parameter Value'
+  ParamValue : String(50);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Created By'
+  Createdby : String(15);
+  @sap.display.format : 'Date'
+  @sap.label : 'Change Date'
+  @sap.quickinfo : 'Changed Date'
   Createddate : Date;
   @sap.label : 'Created Time'
   Createdtime : Time;

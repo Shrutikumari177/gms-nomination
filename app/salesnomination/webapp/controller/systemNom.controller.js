@@ -32,6 +32,9 @@ sap.ui.define([
 	return Controller.extend("com.ingenx.nomination.salesnomination.controller.systemNom", {
 
 		onInit: function () {
+
+
+			this._oBusyDialog = new sap.m.BusyDialog();
 			const initialDelvData = {
 				DeliveryPoints: [{
 					DeliveryPt: "",
@@ -66,6 +69,8 @@ sap.ui.define([
 		},
 		documenttypeValueHelp: async function (oEvent) {
 			try {
+				this._resetContractDataViews();
+
 				let sDialogId = "_documentSelectDialog";
 				let sFragmentName = "com.ingenx.nomination.salesnomination.fragment.selectDocumentType";
 
@@ -77,6 +82,56 @@ sap.ui.define([
 				sap.m.MessageBox.error("Could not open value help. Please contact support.");
 			}
 		},
+		_resetContractDataViews: function () {
+			const oView = this.getView();
+		
+			oView.byId("IdSysNomDelPointTable").setVisible(false);
+			oView.byId("IdSysNomTableHeaderBarForDelv").setVisible(false);
+		
+			const aInputIds = [
+				"sysNom_ValidTo",
+				"sysNom_ValidFrom",
+				"sysNom_Contract",
+				"sysNom_Material",
+				"sysNom_SoldToParty",
+				"sysNom_DocumentType"
+			];
+			aInputIds.forEach(function (sId) {
+				let oInput = oView.byId(sId);
+				if (oInput) {
+					oInput.setValue("");
+				}
+			});
+		
+			const oRedlvModel = oView.getModel("RedlvModelData");
+			if (oRedlvModel) {
+				oRedlvModel.setProperty("/RedeliveryPoints", [{
+					RedeliveryPt: "",
+					DNQ: "",
+					UOM: "",
+					MaxRDP_DCQ: "",
+					MinRDP_DCQ: ""
+				}]);
+			}
+		
+			const oDelvModel = oView.getModel("DelvModelData");
+			if (oDelvModel) {
+				oDelvModel.setProperty("/DeliveryPoints", [{
+					DeliveryPt: "",
+					DNQ: "",
+					UOM: "",
+					MaxDP_DCQ: "",
+					MinDP_DCQ: ""
+				}]);
+			}
+		
+			const oContModel = oView.getModel("contDataModel");
+			if (oContModel) {
+				oContModel.setData({});
+			}
+		},
+		
+		
 		onValueHelpConfirmDocument: async function (oEvent) {
 
 			try {
@@ -354,70 +409,177 @@ sap.ui.define([
 			let clause = data.find(item => item.Clause_Code === clauseCode);
 			return clause ? parseFloat(clause.Calculated_Value) || 0 : 0;
 		},
-		onSubmitSysNomDData: function () {
+		onSubmitSysNomDData1: async function () {
+
+			const oModelDataRedlv = this.getView().getModel("RedlvModelData").getData();
+			const oModelDataDelv = this.getView().getModel("DelvModelData").getData();
+			const selectedMaterialData = this.getView().getModel("contDataModel").getData();
+
 			var oView = this.getView();
-			var oModel = this.getOwnerComponent().getModel();
-			var oListBinding = oModel.bindList("/systemNomination");
+			var oValidFrom = oView.byId("sysNom_ValidFrom").getDateValue();
+			var oValidTo = oView.byId("sysNom_ValidTo").getDateValue();
 		
-			var oValidFrom = oView.byId("IdsysPubNomDelvFromTimePicker").getDateValue();
-			var oValidTo = oView.byId("IdsysPubNomDelvtoTimePicker").getDateValue();
-		
-			// Format dates to YYYY-MM-DD
 			var sValidFrom = oValidFrom ? oValidFrom.toISOString().split("T")[0] : null;
 			var sValidTo = oValidTo ? oValidTo.toISOString().split("T")[0] : null;
+
+			let systemNomPayload = {
+				Vbeln:selectedMaterialData.DocNo,
+				Redelivrypoint:selectedMaterialData.Redelivery_Point,
+				ValidFrom:sValidFrom,
+				ValidTo:sValidTo,
+				SoldToParty:selectedMaterialData.SoldToParty,
+				Material:selectedMaterialData.Material,
+				DpDnq:oModelDataDelv.DeliveryPoints[0].DNQ,
+				Uom:selectedMaterialData.UOM,
+				RpDnq:oModelDataRedlv.RedeliveryPoints[0].DNQ,
+				DeliveryPoint:selectedMaterialData.Delivery_Point,
+				Event:"No-event"
+			};
+
+
+
+
+
+			console.log("systemNomPayload",systemNomPayload);
+			
+			let oModel = this.getOwnerComponent().getModel();
+			let oBindList = oModel.bindList("/Nom_DetailSet");
+			const newContext =await oBindList.create(systemNomPayload, true);
+			await newContext.created();
+			sap.m.MessageBox.success("Nomination Successfully Submitted");
+			this._resetContractDataViews();
+			
 		
-			var oPayload = {
-				Vbeln: oView.byId("registrationMapping_emailID").getValue(),
-				soldToParty: oView.byId("registrationMapping_retailerName").getValue(),
-				Material: oView.byId("registrationMapping_contactNo").getValue(),
-				Rdcq: parseFloat(oView.byId("contractRDPDCQ").getValue()) || 0,
-				Uom: oView.byId("contractUOM").getValue(),
-				RedelivryPoint: oView.byId("ContractRedeliveryPoint").getValue(),
-				Rpdnq: parseFloat(oView.byId("registrationMapping_district").getValue()) || 0,
+			
+			
+		},
+		
+		
+
+		onSubmitSysNomDData: async function () {
+			const oView = this.getView();
+			const oBusyDialog = new sap.m.BusyDialog();
+			oBusyDialog.open();
+		
+			try {
+				const oModelDataRedlv = oView.getModel("RedlvModelData").getData();
+				const oModelDataDelv = oView.getModel("DelvModelData").getData();
+				const selectedMaterialData = oView.getModel("contDataModel").getData();
+		
+				const oValidFrom = oView.byId("sysNom_ValidFrom").getDateValue();
+				const oValidTo = oView.byId("sysNom_ValidTo").getDateValue();
+		
+				const sValidFrom = oValidFrom ? oValidFrom.toISOString().split("T")[0] : null;
+				const sValidTo = oValidTo ? oValidTo.toISOString().split("T")[0] : null;
+		
+				const systemNomPayload = {
+					Vbeln: selectedMaterialData.DocNo,
+					Redelivrypoint: selectedMaterialData.Redelivery_Point,
+					ValidFrom: sValidFrom,
+					ValidTo: sValidTo,
+					SoldToParty: selectedMaterialData.SoldToParty,
+					Material: selectedMaterialData.Material,
+					DpDnq: oModelDataDelv.DeliveryPoints[0].DNQ,
+					Uom: selectedMaterialData.UOM,
+					RpDnq: oModelDataRedlv.RedeliveryPoints[0].DNQ,
+					DeliveryPoint: selectedMaterialData.Delivery_Point,
+					Event: "No-event"
+				};
+		
+				const oModel = this.getOwnerComponent().getModel();
+				const oBindList = oModel.bindList("/Nom_DetailSet");
+		
+				oBindList.attachEventOnce("createCompleted", function (oEvent) {
+					oBusyDialog.close();
+					const bSuccess = oEvent.getParameter("success");
+		
+					if (bSuccess) {
+						sap.m.MessageBox.success("Nomination Successfully Submitted");
+						this._resetContractDataViews();
+					} else {
+						const oContext = oEvent.getParameter("context");
+						const oMessages = oModel.getMessagesByPath(oContext.getPath());
+						const sErrorMsg = oMessages?.[0]?.message || "Nomination submission failed.";
+						sap.m.MessageBox.error(sErrorMsg);
+					}
+				}, this);
+		
+				// Fire-and-forget (false = don't wait)
+				oBindList.create(systemNomPayload, false);
+		
+			} catch (error) {
+				console.error("Unexpected error:", error);
+				oBusyDialog.close();
+				sap.m.MessageBox.error("Unexpected error occurred while submitting nomination.");
+			}
+		},
+		onSubmitSysNomDData2: async function () {
+			
+			const oView = this.getView();
+			const oModelDataRedlv = oView.getModel("RedlvModelData").getData();
+			const oModelDataDelv = oView.getModel("DelvModelData").getData();
+			const selectedMaterialData = oView.getModel("contDataModel").getData();
+		
+			const oValidFrom = oView.byId("sysNom_ValidFrom").getDateValue();
+			const oValidTo = oView.byId("sysNom_ValidTo").getDateValue();
+		
+			const sValidFrom = oValidFrom ? oValidFrom.toISOString().split("T")[0] : null;
+			const sValidTo = oValidTo ? oValidTo.toISOString().split("T")[0] : null;
+		
+			let systemNomPayload = {
+				Vbeln: selectedMaterialData.DocNo,
+				Redelivrypoint: selectedMaterialData.Redelivery_Point,
+				ValidFrom: sValidFrom,
 				ValidTo: sValidTo,
-				ValidFrom: sValidFrom
+				SoldToParty: selectedMaterialData.SoldToParty,
+				Material: selectedMaterialData.Material,
+				DpDnq: oModelDataDelv.DeliveryPoints[0].DNQ|| "0.000",
+				Uom: selectedMaterialData.UOM,
+				RpDnq: oModelDataRedlv.RedeliveryPoints[0].DNQ|| "0.000",
+				DeliveryPoint: selectedMaterialData.Delivery_Point,
+				Event: "No-event"
 			};
 		
-			// Validate required fields
-			if (!oPayload.Vbeln) {
-				MessageBox.error("Contract No. is required!");
-				return;
+			console.log("systemNomPayload", systemNomPayload);
+		
+			const oModel = this.getOwnerComponent().getModel();
+		
+			const oListBinding = oModel.bindList("/xGMSxNOMDETAILS", null, null, [
+				new sap.ui.model.Filter("Vbeln", "EQ", systemNomPayload.Vbeln),
+				new sap.ui.model.Filter("ValidFrom", "EQ", systemNomPayload.ValidFrom),
+				new sap.ui.model.Filter("Redelivrypoint", "EQ", systemNomPayload.Redelivrypoint),
+				new sap.ui.model.Filter("ValidTo", "EQ", systemNomPayload.ValidTo),
+
+
+			]);
+		
+			try {
+				const aContexts = await oListBinding.requestContexts(0, 1); 
+		
+				if (aContexts.length > 0) {
+					sap.m.MessageBox.error("A nomination already exists for the selected combination.");
+					return;
+				}
+		
+				const oNominationBinding = oModel.bindList("/Nom_DetailSet");
+				const oNewContext = await oNominationBinding.create(systemNomPayload, true);
+				await oNewContext.created();
+		
+				sap.m.MessageBox.success("Nomination Successfully Submitted");
+				this._resetContractDataViews();
+		
+			} catch (err) {
+				console.error("Nomination creation failed:", err);
+		        sap.m.MessageBox.error("Nomination creation failed:", err);
 			}
-		
-			if (!oPayload.ValidFrom || !oPayload.ValidTo) {
-				MessageBox.error("Valid From and Valid To dates are required!");
-				return;
-			}
-		
-			if (new Date(oPayload.ValidFrom) > new Date(oPayload.ValidTo)) {
-				MessageBox.error("Valid From date cannot be later than Valid To date!");
-				return;
-			}
-		
-			// Create new entry using bindList (OData V4)
-			var oContext = oListBinding.create(oPayload);
-		
-			oContext.created()
-				.then(() => {
-					MessageBox.success("System Nomination created successfully!");
-		
-					// Clear input fields after successful nomination
-					oView.byId("registrationMapping_emailID").setValue("");
-					oView.byId("registrationMapping_retailerName").setValue("");
-					oView.byId("registrationMapping_contactNo").setValue("");
-					oView.byId("contractRDPDCQ").setValue("");
-					oView.byId("contractUOM").setValue("");
-					oView.byId("ContractRedeliveryPoint").setValue("");
-					oView.byId("registrationMapping_district").setValue("");
-					oView.byId("IdsysPubNomDelvFromTimePicker").setValue("");
-					oView.byId("IdsysPubNomDelvtoTimePicker").setValue("");
-		
-					oModel.refresh(); // Refresh UI to show new data
-				})
-				.catch((oError) => {
-					MessageBox.error("Failed to create System Nomination: " + oError.message);
-				});
 		}
+		
+		
+
+		
+		
+		
+		
 		
 		
 		

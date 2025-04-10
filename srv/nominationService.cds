@@ -217,45 +217,9 @@ service nominationServices {
                 Changedtime
         };
 
-    entity xGMSxCREATENOMINATION         as
-        projection on GMSNOMINATIONS_SRV.xGMSxCREATENOMINATION {
-            key Vbeln,
-            key Gasday,
-            key item_no,
-                NomItem,
-                Versn,
-                DeliveryPoint,
-                RedelivryPoint,
-                shiptoparty,
-                vendor,
-                ValidTo,
-                ValidFrom,
-                Zstat,
-                Material,
-                Nomtk,
-                Kunnr,
-                Auart,
-                Transys,
-                Ddcq,
-                Rdcq,
-                Uom1,
-                Pdnq,
-                Event,
-                Adnq,
-                Rpdnq,
-                Znomtk,
-                Src,
-                Remarks,
-                Flag,
-                Action,
-                Path,
-                Source,
-                CustGrp,
-                Timestamp,
-                SrvProfile,
-                Contracttype
-        };
-
+      entity xGMSxCREATENOMINATION as projection on GMSNOMINATIONS_SRV.xGMSxCREATENOMINATION
+    {        key Vbeln, key Gasday, key item_no, Versn, CustomerName, NomItem, shiptoparty, vendor, kunnr, DeliveryPoint, RedelivryPoint, ValidTo, ValidFrom, Zstat, Material, Nomtk, Auart, Transys, Ddcq, Rdcq, Uom1, Pdnq, Event, Adnq, Rpdnq, Znomtk, Src, Remarks, Flag, Action, Path, Source, CustGrp, Timestamp, SrvProfile, Contracttype     }    
+;
     entity xGMSxFETCHNOMINATION          as
         projection on GMSNOMINATIONS_SRV.xGMSxFETCHNOMINATION {
             key DocNo,
@@ -408,6 +372,14 @@ service nominationServices {
                 Purchasecontract,
                 Exchangecont
         };
+
+entity xGMSxNOMDETAILS as projection on GMSNOMINATIONS_SRV.xGMSxNOMDETAILS
+    {        key Vbeln, key Redelivrypoint, key ValidFrom, key ValidTo, SoldToParty, Material, DpDnq, Uom, RpDnq, DeliveryPoint, Event, Createdby, Createddate, Createdtime, Changedby, Changeddate, Changedtime     }    
+;
+    
+    entity Nom_DetailSet as projection on GMSNOMINATIONS_SRV.Nom_DetailSet
+    {        key Vbeln, key Redelivrypoint, key ValidFrom, key ValidTo, SoldToParty, Material, DpDnq, Uom, RpDnq, DeliveryPoint, Event, Createdby, Createddate, Createdtime, Changedby, Changeddate, Changedtime     }    
+;
 
 
     entity pathAndFuelMapping            as projection on GMS_CONFIG.pathAndFuelMapping;

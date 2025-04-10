@@ -44,7 +44,7 @@ GET http://localhost:4004/odata/v4/nomination-services/getRenominationContractDa
 
 
 
-####
+####\
 GET http://localhost:4004/odata/v4/nomination-services/nomi_SaveSet(Gasday='2025-03-24',Vbeln='40000945')
 
 ###
@@ -258,6 +258,26 @@ Content-Type: application/json
     }
   ]
 }
+
+
+##########
+POST http://localhost:4004/odata/v4/nomination-services/Nom_DetailSet
+Content-Type: application/json
+
+{
+"Vbeln": "40001042",
+"Redelivrypoint": "C1100003",
+"ValidFrom": "2025-04-01",
+"ValidTo": "2025-04-05",
+"SoldToParty": "1100000003",
+"Material": "2000000068",
+"DpDnq": "4500.000",
+"Uom": "MBT",
+"RpDnq": "5000.000",
+"DeliveryPoint": "DAHEJ",
+"Event": "No-event"
+}
+
 
 
 
