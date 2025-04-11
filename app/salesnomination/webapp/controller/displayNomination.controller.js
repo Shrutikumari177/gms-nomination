@@ -340,7 +340,7 @@ sap.ui.define([
 		},
 
 
-		onSelectMaterial: async function (oEvent) {
+		onSelectMaterial1: async function (oEvent) {
 			var oSelectedItem = oEvent.getSource();
 			var oContext = oSelectedItem.getBindingContext("materialModel");
 			if (oContext) {
@@ -426,6 +426,105 @@ sap.ui.define([
 				console.log("error", error);
 			}
 		},
+		onSelectMaterial: async function (oEvent) {
+			var oSelectedItem = oEvent.getSource();
+			var oContext = oSelectedItem.getBindingContext("materialModel");
+			if (oContext) {
+				var oSelectedMaterial = oContext.getObject();
+				var material = oSelectedMaterial.Material;
+				var Redelivery_Point = oSelectedMaterial.RedelivryPoint;
+			}
+		
+			// Reusable BusyDialog setup
+			if (!this._oBusyDialog) {
+				this._oBusyDialog = new sap.m.BusyDialog({
+					title: "Please wait",
+					text: "Loading nomination details..."
+				});
+			}
+			this._oBusyDialog.open();
+		
+			const sPath = `/getRenominationContractData?DocNo='${selectedContract}'&Material='${material}'&Redelivery_Point='${Redelivery_Point}'&Gasday=${selectedGasDay}`;
+			console.log("sPath", sPath);
+		
+			let oModelgetCust = this.getOwnerComponent().getModel();
+			const oBindinggetCust = oModelgetCust.bindContext(sPath, null, {});
+		
+			try {
+				const oData = await oBindinggetCust.requestObject();
+				console.log("Fetched Data:", oData.value);
+		
+				const oNewJsonModel = new sap.ui.model.json.JSONModel(oData.value[0]);
+				this.getView().setModel(oNewJsonModel, "contDataModel");
+		
+				var oLocalModel = this.getView().getModel("localModel");
+				var redeliveryDNQ = oData.value[0].Rpdnq || "0.000";
+				var uom = "MBT";
+				oLocalModel.setProperty("/CummDNQ", redeliveryDNQ + " " + uom);
+		
+				const oDatePicker = this.getView().byId("IdRePubNomGasDayPicker");
+				if (selectedGasDay) {
+					const oFormattedDate = new Date(selectedGasDay);
+					oDatePicker.setDateValue(oFormattedDate);
+				} else {
+					oDatePicker.setVisible(false);
+				}
+		
+				// Redelivery Section
+				const hasRedeliveryDcq = oData.value[0].Redelivery_Point && oData.value[0].Redelivery_Point.trim() !== "";
+				if (hasRedeliveryDcq) {
+					this.getView().byId("IdRePubNomContractRPDCQ").setVisible(true);
+					var oRedlvModel = this.getView().getModel("RedlvModelData");
+					var aRedeliveryPoints = oRedlvModel.getProperty("/RedeliveryPoints") || [];
+		
+					aRedeliveryPoints.forEach(item => {
+						item.RedeliveryPt = oData.value[0].Redelivery_Point;
+						item.DNQ = oData.value[0].rediliveryDNQ;
+						item.UOM = "MBT";
+						item.FromT = oData.value[0].Redelivery_ValidFrom;
+						item.ToT = oData.value[0].Redelivery_ValidTo;
+						item.Event = oData.value[0].redeliveryEvent;
+					});
+					oRedlvModel.setProperty("/RedeliveryPoints", aRedeliveryPoints);
+				}
+		
+				// Delivery Section
+				const hasDeliveryDcq = !!(oData.value[0].Delivery_Point && oData.value[0].Delivery_Point.trim());
+				if (hasDeliveryDcq) {
+					var oDelvModel = this.getView().getModel("DelvModelData");
+					var aDeliveryPoints = oDelvModel.getProperty("/DeliveryPoints") || [];
+					const oView = this.getView();
+		
+					["IdRePubNomStaticListS", "IdRePubNomContratRPDCQ", "IdRePubNomContractDPDCQ", "IdRePubNomDelPointTable", "IdRePubNomTableHeaderBarForDelv"].forEach(id => {
+						oView.byId(id).setVisible(true);
+					});
+		
+					["IdRePubNomContractRPDCQ", "IdRePubNomStaticListfinal"].forEach(id => {
+						oView.byId(id).setVisible(false);
+					});
+		
+					aDeliveryPoints.forEach(item => {
+						item.DeliveryPt = oData.value[0].Delivery_Point;
+						item.UOM = "MBT";
+						item.DNQ = oData.value[0].deliveryDNQ;
+						item.FromT = oData.value[0].Delivery_ValidFrom;
+						item.ToT = oData.value[0].Delivery_ValidTo;
+						item.Event = oData.value[0].deliveryEvent;
+					});
+		
+					oDelvModel.setProperty("/DeliveryPoints", aDeliveryPoints);
+				}
+		
+			} catch (error) {
+				console.error("Error while fetching nomination data:", error);
+			} finally {
+				// Always close BusyDialog
+				if (this._oBusyDialog) {
+					this._oBusyDialog.close();
+				}
+			}
+		}
+		
 
 
 

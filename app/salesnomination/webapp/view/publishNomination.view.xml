@@ -192,7 +192,7 @@
                                         id="IdPubNomDynamicFieldList"
                                         showNoData="false"
                                         items="{contDataModel>/data}"
-                                    >
+                                     >
                                         <items>
                                             <DisplayListItem
                                                 label="{contDataModel>Clause_Code}"
@@ -223,6 +223,7 @@
                                 valueFormat="{ YYYY-MM-dd }"
                                 minDate="{}"
                                 liveChange="onSelectedDate"
+                                 change="onSelectedGasDay"
                             />
                         </contentRight>
                     </Bar>

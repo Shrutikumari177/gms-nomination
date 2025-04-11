@@ -409,50 +409,10 @@ sap.ui.define([
 			let clause = data.find(item => item.Clause_Code === clauseCode);
 			return clause ? parseFloat(clause.Calculated_Value) || 0 : 0;
 		},
-		onSubmitSysNomDData1: async function () {
-
-			const oModelDataRedlv = this.getView().getModel("RedlvModelData").getData();
-			const oModelDataDelv = this.getView().getModel("DelvModelData").getData();
-			const selectedMaterialData = this.getView().getModel("contDataModel").getData();
-
-			var oView = this.getView();
-			var oValidFrom = oView.byId("sysNom_ValidFrom").getDateValue();
-			var oValidTo = oView.byId("sysNom_ValidTo").getDateValue();
-
-			var sValidFrom = oValidFrom ? oValidFrom.toISOString().split("T")[0] : null;
-			var sValidTo = oValidTo ? oValidTo.toISOString().split("T")[0] : null;
-
-			let systemNomPayload = {
-				Vbeln: selectedMaterialData.DocNo,
-				Redelivrypoint: selectedMaterialData.Redelivery_Point,
-				ValidFrom: sValidFrom,
-				ValidTo: sValidTo,
-				SoldToParty: selectedMaterialData.SoldToParty,
-				Material: selectedMaterialData.Material,
-				DpDnq: oModelDataDelv.DeliveryPoints[0].DNQ,
-				Uom: selectedMaterialData.UOM,
-				RpDnq: oModelDataRedlv.RedeliveryPoints[0].DNQ,
-				DeliveryPoint: selectedMaterialData.Delivery_Point,
-				Event: "No-event"
-			};
-
-
-
-
-
-			console.log("systemNomPayload", systemNomPayload);
-
-			let oModel = this.getOwnerComponent().getModel();
-			let oBindList = oModel.bindList("/Nom_DetailSet");
-			const newContext = await oBindList.create(systemNomPayload, true);
-			await newContext.created();
-			sap.m.MessageBox.success("Nomination Successfully Submitted");
+		onCancelSysNomDData:function(){
 			this._resetContractDataViews();
-
-
-
-
 		},
+	
 
 
 
@@ -510,14 +470,10 @@ sap.ui.define([
 						const sErrorMsg = oMessages[0]?.message || "Nomination submission failed.";
 						sap.m.MessageBox.error(sErrorMsg);
 
-						// const oContext = oEvent.getParameter("context");
-						// const oMessages = oModel.getMessagesByPath(oContext.getPath());
-						// const sErrorMsg = oMessages?.[0]?.message || "Nomination submission failed.";
-						// sap.m.MessageBox.error(sErrorMsg);
+						
 					}
 				}, this);
 
-				// Fire-and-forget (false = don't wait)
 				oBindList.create(systemNomPayload, false);
 
 			} catch (error) {
@@ -526,67 +482,123 @@ sap.ui.define([
 				sap.m.MessageBox.error("Unexpected error occurred while submitting nomination.");
 			}
 		},
-		onSubmitSysNomDData2: async function () {
-
-			const oView = this.getView();
-			const oModelDataRedlv = oView.getModel("RedlvModelData").getData();
-			const oModelDataDelv = oView.getModel("DelvModelData").getData();
-			const selectedMaterialData = oView.getModel("contDataModel").getData();
-
-			const oValidFrom = oView.byId("sysNom_ValidFrom").getDateValue();
-			const oValidTo = oView.byId("sysNom_ValidTo").getDateValue();
-
-			const sValidFrom = oValidFrom ? oValidFrom.toISOString().split("T")[0] : null;
-			const sValidTo = oValidTo ? oValidTo.toISOString().split("T")[0] : null;
-
-			let systemNomPayload = {
-				Vbeln: selectedMaterialData.DocNo,
-				Redelivrypoint: selectedMaterialData.Redelivery_Point,
-				ValidFrom: sValidFrom,
-				ValidTo: sValidTo,
-				SoldToParty: selectedMaterialData.SoldToParty,
-				Material: selectedMaterialData.Material,
-				DpDnq: oModelDataDelv.DeliveryPoints[0].DNQ || "0.000",
-				Uom: selectedMaterialData.UOM,
-				RpDnq: oModelDataRedlv.RedeliveryPoints[0].DNQ || "0.000",
-				DeliveryPoint: selectedMaterialData.Delivery_Point,
-				Event: "No-event"
+		OnReDeliveryDNQValidation: function (oEvent) {
+			
+			let sValue = oEvent.getParameter("value").trim();
+			let dnqValue = parseFloat(sValue) || 0;
+			let oView = this.getView();
+			
+		
+			let oContractData = oView.getModel("contDataModel").getData();
+		
+			let  profile = oContractData.Profile; 
+			
+			let maxRDPDCQ = this._getClauseValue(oContractData.data, "Max RDP DCQ");
+			let minRDPDCQ = this._getClauseValue(oContractData.data, "Min RDP DCQ");
+		
+			let valueMap = {
+				"DNQ": dnqValue,
+				"Max RDP DCQ": maxRDPDCQ,
+				"Min RDP DCQ": minRDPDCQ
 			};
-
-			console.log("systemNomPayload", systemNomPayload);
-
-			const oModel = this.getOwnerComponent().getModel();
-
-			const oListBinding = oModel.bindList("/xGMSxNOMDETAILS", null, null, [
-				new sap.ui.model.Filter("Vbeln", "EQ", systemNomPayload.Vbeln),
-				new sap.ui.model.Filter("ValidFrom", "EQ", systemNomPayload.ValidFrom),
-				new sap.ui.model.Filter("Redelivrypoint", "EQ", systemNomPayload.Redelivrypoint),
-				new sap.ui.model.Filter("ValidTo", "EQ", systemNomPayload.ValidTo),
-
-
-			]);
-
-			try {
-				const aContexts = await oListBinding.requestContexts(0, 1);
-
-				if (aContexts.length > 0) {
-					sap.m.MessageBox.error("A nomination already exists for the selected combination.");
-					return;
-				}
-
-				const oNominationBinding = oModel.bindList("/Nom_DetailSet");
-				const oNewContext = await oNominationBinding.create(systemNomPayload, true);
-				await oNewContext.created();
-
-				sap.m.MessageBox.success("Nomination Successfully Submitted");
-				this._resetContractDataViews();
-
-			} catch (err) {
-				console.error("Nomination creation failed:", err);
-				sap.m.MessageBox.error("Nomination creation failed:", err);
+		
+			let isRelaxedValidation = false
+			console.log("isrelax",isRelaxedValidation);
+			
+		
+			if (this._validationTimeout) {
+				clearTimeout(this._validationTimeout);
 			}
-		}
-
+		
+			if (!this._lastValidatedValue || this._lastValidatedValue !== sValue) {
+				this._lastValidatedValue = sValue;
+		
+				this._validationTimeout = setTimeout(async () => {
+					if (sValue.length >= 1) {
+						try {
+							let isValid = await HelperFunction.validateDNQ(oView, valueMap, customerValue,profile, isRelaxedValidation);
+							if (!isValid) {
+								oEvent.getSource().setValue("");
+								
+							}
+						} catch (err) {
+							console.error("Validation failed:", err);
+							oEvent.getSource().setValue("");
+							
+						} finally {
+							this._validationTimeout = null;
+						}
+					}
+				}, 1000);
+			}
+		},
+		debounce: function (fn, delay) {
+			let timer;
+			return function (...args) {
+				clearTimeout(timer);
+				timer = setTimeout(() => fn.apply(this, args), delay);
+			};
+		},
+		
+		
+		OnDeliveryDNQValidation: function (oEvent) {
+			let sValue = oEvent.getParameter("value").trim();
+			let dnqValue = parseFloat(sValue) || 0;
+			let oView = this.getView();
+		
+			if (!sValue){
+				
+				this._lastValidatedValue = null;
+				return;
+			}
+			
+		
+			let oContractData = oView.getModel("contDataModel").getData();
+			let  profile = oContractData.Profile;
+			let maxDCQ = this._getClauseValue(oContractData.data, "Max DP DCQ");
+			let minDCQ = this._getClauseValue(oContractData.data, "Min DP DCQ");
+		
+			let valueMap = {
+				"DNQ": dnqValue,
+				"Max DP DCQ": maxDCQ,
+				"Min DP DCQ": minDCQ
+			};
+		
+			let isRelaxedValidation = false;
+			console.log("isrelax",isRelaxedValidation);
+			
+			if (this._validationTimeout) {
+				clearTimeout(this._validationTimeout);
+			}
+		
+			if (sValue === "") {
+				this._lastValidatedValue = null;
+				return; 
+			}
+		
+			if (!this._lastValidatedValue || this._lastValidatedValue !== sValue) {
+				this._lastValidatedValue = sValue;
+		
+				this._validationTimeout = setTimeout(async () => {
+					if (sValue.length >= 1) {
+						try {
+							let isValid = await HelperFunction.validateDNQ(oView, valueMap, customerValue,profile, isRelaxedValidation);
+							if (!isValid) {
+								oEvent.getSource().setValue("");
+								
+							}
+						} catch (err) {
+							console.error("Validation failed:", err);
+							oEvent.getSource().setValue("");
+							
+						} finally {
+							this._validationTimeout = null;
+						}
+					}
+				}, 1000); 
+			}
+		},
+	
 
 
 

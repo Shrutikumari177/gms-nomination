@@ -22,6 +22,8 @@ service nominationServices {
     function getNominationsByCustomer(SoldToParty : String)                                                           returns array of String;
     function getContractDetailsAndPastNom(DocNo : String)                                                             returns array of String;
     function getContractDetail(DocNo : String, Material : String, Redelivery_Point : String)                          returns array of String;
+    function getMinMaxDCQByGasDate(Gasday : Date,DocNo : String, Material : String, Redelivery_Point : String)                          returns array of String;
+
     function getContractMatDetailsByGasday(Gasday : Date, DocNo : String)                                             returns array of String;
     function getRenominationContractData(DocNo : String, Material : String, Redelivery_Point : String, Gasday : Date) returns array of String;
     function getContractsByCustomerNDocType(SoldToParty : String, DocTyp : String)                                    returns array of String;

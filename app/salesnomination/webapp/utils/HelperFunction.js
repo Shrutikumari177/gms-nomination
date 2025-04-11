@@ -121,59 +121,8 @@ sap.ui.define(["sap/ui/core/Fragment","sap/ui/model/Filter","sap/ui/model/Filter
        }
     },
    
-    validateDNQ2: async function (oView, valueMap, customerValue, bRelaxValidation) {
-        try {
-            const oModel = oView.getModel();
-            if (!oModel) {
-                throw new Error("OData model not found on the view.");
-            }
-    
-            const oBindList = oModel.bindList("/Nominationlogic");
-            const oContext = await oBindList.requestContexts(0, Infinity);
-            const customerRules = oContext.map((context) => context.getObject());
-    
-            if (!customerRules.length) {
-                console.info("No rules found for customer.");
-                return true;
-            }
-    
-            let validationFailed = false;
-    
-            customerRules.forEach((rule) => {
-                const value1 = valueMap[rule.SP1];
-                const value2 = valueMap[rule.SP2];
-    
-                if (value1 === undefined || value2 === undefined) {
-                    console.warn(`Values missing for SP1: ${rule.SP1} or SP2: ${rule.SP2}`);
-                    return;
-                }
-    
-                // Ignore Min RDP DCQ check if event allows it
-                if (bRelaxValidation && rule.SP1 === "Min RDP DCQ") {
-                    return;
-                }
-    
-                const operatorChecks = {
-                    "<=": value1 <= value2,
-                    ">=": value1 >= value2,
-                    "=": value1 === value2,
-                    "!=": value1 !== value2
-                };
-    
-                if (!operatorChecks[rule.logicaloperator]) {
-                    MessageBox.error(rule.message || `${rule.SP1} validation failed`);
-                    validationFailed = true;
-                }
-            });
-    
-            return !validationFailed;
-        } catch (error) {
-            console.error("Validation error:", error);
-            MessageBox.error("An error occurred during validation.");
-            return false;
-        }
-    },
-    validateDNQ: async function (oView, valueMap, customerValue,profile, bRelaxValidation) {
+  
+    validateDNQ1: async function (oView, valueMap, customerValue,profile, bRelaxValidation) {
        
         try {
             const oModel = oView.getModel();
@@ -237,6 +186,65 @@ sap.ui.define(["sap/ui/core/Fragment","sap/ui/model/Filter","sap/ui/model/Filter
             return false;
         }
     },
+    validateDNQ: async function (oView, valueMap, customerValue, profile, bRelaxValidation) {
+        try {
+            const oModel = oView.getModel();
+            if (!oModel) {
+                throw new Error("OData model not found on the view.");
+            }
+    
+            const oFilters = new sap.ui.model.Filter({
+                filters: [
+                    new sap.ui.model.Filter("CustomerNo", sap.ui.model.FilterOperator.EQ, customerValue),
+                    new sap.ui.model.Filter("ServiceProfile", sap.ui.model.FilterOperator.EQ, profile)
+                ],
+                and: true
+            });
+    
+            const oBindList = oModel.bindList("/Nominationlogic", null, null, [oFilters]);
+            const oContext = await oBindList.requestContexts(0, Infinity);
+            const customerRules = oContext.map((context) => context.getObject());
+    
+            if (!customerRules.length) {
+                console.info("No rules found for customer.");
+                return { isValid: true };
+            }
+    
+            for (let rule of customerRules) {
+                const value1 = valueMap[rule.SP1];
+                const value2 = valueMap[rule.SP2];
+    
+                if (value1 === undefined || value2 === undefined) {
+                    console.warn(`Values missing for SP1: ${rule.SP1} or SP2: ${rule.SP2}`);
+                    continue;
+                }
+    
+                if (bRelaxValidation && (rule.SP2 === "Min RDP DCQ" || rule.SP2 === "Min DP DCQ")) {
+                    continue;
+                }
+    
+                const operatorChecks = {
+                    "<=": value1 <= value2,
+                    ">=": value1 >= value2,
+                    "=": value1 === value2,
+                    "!=": value1 !== value2
+                };
+    
+                if (!operatorChecks[rule.logicaloperator]) {
+                    return {
+                        isValid: false,
+                        message: rule.message || `${rule.SP1} validation failed`
+                    };
+                }
+            }
+    
+            return { isValid: true };
+        } catch (error) {
+            console.error("Validation error:", error);
+            return { isValid: false, message: "An error occurred during validation." };
+        }
+    },
+    
     
     
     

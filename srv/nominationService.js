@@ -184,121 +184,7 @@ module.exports = cds.service.impl(async (srv) => {
 
 
 
-    // srv.on('getContractDetail', async (req) => {
-    //     const { DocNo, Material, Redelivery_Point } = req.data;
-    //     console.log("Received:", DocNo, Material, Redelivery_Point);
-
-    //     const query = SELECT.from('xGMSxFETCHNOMINATION')
-    //         .columns(
-    //             'DocNo', 'Item', 'Material', 'Redelivery_Point', 'Delivery_Point',
-    //             'Delivery_Dcq', 'Redelivery_Dcq', 'Valid_Form', 'Valid_To',
-    //             'Calculated_Value', 'Clause_Code', 'SoldToParty', 'UOM', 'Contracttype', 'Profile', 'Contract_Description', 'Auart', 'Vendor'
-    //         )
-    //         .where({ DocNo });
-
-    //     const resultRes = await GMSNOMINATIONS_SRV.run(query);
-    //     console.log("Query Result:", resultRes);
-
-    //     if (!resultRes?.length) {
-    //         return null;
-    //     }
-
-    //     const matfilter = resultRes.filter(item =>
-    //         item.Material === Material && item.Redelivery_Point === Redelivery_Point
-    //     );
-    //     console.log("Filtered by Material and Redelivery_Point:", matfilter);
-
-    //     if (!matfilter.length) {
-    //         return null;
-    //     }
-
-    //     const uniqueItems = new Set(matfilter.map(item => item.Item));
-    //     console.log("Unique Items:", uniqueItems);
-
-    //     let filteredResults = matfilter;
-
-       
-    //     if (uniqueItems.size > 1) {
-    //         const currentDate = new Date();
-    //         let minDiff = Infinity;
-        
-    //         const futureEntries = filteredResults
-    //             .map(item => {
-    //                 const validFrom = new Date(item.Valid_Form);
-    //                 const validTo = new Date(item.Valid_To);
-        
-    //                 const fromDiff = validFrom > currentDate ? validFrom - currentDate : Infinity;
-    //                 const toDiff = validTo > currentDate ? validTo - currentDate : Infinity;
-        
-    //                 const minFutureDiff = Math.min(fromDiff, toDiff);
-    //                 return { ...item, diff: minFutureDiff };
-    //             })
-    //             .filter(item => item.diff !== Infinity);
-        
-    //         if (futureEntries.length) {
-    //             minDiff = Math.min(...futureEntries.map(item => item.diff));
-    //             filteredResults = futureEntries.filter(item => item.diff === minDiff);
-    //         } else {
-    //             filteredResults = [];
-    //         }
-    //     }
-        
-    //     console.log("Filtered by closest future Valid date(s):", filteredResults);
-        
-
-    //     if (!filteredResults.length) {
-    //         return null;
-    //     }
-
-    //     // Destructure main fields from the first matched result
-    //     const {
-    //         Item,
-    //         Delivery_Point,
-    //         Delivery_Dcq,
-    //         Redelivery_Dcq,
-    //         Valid_Form,
-    //         Valid_To,
-    //         SoldToParty,
-    //         UOM,
-    //         Contracttype,
-    //         Profile,
-    //         Contract_Description,
-    //         Auart,
-    //         Vendor
-    //     } = filteredResults[0];
-
-    //     // Remove duplicates from 'data' array
-    //     const uniqueData = [];
-    //     const seen = new Set();
-
-    //     filteredResults.forEach(({ Calculated_Value, Clause_Code }) => {
-    //         const key = `${Calculated_Value}-${Clause_Code}`;
-    //         if (!seen.has(key)) {
-    //             seen.add(key);
-    //             uniqueData.push({ Calculated_Value, Clause_Code });
-    //         }
-    //     });
-
-    //     return {
-    //         DocNo,
-    //         Item,
-    //         Material,
-    //         Redelivery_Point,
-    //         Delivery_Point,
-    //         Delivery_Dcq,
-    //         Redelivery_Dcq,
-    //         Valid_Form,
-    //         Valid_To,
-    //         SoldToParty,
-    //         UOM,
-    //         Contracttype,
-    //         Profile,
-    //         Contract_Description,
-    //         Auart,
-    //         Vendor,
-    //         data: uniqueData
-    //     };
-    // });
+   
     srv.on('getContractDetail', async (req) => {
         const { DocNo, Material, Redelivery_Point } = req.data;
         console.log("Received:", DocNo, Material, Redelivery_Point);
@@ -316,6 +202,87 @@ module.exports = cds.service.impl(async (srv) => {
         }
     });
 
+
+    srv.on('getMinMaxDCQByGasDate', async (req) => {
+        try {
+            const { Gasday, DocNo, Material, Redelivery_Point } = req.data;
+    
+            const query = SELECT.from('xGMSxFETCHNOMINATION')
+                .columns(
+                    'DocNo', 'Item', 'Material', 'Redelivery_Point', 'Delivery_Point',
+                    'Delivery_Dcq', 'Redelivery_Dcq', 'Valid_Form', 'Valid_To',
+                    'Calculated_Value', 'Clause_Code', 'SoldToParty', 'UOM',
+                    'Contracttype', 'Profile', 'Contract_Description', 'Auart', 'Vendor'
+                )
+                .where({ DocNo });
+    
+            const resultRes = await GMSNOMINATIONS_SRV.run(query);
+            if (!resultRes?.length) {
+                return req.error(404, `No data found for DocNo: ${DocNo}`);
+            }
+    
+            const matFilter = resultRes.filter(item =>
+                item.Material === Material && item.Redelivery_Point === Redelivery_Point
+            );
+            if (!matFilter.length) {
+                return req.error(404, `No data found for Material: ${Material} and Redelivery_Point: ${Redelivery_Point}`);
+            }
+    
+            const gasDate = new Date(Gasday);
+            let validEntries = [];
+            let futureStartEntry = null;
+    
+            for (const entry of matFilter) {
+                const validFrom = new Date(entry.Valid_Form);
+                const validTo = new Date(entry.Valid_To);
+    
+                if (gasDate >= validFrom && gasDate <= validTo) {
+                    validEntries.push(entry);
+                } else if (gasDate < validFrom) {
+                    if (!futureStartEntry || validFrom < new Date(futureStartEntry.Valid_Form)) {
+                        futureStartEntry = entry;
+                    }
+                }
+            }
+    
+            if (validEntries.length > 0) {
+                validEntries.sort((a, b) => new Date(a.Valid_Form) - new Date(b.Valid_Form));
+    
+                const seen = new Set();
+                const uniqueClauseCodes = [];
+    
+                validEntries.forEach(({ Clause_Code, Calculated_Value }) => {
+                    const key = `${Clause_Code}-${Calculated_Value}`;
+                    if (!seen.has(key)) {
+                        seen.add(key);
+                        uniqueClauseCodes.push({
+                            Clause_Code: Clause_Code?.trim(),
+                            Calculated_Value: String(Calculated_Value).trim()
+                        });
+                    }
+                });
+    
+                return uniqueClauseCodes;
+            }
+    
+            if (futureStartEntry) {
+                return req.error(
+                    400,
+                    `Cannot create nomination. Validity starts from ${new Date(futureStartEntry.Valid_Form).toLocaleDateString()} to ${new Date(futureStartEntry.Valid_To).toLocaleDateString()}`
+                );
+            }
+    
+            return req.error(
+                404,
+                `No clause found for the given gas day: ${new Date(gasDate).toLocaleDateString()}`
+            );
+        } catch (error) {
+            console.error("Error in getMinMaxDCQByGasDate:", error);
+            return req.error(500, error);
+        }
+    });
+    
+    
 
 
 
