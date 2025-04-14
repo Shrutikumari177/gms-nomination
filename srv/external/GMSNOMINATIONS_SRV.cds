@@ -1,4 +1,4 @@
-/* checksum : b9fcff73a3c8571032679d29ac52552f */
+/* checksum : 334e2c53d1a772265db62bae5368d128 */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -644,10 +644,10 @@ entity GMSNOMINATIONS_SRV.xGMSxFETCHNOMINATION {
   key Redelivery_Dcq : String(30) not null;
   @sap.display.format : 'Date'
   @sap.label : 'Valid From'
-  key Valid_Form : Date not null;
+  key Valid_From_DCQ : Date not null;
   @sap.display.format : 'Date'
   @sap.label : 'Valid To'
-  key Valid_To : Date not null;
+  key Valid_To_DCQ : Date not null;
   @sap.display.format : 'UpperCase'
   @sap.label : 'Service Profile'
   Profile : String(40);
@@ -669,6 +669,14 @@ entity GMSNOMINATIONS_SRV.xGMSxFETCHNOMINATION {
   @sap.label : 'Vendor'
   @sap.quickinfo : 'Vendor''s account number'
   Vendor : String(10);
+  @sap.display.format : 'Date'
+  @sap.label : 'Validity Start'
+  @sap.quickinfo : 'Start of Validity Period'
+  Valid_From_Cont : Date;
+  @sap.display.format : 'Date'
+  @sap.label : 'Validity End'
+  @sap.quickinfo : 'End of Validity Period'
+  Valid_To_Cont : Date;
   @sap.display.format : 'UpperCase'
   @sap.label : 'Calculated Value'
   Calculated_Value : String(20);

@@ -516,14 +516,24 @@ sap.ui.define([
 				this._validationTimeout = setTimeout(async () => {
 					if (sValue.length >= 1) {
 						try {
-							let isValid = await HelperFunction.validateDNQ(oView, valueMap, customerValue,profile, isRelaxedValidation);
-							if (!isValid) {
-								oEvent.getSource().setValue("");
+							let result = await HelperFunction.validateDNQ(oView, valueMap, customerValue,profile, isRelaxedValidation);
+							if (!result.isValid) {
+								MessageBox.error(result.message, {
+									onClose: () => {
+										oEvent.getSource().setValue("");
+									
+									}
+								});
 								
 							}
 						} catch (err) {
 							console.error("Validation failed:", err);
-							oEvent.getSource().setValue("");
+							MessageBox.error("Validation error occurred.", {
+								onClose: () => {
+									oEvent.getSource().setValue("");
+									
+								}
+							});
 							
 						} finally {
 							this._validationTimeout = null;
@@ -582,14 +592,22 @@ sap.ui.define([
 				this._validationTimeout = setTimeout(async () => {
 					if (sValue.length >= 1) {
 						try {
-							let isValid = await HelperFunction.validateDNQ(oView, valueMap, customerValue,profile, isRelaxedValidation);
-							if (!isValid) {
-								oEvent.getSource().setValue("");
+							let result = await HelperFunction.validateDNQ(oView, valueMap, customerValue,profile, isRelaxedValidation);
+							if (!result.isValid) {
+								MessageBox.error(result.message, {
+									onClose: () => {
+										oEvent.getSource().setValue("");
+										
+									}
+								});
 								
 							}
 						} catch (err) {
-							console.error("Validation failed:", err);
-							oEvent.getSource().setValue("");
+							MessageBox.error("Validation error occurred.", {
+								onClose: () => {
+									oEvent.getSource().setValue("");
+								}
+							});
 							
 						} finally {
 							this._validationTimeout = null;

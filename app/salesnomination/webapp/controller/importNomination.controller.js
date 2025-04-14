@@ -26,7 +26,7 @@ sap.ui.define([
         onFileUpload: function (oEvent) {
             var flexBox = this.getView().byId("importNominationBlockLayoutCell2");
             var oFileUploader = oEvent.getSource();
-            var oFile = oFileUploader.oFileUpload.files[0]; // Get the uploaded file
+            var oFile = oFileUploader.oFileUpload.files[0]; 
         
             if (!oFile) {
                 sap.m.MessageToast.show("Please select a file first!");

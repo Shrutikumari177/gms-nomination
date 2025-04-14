@@ -370,39 +370,7 @@ sap.ui.define([
 				this._oBusyDialog.close(); 
 			}
 		},
-		onSelectedGasDay1: async function (oEvent) {
-			const oDatePicker = oEvent.getSource();
-			const gasDay = oDatePicker.getDateValue();
-			if (!gasDay) return;
-		
-			const oDateFormat = sap.ui.core.format.DateFormat.getDateInstance({ pattern: "yyyy-MM-dd" });
-			let Gasday = oDateFormat.format(gasDay);
-		
-			
-		
-			const sPath = `/getMinMaxDCQByGasDate?DocNo='${encodeURIComponent(sDocNo)}'&Material='${encodeURIComponent(material)}'&Redelivery_Point='${encodeURIComponent(Redelivery_Point)}'&Gasday=${Gasday}`;
-		
-			let oModel = this.getOwnerComponent().getModel();
-			let oBindingGetData = oModel.bindContext(sPath, null, {});
-		
-			try {
-				const oResult = await oBindingGetData.requestObject(); 
-		
-				let oContDataModel = this.getView().getModel("contDataModel");
-				if (oContDataModel) {
-					let oModelData = oContDataModel.getData();
-					oModelData.data = oResult.value; 
-					oContDataModel.setData(oModelData);
-				} else {
-					let oNewModel = new sap.ui.model.json.JSONModel({ data: oResult.value });
-					this.getView().setModel(oNewModel, "contDataModel");
-				}
-		
-			} catch (err) {
-				console.error("Error fetching clause codes:", err);
-				sap.m.MessageToast.show(err);
-			}
-		},
+	
 		onSelectedGasDay: async function (oEvent) {
 			const oDatePicker = oEvent.getSource();
 			const gasDay = oDatePicker.getDateValue();
@@ -431,19 +399,23 @@ sap.ui.define([
 				}
 		
 			} catch (err) {
-				// Check if error message contains your specific text
-				if (err.message && err.message.includes("No clause found for the given gas day")) {
+				const errMsg = err?.message || "";
+			
+				if (
+					errMsg.includes("No clause found for the given gas day") ||
+					errMsg.includes("Cannot create nomination.DCQ Validity starts from")
+				) {
 					const oFallbackData = [
 						{
 							Clause_Code: "Max RDP DCQ",
-							Calculated_Value: "0.000"
+							Calculated_Value: ""
 						},
 						{
 							Clause_Code: "Min RDP DCQ",
-							Calculated_Value: "0.000"
+							Calculated_Value: ""
 						}
 					];
-		
+			
 					let oContDataModel = this.getView().getModel("contDataModel");
 					if (oContDataModel) {
 						let oModelData = oContDataModel.getData();
@@ -453,12 +425,14 @@ sap.ui.define([
 						let oNewModel = new sap.ui.model.json.JSONModel({ data: oFallbackData });
 						this.getView().setModel(oNewModel, "contDataModel");
 					}
-		
-					sap.m.MessageToast.show("No clause found for the selected gas day. Please select another date.");
+			
+					sap.m.MessageToast.show(errMsg); 
 				} else {
 					console.error("Error fetching clause codes:", err);
-					sap.m.MessageToast.show(err);
+					sap.m.MessageToast.show(errMsg);
 				}
+			
+			
 			}
 		},
 		

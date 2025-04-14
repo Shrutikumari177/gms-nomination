@@ -44,6 +44,8 @@ GET http://localhost:4004/odata/v4/nomination-services/VirtualNominations
 
 GET http://localhost:4004/odata/v4/nomination-services/getRenominationContractData?DocNo='40001042'&Material='2000000068'&Redelivery_Point='C1100003'&Gasday=2025-04-17
 
+####
+GET http://localhost:4004/odata/v4/nomination-services/getRenominationContractData?DocNo='40001042'&Material='2000000068'&Redelivery_Point='C1100003'&Gasday=2025-04-30
 
 
 ####\

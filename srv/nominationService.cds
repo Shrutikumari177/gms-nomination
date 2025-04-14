@@ -222,29 +222,31 @@ service nominationServices {
       entity xGMSxCREATENOMINATION as projection on GMSNOMINATIONS_SRV.xGMSxCREATENOMINATION
     {        key Vbeln, key Gasday, key item_no, Versn, CustomerName, NomItem, shiptoparty, vendor, kunnr, DeliveryPoint, RedelivryPoint, ValidTo, ValidFrom, Zstat, Material, Nomtk, Auart, Transys, Ddcq, Rdcq, Uom1, Pdnq, Event, Adnq, Rpdnq, Znomtk, Src, Remarks, Flag, Action, Path, Source, CustGrp, Timestamp, SrvProfile, Contracttype     }    
 ;
-    entity xGMSxFETCHNOMINATION          as
-        projection on GMSNOMINATIONS_SRV.xGMSxFETCHNOMINATION {
-            key DocNo,
-            key Item,
-            key Delivery_Point,
-            key Redelivery_Point,
-            key Material,
-            key Delivery_Dcq,
-            key Redelivery_Dcq,
-            key Valid_Form,
-            key Valid_To,
-                Profile,
-                Contract_Description,
-                UOM,
-                nomtk,
-                Auart,
-                Vendor,
-                Calculated_Value,
-                Contracttype,
-                Clause_Code,
-                SoldToParty
-        };
-
+    // entity xGMSxFETCHNOMINATION          as
+    //     projection on GMSNOMINATIONS_SRV.xGMSxFETCHNOMINATION {
+    //         key DocNo,
+    //         key Item,
+    //         key Delivery_Point,
+    //         key Redelivery_Point,
+    //         key Material,
+    //         key Delivery_Dcq,
+    //         key Redelivery_Dcq,
+    //         key Valid_Form,
+    //         key Valid_To,
+    //             Profile,
+    //             Contract_Description,
+    //             UOM,
+    //             nomtk,
+    //             Auart,
+    //             Vendor,
+    //             Calculated_Value,
+    //             Contracttype,
+    //             Clause_Code,
+    //             SoldToParty
+    //     };
+    entity xGMSxFETCHNOMINATION as projection on GMSNOMINATIONS_SRV.xGMSxFETCHNOMINATION
+    {        key DocNo, key Item, key Delivery_Point, key Redelivery_Point, key Material, key Delivery_Dcq, key Redelivery_Dcq, key Valid_From_DCQ, key Valid_To_DCQ, Profile, Contract_Description, UOM, nomtk, Auart, Vendor, Valid_From_Cont, Valid_To_Cont, Calculated_Value, Contracttype, Clause_Code, SoldToParty     }    
+;
     entity znom_headSet                  as
         projection on GMSNOMINATIONS_SRV.znom_headSet {
                 Gasday,

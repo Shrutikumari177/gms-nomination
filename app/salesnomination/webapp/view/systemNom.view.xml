@@ -119,7 +119,7 @@
                         <Table
                         id="IdSysNomDelPointTable"
                         items="{DelvModelData>/DeliveryPoints}"
-                        visible="false"
+                        visible="false" 
                      >
                         <columns>
                             <Column id="IdSysNomDelvPointCol">

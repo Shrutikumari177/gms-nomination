@@ -11,6 +11,7 @@ module.exports = cds.service.impl(async (srv) => {
     const GMSNOMINATIONS_SRV = await cds.connect.to("GMSNOMINATIONS_SRV");
     srv.on('READ', 'nomi_SaveSet', req => GMSNOMINATIONS_SRV.run(req.query));
     srv.on('CREATE', 'nomi_SaveSet', req => GMSNOMINATIONS_SRV.run(req.query));
+    
     srv.on('UPDATE', 'nomi_SaveSet', async req => {
 
         let data = await GMSNOMINATIONS_SRV.run(req.query)
@@ -43,6 +44,10 @@ module.exports = cds.service.impl(async (srv) => {
     srv.on('READ', 'TransAgreemSet', req => GMSEXCHG_AGRMT_API_SRV.run(req.query));
 
 
+   
+
+
+
     srv.on('READ', 'DocumentNoProfileMapping', async (req) => {
         try {
             const result = await externalService.run(SELECT.from('DocumentNoProfileMapping'));
@@ -52,38 +57,7 @@ module.exports = cds.service.impl(async (srv) => {
             req.error(500, 'Failed to fetch data from external service.');
         }
     })
-
-
-
-
-    srv.on('READ', 'pathAndFuelMapping', async (req) => {
-        try {
-            const result = await externalService.run(SELECT.from('pathAndFuelMapping'));
-            return result;
-        } catch (err) {
-            console.error('Error fetching data from external service:', err);
-            req.error(500, 'Failed to fetch data from external service.');
-        }
-    })
-
-    srv.on('READ', 'ServiceProfileMaster', async (req) => {
-        try {
-            const result = await externalService.run(SELECT.from('ServiceProfileMaster'));
-            return result;
-        } catch (err) {
-            console.error('Error fetching data from external service:', err);
-            req.error(500, 'Failed to fetch data from external service.');
-        }
-    });
-    srv.on('READ', 'serviceProfileParametersItems', async (req) => {
-        try {
-            const result = await externalService.run(SELECT.from('serviceProfileParametersItems'));
-            return result;
-        } catch (err) {
-            console.error('Error fetching data from external service:', err);
-            req.error(500, 'Failed to fetch data from external service.');
-        }
-    })
+  
 
     srv.on('READ', 'Nominationlogic', async (req) => {
         try {
@@ -210,7 +184,7 @@ module.exports = cds.service.impl(async (srv) => {
             const query = SELECT.from('xGMSxFETCHNOMINATION')
                 .columns(
                     'DocNo', 'Item', 'Material', 'Redelivery_Point', 'Delivery_Point',
-                    'Delivery_Dcq', 'Redelivery_Dcq', 'Valid_Form', 'Valid_To',
+                    'Delivery_Dcq', 'Redelivery_Dcq', 'Valid_From_DCQ', 'Valid_To_DCQ',
                     'Calculated_Value', 'Clause_Code', 'SoldToParty', 'UOM',
                     'Contracttype', 'Profile', 'Contract_Description', 'Auart', 'Vendor'
                 )
@@ -233,8 +207,8 @@ module.exports = cds.service.impl(async (srv) => {
             let futureStartEntry = null;
     
             for (const entry of matFilter) {
-                const validFrom = new Date(entry.Valid_Form);
-                const validTo = new Date(entry.Valid_To);
+                const validFrom = new Date(entry.Valid_From_DCQ);
+                const validTo = new Date(entry.Valid_To_DCQ);
     
                 if (gasDate >= validFrom && gasDate <= validTo) {
                     validEntries.push(entry);
@@ -268,7 +242,7 @@ module.exports = cds.service.impl(async (srv) => {
             if (futureStartEntry) {
                 return req.error(
                     400,
-                    `Cannot create nomination. Validity starts from ${new Date(futureStartEntry.Valid_Form).toLocaleDateString()} to ${new Date(futureStartEntry.Valid_To).toLocaleDateString()}`
+                    `Cannot create nomination.DCQ Validity starts from ${new Date(futureStartEntry.Valid_Form).toLocaleDateString()} to ${new Date(futureStartEntry.Valid_To).toLocaleDateString()}`
                 );
             }
     
@@ -319,7 +293,7 @@ module.exports = cds.service.impl(async (srv) => {
         const queryNomination = SELECT.from('xGMSxFETCHNOMINATION')
             .columns(
                 'DocNo', 'Item', 'Material', 'Redelivery_Point', 'Delivery_Point',
-                'Delivery_Dcq', 'Redelivery_Dcq', 'Valid_Form', 'Valid_To',
+                'Delivery_Dcq', 'Redelivery_Dcq', 'Valid_From_DCQ', 'Valid_To_DCQ',
                 'Calculated_Value', 'Clause_Code', 'SoldToParty', 'UOM', 'Contracttype', 'Profile', 'Contract_Description', 'Auart', 'Vendor'
             )
             .where({ DocNo });
@@ -346,8 +320,8 @@ module.exports = cds.service.impl(async (srv) => {
         
             const futureEntries = filteredResults
                 .map(item => {
-                    const validFrom = new Date(item.Valid_Form);
-                    const validTo = new Date(item.Valid_To);
+                    const validFrom = new Date(item.Valid_From_DCQ);
+                    const validTo = new Date(item.Valid_To_DCQ);
         
                     const fromDiff = validFrom > currentDate ? validFrom - currentDate : Infinity;
                     const toDiff = validTo > currentDate ? validTo - currentDate : Infinity;
@@ -365,7 +339,7 @@ module.exports = cds.service.impl(async (srv) => {
             }
         }
         
-        console.log("Filtered by closest future Valid date(s):", filteredResults);
+        // console.log("Filtered by closest future Valid date(s):", filteredResults);
         
 
 
@@ -373,8 +347,8 @@ module.exports = cds.service.impl(async (srv) => {
             return null;
         }
 
-        const minValidForm = filteredResults.reduce((min, item) => item.Valid_Form < min ? item.Valid_Form : min, filteredResults[0].Valid_Form);
-        const maxValidTo = filteredResults.reduce((max, item) => item.Valid_To > max ? item.Valid_To : max, filteredResults[0].Valid_To);
+        const minValidForm = filteredResults.reduce((min, item) => item.Valid_From_DCQ < min ? item.Valid_From_DCQ : min, filteredResults[0].Valid_From_DCQ);
+        const maxValidTo = filteredResults.reduce((max, item) => item.Valid_To_DCQ > max ? item.Valid_To_DCQ : max, filteredResults[0].Valid_To_DCQ);
 
         const purchaseContractquery = SELECT.one
             .from('TransAgreemSet', { Salescontract: DocNo })
@@ -387,6 +361,8 @@ module.exports = cds.service.impl(async (srv) => {
         } catch (error) {
             console.error("Error fetching purchase contract:", error.message);
         }
+        console.log("purchaseContract",purchseContract);
+        
 
         // Fetch from xGMSxCREATENOMINATION (Redelivery side)
         const queryCreateNomination = SELECT.from('xGMSxCREATENOMINATION')
@@ -859,7 +835,7 @@ module.exports = cds.service.impl(async (srv) => {
         const query = SELECT.from('xGMSxFETCHNOMINATION')
             .columns(
                 'DocNo', 'Item', 'Material', 'Redelivery_Point', 'Delivery_Point',
-                'Delivery_Dcq', 'Redelivery_Dcq', 'Valid_Form', 'Valid_To',
+                'Delivery_Dcq', 'Redelivery_Dcq', 'Valid_From_DCQ', 'Valid_To_DCQ',
                 'Calculated_Value', 'Clause_Code', 'SoldToParty', 'UOM',
                 'Contracttype', 'Profile', 'Contract_Description', 'Auart', 'Vendor'
             )
@@ -890,8 +866,8 @@ module.exports = cds.service.impl(async (srv) => {
         
             const futureEntries = filteredResults
                 .map(item => {
-                    const validFrom = new Date(item.Valid_Form);
-                    const validTo = new Date(item.Valid_To);
+                    const validFrom = new Date(item.Valid_From_DCQ);
+                    const validTo = new Date(item.Valid_To_DCQ);
         
                     const fromDiff = validFrom > currentDate ? validFrom - currentDate : Infinity;
                     const toDiff = validTo > currentDate ? validTo - currentDate : Infinity;
@@ -922,8 +898,8 @@ module.exports = cds.service.impl(async (srv) => {
             Delivery_Point,
             Delivery_Dcq,
             Redelivery_Dcq,
-            Valid_Form,
-            Valid_To,
+            Valid_From_DCQ,
+            Valid_To_DCQ,
             SoldToParty,
             UOM,
             Contracttype,
@@ -955,8 +931,8 @@ module.exports = cds.service.impl(async (srv) => {
             Delivery_Point,
             Delivery_Dcq,
             Redelivery_Dcq,
-            Valid_Form,
-            Valid_To,
+            Valid_From_DCQ,
+            Valid_To_DCQ,
             SoldToParty,
             UOM,
             Contracttype,

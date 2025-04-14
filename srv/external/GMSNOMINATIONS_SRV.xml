@@ -158,8 +158,8 @@
                     <PropertyRef Name="Material"/>
                     <PropertyRef Name="Delivery_Dcq"/>
                     <PropertyRef Name="Redelivery_Dcq"/>
-                    <PropertyRef Name="Valid_Form"/>
-                    <PropertyRef Name="Valid_To"/>
+                    <PropertyRef Name="Valid_From_DCQ"/>
+                    <PropertyRef Name="Valid_To_DCQ"/>
                 </Key>
                 <Property Name="DocNo" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="DocumentNo" sap:quickinfo="Document Number"/>
                 <Property Name="Item" Type="Edm.String" Nullable="false" MaxLength="6" sap:display-format="NonNegative" sap:label="Sales Document Item"/>
@@ -168,14 +168,16 @@
                 <Property Name="Material" Type="Edm.String" Nullable="false" MaxLength="40" sap:display-format="UpperCase" sap:label="Material" sap:quickinfo="Material Number"/>
                 <Property Name="Delivery_Dcq" Type="Edm.String" Nullable="false" MaxLength="30" sap:display-format="UpperCase" sap:label="Delivery DCQ"/>
                 <Property Name="Redelivery_Dcq" Type="Edm.String" Nullable="false" MaxLength="30" sap:display-format="UpperCase" sap:label="ReDelivery DCQ" sap:quickinfo="Redelivery DCQ"/>
-                <Property Name="Valid_Form" Type="Edm.DateTime" Nullable="false" Precision="0" sap:display-format="Date" sap:label="Valid From"/>
-                <Property Name="Valid_To" Type="Edm.DateTime" Nullable="false" Precision="0" sap:display-format="Date" sap:label="Valid To"/>
+                <Property Name="Valid_From_DCQ" Type="Edm.DateTime" Nullable="false" Precision="0" sap:display-format="Date" sap:label="Valid From"/>
+                <Property Name="Valid_To_DCQ" Type="Edm.DateTime" Nullable="false" Precision="0" sap:display-format="Date" sap:label="Valid To"/>
                 <Property Name="Profile" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Service Profile"/>
                 <Property Name="Contract_Description" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Sales Contract Descr" sap:quickinfo="Sales Contract Description"/>
                 <Property Name="UOM" Type="Edm.String" MaxLength="3" sap:label="Target Quantity UoM" sap:semantics="unit-of-measure"/>
                 <Property Name="nomtk" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Nomination key" sap:quickinfo="Nomination (technical) Key"/>
                 <Property Name="Auart" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Sales Document Type"/>
                 <Property Name="Vendor" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Vendor" sap:quickinfo="Vendor's account number"/>
+                <Property Name="Valid_From_Cont" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Validity Start" sap:quickinfo="Start of Validity Period"/>
+                <Property Name="Valid_To_Cont" Type="Edm.DateTime" Precision="0" sap:display-format="Date" sap:label="Validity End" sap:quickinfo="End of Validity Period"/>
                 <Property Name="Calculated_Value" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Calculated Value"/>
                 <Property Name="Contracttype" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Document Type"/>
                 <Property Name="Clause_Code" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Service Parameter"/>
