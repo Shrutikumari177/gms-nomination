@@ -12,6 +12,7 @@
     xmlns:viz.data="sap.viz.ui5.data"
     height="100%"
 >
+<Page showHeader="false" >
     <tnt:ToolHeader
         id="IdPubNomToolHeader"
         class="sapUiTinyMarginBottom sapUiTinyMarginTop"
@@ -645,7 +646,7 @@
                     <Panel>
                         <VBox
                             id="IdPubNomChartContainer"
-                            height="320px"
+                            height="500px"
                             class="chartContainer"
                         />
                     </Panel>
@@ -653,4 +654,5 @@
             </l:PaneContainer>
         </l:PaneContainer>
     </l:ResponsiveSplitter>
+    </Page>
 </mvc:View>
