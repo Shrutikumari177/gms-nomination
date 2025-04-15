@@ -12,6 +12,8 @@
     xmlns:viz.data="sap.viz.ui5.data"
     height="100%"
 >
+<Page showHeader="false" >
+
   <tnt:ToolHeader
             id="IdPubReNomToolHeader"
             class="sapUiTinyMarginBottom sapUiTinyMarginTop"
@@ -567,51 +569,51 @@
                         titleAlignment="Center"
                     >
                         <Table
-                            id="pasNomTable"
-                            items="{modelData>/PastNominations}"
+                            id="pastDisNomTable"
+                            items="{path: 'pastNomModel>/'}"
                             sticky="ColumnHeaders"
                         >
                             <layoutData>
                                 <l:SplitterLayoutData
-                                    id="_IDGenSplitterLayoutDta1"
+                                    id="_IDGenSlitterLayoutDta1"
                                     size="250px"
                                     resizable="true"
                                 />
                             </layoutData>
                             <columns>
-                                <Column id="_IDGenColumn111">
+                                <Column id="_IDGnColumn111">
                                     <Text
-                                        id="_IDGenText1"
+                                        id="_IDGeText1"
                                         text="Gas Day"
                                     />
                                 </Column>
-                                <Column id="_IDGenColumn23">
+                                <Column id="_IDGeColumn23">
                                     <Text
-                                        id="_IDGenText2"
+                                        id="_IDGenTxt2"
                                         text="Approved DNQ"
                                     />
                                 </Column>
-                                <Column id="_IDGenColumn13">
+                                <Column id="_IDGnColumn13">
                                     <Text
-                                        id="_IDGenText44"
+                                        id="_IDGenTxt44"
                                         text="UoM"
                                     />
                                 </Column>
                             </columns>
                             <items>
-                                <ColumnListItem id="_IDGenColumnListItem7">
+                                <ColumnListItem id="_IDGenColumnistItem7">
                                     <cells>
                                         <Text
-                                            id="_IDGenText16"
-                                            text="{modelData>Gasday}"
+                                            id="_IDGenext16"
+                                            text="{pastNomModel>Gasday}"
                                         />
                                         <Text
-                                            id="_IDGenText17"
-                                            text="{modelData>Adnq}"
+                                            id="_IDGeText17"
+                                            text="{pastNomModel>Adnq}"
                                         />
                                         <Text
-                                            id="_IDGenText18"
-                                            text="{modelData>Uom4}"
+                                            id="_IDGeText18"
+                                            text="{pastNomModel>Uom}"
                                         />
                                     </cells>
                                 </ColumnListItem>
@@ -636,7 +638,7 @@
                     </l:layoutData>
                     <Panel>
                         <VBox
-                            id="chartContainer"
+                            id="IdDispalyPubNomChartContainer"
                             height="320px"
                             class="chartContainer"
                         />
@@ -645,4 +647,5 @@
             </l:PaneContainer>
         </l:PaneContainer>
     </l:ResponsiveSplitter>
+    </Page>
 </mvc:View>

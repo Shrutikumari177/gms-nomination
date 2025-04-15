@@ -276,7 +276,8 @@ sap.ui.define([
 				oMaterialWiseContractData,
 				oMaterialWiseModelData,
 				oReDelvNomDCQTableData,
-				oDelvNomDCQTableData
+				oDelvNomDCQTableData,
+				OPastNominationData
 			]);
 		},
 

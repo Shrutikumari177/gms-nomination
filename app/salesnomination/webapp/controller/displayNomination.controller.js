@@ -188,6 +188,10 @@ sap.ui.define([
 				}
 				this.byId("IdDelCummDNQInput").setValue("");
 				this.byId("IdCummDNQInput").setValue("");
+				const oChartContainer = this.byId("IdDispalyPubNomChartContainer");
+				if (oChartContainer) {
+					oChartContainer.removeAllItems();
+				}
 
 				this.clearMaterialModels();
 
@@ -213,9 +217,14 @@ sap.ui.define([
 			const oMaterialWiseModelData = this.getView().getModel("contDataModel");
 			const oReDelvNomDCQTableData = this.getView().getModel("RedlvModelData");
 			const oDelvNomDCQTableData = this.getView().getModel("DelvModelData");
+			const OPastNominationData = this.getView().getModel("pastNomModel");
+
 
 			if (oMaterialWiseModelData) {
 				oMaterialWiseModelData.setData({});
+			}
+			if (OPastNominationData) {
+				OPastNominationData.setData({});
 			}
 
 			if (oReDelvNomDCQTableData) {
@@ -259,7 +268,8 @@ sap.ui.define([
 				oMaterialWiseContractData,
 				oMaterialWiseModelData,
 				oReDelvNomDCQTableData,
-				oDelvNomDCQTableData
+				oDelvNomDCQTableData,
+				OPastNominationData
 			]);
 		},
 
@@ -340,92 +350,7 @@ sap.ui.define([
 		},
 
 
-		onSelectMaterial1: async function (oEvent) {
-			var oSelectedItem = oEvent.getSource();
-			var oContext = oSelectedItem.getBindingContext("materialModel");
-			if (oContext) {
-				var oSelectedMaterial = oContext.getObject();
-
-				var material = oSelectedMaterial.Material;
-				var Redelivery_Point = oSelectedMaterial.RedelivryPoint;
-			}
-
-			const sPath = `/getRenominationContractData?DocNo='${selectedContract}'&Material='${material}'&Redelivery_Point='${Redelivery_Point}'&Gasday=${selectedGasDay}`;
-			console.log("sPath", sPath);
-
-			let oModelgetCust = this.getOwnerComponent().getModel();
-			const oBindinggetCust = oModelgetCust.bindContext(sPath, null, {});
-			try {
-				const oData = await oBindinggetCust.requestObject();
-				console.log("Fetched Data:", oData.value);
-
-				const oNewJsonModel = new sap.ui.model.json.JSONModel(oData.value[0]);
-				this.getView().setModel(oNewJsonModel, "contDataModel");
-				var oLocalModel = this.getView().getModel("localModel");
-				var redeliveryDNQ = oData.value[0].Rpdnq || "0.000";
-				var uom = "MBT";
-				oLocalModel.setProperty("/CummDNQ", redeliveryDNQ + " " + uom);
-
-
-				const oDatePicker = this.getView().byId("IdRePubNomGasDayPicker");
-				if (selectedGasDay) {
-					const oFormattedDate = new Date(selectedGasDay);
-					oDatePicker.setDateValue(oFormattedDate);
-
-				} else {
-					oDatePicker.setVisible(false);
-				}
-
-				const hasRedeliveryDcq = oData.value[0].Redelivery_Point && oData.value[0].Redelivery_Point.trim() !== "";
-				if (hasRedeliveryDcq) {
-					this.getView().byId("IdRePubNomContractRPDCQ").setVisible(true);
-					var oRedlvModel = this.getView().getModel("RedlvModelData");
-					var aRedeliveryPoints = oRedlvModel.getProperty("/RedeliveryPoints") || [];
-
-					aRedeliveryPoints.forEach(item => {
-						item.RedeliveryPt = oData.value[0].Redelivery_Point;
-						item.DNQ = oData.value[0].rediliveryDNQ;
-						item.UOM = "MBT";
-						item.FromT = oData.value[0].Redelivery_ValidFrom;
-						item.ToT = oData.value[0].Redelivery_ValidTo;
-						item.Event = oData.value[0].redeliveryEvent;
-
-					});
-					oRedlvModel.setProperty("/RedeliveryPoints", aRedeliveryPoints);
-				}
-
-				const hasDeliveryDcq = !!(oData.value[0].Delivery_Point && oData.value[0].Delivery_Point.trim());
-				if (hasDeliveryDcq) {
-					var oDelvModel = this.getView().getModel("DelvModelData");
-					var aDeliveryPoints = oDelvModel.getProperty("/DeliveryPoints") || [];
-					const oView = this.getView();
-
-					["IdRePubNomStaticListS", "IdRePubNomContratRPDCQ", "IdRePubNomContractDPDCQ", "IdRePubNomDelPointTable", "IdRePubNomTableHeaderBarForDelv"].forEach(id => {
-						oView.byId(id).setVisible(true);
-					});
-
-					["IdRePubNomContractRPDCQ", "IdRePubNomStaticListfinal"].forEach(id => {
-						oView.byId(id).setVisible(false);
-					});
-
-
-
-					aDeliveryPoints.forEach(item => {
-						item.DeliveryPt = oData.value[0].Delivery_Point;
-						item.UOM = "MBT";
-						item.DNQ = oData.value[0].deliveryDNQ;
-						item.FromT = oData.value[0].Delivery_ValidFrom;
-						item.ToT = oData.value[0].Delivery_ValidTo;
-						item.Event = oData.value[0].deliveryEvent;
-					});
-
-					oDelvModel.setProperty("/DeliveryPoints", aDeliveryPoints);
-				}
-
-			} catch (error) {
-				console.log("error", error);
-			}
-		},
+		
 		onSelectMaterial: async function (oEvent) {
 			var oSelectedItem = oEvent.getSource();
 			var oContext = oSelectedItem.getBindingContext("materialModel");
@@ -514,7 +439,8 @@ sap.ui.define([
 		
 					oDelvModel.setProperty("/DeliveryPoints", aDeliveryPoints);
 				}
-		
+				this.fetchPastNominationData(selectedContract, material);
+
 			} catch (error) {
 				console.error("Error while fetching nomination data:", error);
 			} finally {
@@ -523,7 +449,171 @@ sap.ui.define([
 					this._oBusyDialog.close();
 				}
 			}
-		}
+		},
+		fetchPastNominationData: async function (selectedContract, material) {
+			let sPastNomPath = `/getPastNominationdata?DocNo='${encodeURIComponent(selectedContract)}'&Material='${encodeURIComponent(material)}'`;
+			console.log("Fetching past nomination data from:", sPastNomPath);
+
+			let oModel = this.getOwnerComponent().getModel();
+			let oBinding = oModel.bindContext(sPastNomPath, null, {});
+
+			try {
+				const oPastData = await oBinding.requestObject();
+				console.log("Past Nomination Data:", oPastData.value);
+
+				let oPastNomModel = new sap.ui.model.json.JSONModel(oPastData.value || []);
+				this.getView().setModel(oPastNomModel, "pastNomModel");
+				 this._createPastNominationChart();
+
+
+			} catch (err) {
+				console.error("Error fetching past nomination data:", err);
+				sap.m.MessageToast.show("Failed to load past nomination data.");
+			}
+		},
+		_getClauseValue: function (data, clauseCode) {
+			let clause = data.find(item => item.Clause_Code === clauseCode);
+			return clause ? parseFloat(clause.Calculated_Value) || 0 : 0;
+		},
+		_createPastNominationChart: function () {
+			const oView = this.getView();
+			const oVBox = oView.byId("IdDispalyPubNomChartContainer");
+		
+			const oPastNomData = oView.getModel("pastNomModel").getData();
+			const oContractData = oView.getModel("contDataModel").getData();
+		
+			const maxDCQ = parseFloat(this._getClauseValue(oContractData.data, "Max RDP DCQ"));
+			const minDCQ = parseFloat(this._getClauseValue(oContractData.data, "Min RDP DCQ"));
+			const redeliveryDCQ = parseFloat(oContractData.Redelivery_Dcq);
+		
+			const aChartData = oPastNomData.map(entry => {
+				return {
+					Validity: entry.Gasday,
+					Adnq: parseFloat(entry.Adnq),
+					MaxDCQ: maxDCQ,
+					MinDCQ: minDCQ,
+					DCQ: redeliveryDCQ
+				};
+			});
+		
+			const oChartModel = new sap.ui.model.json.JSONModel({ data: aChartData });
+			oVBox.removeAllItems();
+		
+			const oVizFrame = new sap.viz.ui5.controls.VizFrame({
+				width: "100%",
+				height: "350px",
+				vizType: "line"
+			});
+		
+			const oDataset = new sap.viz.ui5.data.FlattenedDataset({
+				dimensions: [{
+					name: "Validity",
+					value: "{Validity}"
+				}],
+				measures: [
+					{ name: "DCQ", value: "{DCQ}" },
+					{ name: "Min DCQ", value: "{MinDCQ}" },
+					{ name: "Max DCQ", value: "{MaxDCQ}" },
+					{ name: "Adnq", value: "{Adnq}" }
+				],
+				data: { path: "/data" }
+			});
+		
+			oVizFrame.setDataset(oDataset);
+			oVizFrame.setModel(oChartModel);
+		
+			oVizFrame.setVizProperties({
+				title: { visible: false },
+				plotArea: {
+					dataLabel: { visible: false },
+					line: {
+						dataShape: {
+							Adnq: "line_with_marker",
+							DCQ: "line",
+							"Min DCQ": "line",
+							"Max DCQ": "line"
+						}
+					},
+					referenceLine: {
+						line: {
+							valueAxis: [
+								{
+									value: redeliveryDCQ,
+									color: "#107e3e",
+									lineType: "dashed"
+								},
+								{
+									value: minDCQ,
+									color: "#00bce1",
+									lineType: "dashed"
+								},
+								{
+									value: maxDCQ,
+									color: "purple",
+									lineType: "dashed"
+								}
+							]
+						}
+					}
+				},
+				valueAxis: {
+					title: { visible: true, text: "DCQ Values" },
+					label: { formatString: "#,##0" }
+				},
+				categoryAxis: {
+					title: { visible: true, text: "Validity" },
+					label: { formatString: "MMM-yyyy" }
+				},
+				legend: { visible: true },
+				tooltip: {
+					visible: true,
+					formatString: "#,##0.00"
+				}
+			});
+		
+			oVizFrame.setVizScales([{
+				feed: "color",
+				palette: ["#107e3e", "#00bce1", "purple", "blue"]
+			}]);
+		
+			oVizFrame.addFeed(new sap.viz.ui5.controls.common.feeds.FeedItem({
+				uid: "valueAxis",
+				type: "Measure",
+				values: ["DCQ", "Min DCQ", "Max DCQ", "Adnq"]
+			}));
+		
+			oVizFrame.addFeed(new sap.viz.ui5.controls.common.feeds.FeedItem({
+				uid: "categoryAxis",
+				type: "Dimension",
+				values: ["Validity"]
+			}));
+		
+			oVBox.addItem(oVizFrame);
+		
+			// AFTER rendering, get visible X-Axis labels and add reference lines
+			oVizFrame.attachEventOnce("renderComplete", function () {
+				try {
+					const oCanvas = oVizFrame.getDomRef();
+					const aXAxisLabels = oCanvas.querySelectorAll("g.v-category-axis text");
+		
+					const aVisibleDates = Array.from(aXAxisLabels).map(oText => oText.textContent.trim());
+		
+					const aVerticalLines = aVisibleDates.map(label => ({
+						value: label,
+						color: "#e0e0e0",
+						lineType: "dotted",
+						size: 1,
+						label: { visible: false }
+					}));
+		
+					const oCurrentProps = oVizFrame.getVizProperties();
+					oCurrentProps.plotArea.referenceLine.line.categoryAxis = aVerticalLines;
+					oVizFrame.setVizProperties(oCurrentProps);
+				} catch (err) {
+					console.warn("Could not set vertical grid lines: ", err);
+				}
+			});
+		},
 		
 
 

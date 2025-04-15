@@ -12,6 +12,8 @@
     xmlns:viz.data="sap.viz.ui5.data"
     height="100%"
 >
+<Page showHeader="false" >
+
   <tnt:ToolHeader
             id="IdPubReNomToolHeader"
             class="sapUiTinyMarginBottom sapUiTinyMarginTop"
@@ -585,8 +587,8 @@
                         titleAlignment="Center"
                     >
                         <Table
-                            id="pasNomTable"
-                            items="{modelData>/PastNominations}"
+                            id="pastNomTable"
+                            items="{path: 'pastNomModel>/'}"
                             sticky="ColumnHeaders"
                         >
                             <layoutData>
@@ -621,15 +623,15 @@
                                     <cells>
                                         <Text
                                             id="_IDGenText16"
-                                            text="{modelData>Gasday}"
+                                            text="{pastNomModel>Gasday}"
                                         />
                                         <Text
                                             id="_IDGenText17"
-                                            text="{modelData>Adnq}"
+                                            text="{pastNomModel>Adnq}"
                                         />
                                         <Text
                                             id="_IDGenText18"
-                                            text="{modelData>Uom4}"
+                                            text="{pastNomModel>Uom}"
                                         />
                                     </cells>
                                 </ColumnListItem>
@@ -654,8 +656,8 @@
                     </l:layoutData>
                     <Panel>
                         <VBox
-                            id="chartContainer"
-                            height="320px"
+                            id="IdRePubNomChartContainer"
+                            height="500px"
                             class="chartContainer"
                         />
                     </Panel>
@@ -663,4 +665,5 @@
             </l:PaneContainer>
         </l:PaneContainer>
     </l:ResponsiveSplitter>
+    </Page>
 </mvc:View>
