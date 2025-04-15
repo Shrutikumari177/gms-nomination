@@ -186,14 +186,14 @@ module.exports = cds.service.impl(async (srv) => {
                 if (gasDate >= validFrom && gasDate <= validTo) {
                     validEntries.push(entry);
                 } else if (gasDate < validFrom) {
-                    if (!futureStartEntry || validFrom < new Date(futureStartEntry.Valid_Form)) {
+                    if (!futureStartEntry || validFrom < new Date(futureStartEntry.Valid_From_DCQ)) {
                         futureStartEntry = entry;
                     }
                 }
             }
     
             if (validEntries.length > 0) {
-                validEntries.sort((a, b) => new Date(a.Valid_Form) - new Date(b.Valid_Form));
+                validEntries.sort((a, b) => new Date(a.Valid_From_DCQ) - new Date(b.Valid_From_DCQ));
     
                 const seen = new Set();
                 const uniqueClauseCodes = [];
@@ -215,7 +215,7 @@ module.exports = cds.service.impl(async (srv) => {
             if (futureStartEntry) {
                 return req.error(
                     400,
-                    `Cannot create nomination.DCQ Validity starts from ${new Date(futureStartEntry.Valid_Form).toLocaleDateString()} to ${new Date(futureStartEntry.Valid_To).toLocaleDateString()}`
+                    `Cannot create nomination. DCQ Validity starts from ${new Date(futureStartEntry.Valid_From_DCQ).toLocaleDateString()} to ${new Date(futureStartEntry.Valid_To_DCQ).toLocaleDateString()}`
                 );
             }
     
@@ -228,6 +228,7 @@ module.exports = cds.service.impl(async (srv) => {
             return req.error(500, error);
         }
     });
+    
 
     srv.on('getContractDetailsAndPastNom', async (req) => {
         const { DocNo } = req.data;
@@ -823,10 +824,11 @@ module.exports = cds.service.impl(async (srv) => {
             console.error(`❌ Error sending email to ${email}:`, error.message);
         }
     }
-    cron.schedule("52 09  * * *", async () => {
-        // console.log("⏳ Running VirtualNominations job at 14:45 IST...");
-        // await generateVirtualNominations();
+    cron.schedule("30 12 * * *", async () => {
+        console.log("⏳ Running VirtualNominations job at 6:00 PM IST...");
+         await generateVirtualNominations();
     });
+    
 
 
 

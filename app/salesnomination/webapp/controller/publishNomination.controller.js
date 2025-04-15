@@ -411,12 +411,13 @@ sap.ui.define([
 				}
 
 			} catch (err) {
-				const errMsg = err?.message || "";
-
+				const errMsg = err?.message || "Unknown error occurred.";
+			
 				if (
-					errMsg.includes("No clause found for the given gas day") ||
-					errMsg.includes("Cannot create nomination.DCQ Validity starts from")
-				) {
+					errMsg.includes("No clause found") ||
+					errMsg.includes("DCQ Validity starts from")
+				)
+				 {
 					const oFallbackData = [
 						{
 							Clause_Code: "Max RDP DCQ",
@@ -427,7 +428,7 @@ sap.ui.define([
 							Calculated_Value: ""
 						}
 					];
-
+			
 					let oContDataModel = this.getView().getModel("contDataModel");
 					if (oContDataModel) {
 						let oModelData = oContDataModel.getData();
@@ -437,15 +438,16 @@ sap.ui.define([
 						let oNewModel = new sap.ui.model.json.JSONModel({ data: oFallbackData });
 						this.getView().setModel(oNewModel, "contDataModel");
 					}
-
-					sap.m.MessageToast.show(errMsg);
+			
+					sap.m.MessageBox.error(errMsg);
 				} else {
 					console.error("Error fetching clause codes:", err);
-					sap.m.MessageToast.show(errMsg);
+					sap.m.MessageBox.error(errMsg);
 				}
-
-
 			}
+			
+
+			
 		},
 		fetchPastNominationData: async function (sDocNo, material) {
 			let sPastNomPath = `/getPastNominationdata?DocNo='${encodeURIComponent(sDocNo)}'&Material='${encodeURIComponent(material)}'`;

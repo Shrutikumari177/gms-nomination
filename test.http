@@ -42,7 +42,7 @@ GET http://localhost:4004/odata/v4/nomination-services/getPastNominationdata?Doc
 
 ###
 
-GET http://localhost:4004/odata/v4/nomination-services/getMinMaxDCQByGasDate?DocNo='40001065'&Material='2000000068'&Redelivery_Point='C1100003'&Gasday=2025-04-18
+GET http://localhost:4004/odata/v4/nomination-services/getMinMaxDCQByGasDate?DocNo='40001065'&Material='2000000068'&Redelivery_Point='C1100003'&Gasday=2025-04-16
 
 ####
 GET http://localhost:4004/odata/v4/nomination-services/VirtualNominations
