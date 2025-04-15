@@ -12,7 +12,6 @@ modules:
       - name: iGMS_NOMINATION-db
       - name: iGMS_NOMINATION-auth
       - name: iGMS_NOMINATION-destination-service
-      - name: iGMS_NOMINATION-jobSchedulerService
     provides:
       - name: srv-api
         properties:
@@ -134,16 +133,6 @@ resources:
       path: ./xs-security.json
       service: xsuaa
       service-plan: application
-  - name: iGMS_NOMINATION-jobSchedulerService
-    type: org.cloudfoundry.managed-service
-    parameters:
-      service-plan: lite
-      service: jobscheduler
-      config:
-        enable-xsuaa-support: true 
-      requires:
-        - name: iGMS_NOMINATION-connectivity
-        - name: iGMS_NOMINATION-destination     
   - name: iGMS_NOMINATION_html_repo_host
     type: org.cloudfoundry.managed-service
     parameters:

@@ -12,6 +12,7 @@
     xmlns:viz.data="sap.viz.ui5.data"
     height="100%"
 >
+<Page showHeader="false" >
     <tnt:ToolHeader
         id="IdPubNomToolHeader"
         class="sapUiTinyMarginBottom sapUiTinyMarginTop"
@@ -29,7 +30,7 @@
     <l:ResponsiveSplitter
         defaultPane="IdPubNomSplitterContainer"
         id='IdPubNomMainScrollContainer'
-    >
+     >
         <l:PaneContainer
             id="IdPubNomPaneContainer"
             resize=".onRootContainerResize"
@@ -160,7 +161,7 @@
                                         <DisplayListItem
                                             id="IdPubNomContractDesc"
                                             label="Contract Desc:"
-                                            value="{contDataModel>/Contracttype}"
+                                            value="{contDataModel>/Contract_Description}"
                                         />
                                     </List>
                                     <List id="IdPubNomStaticListS" visible="false">
@@ -192,7 +193,7 @@
                                         id="IdPubNomDynamicFieldList"
                                         showNoData="false"
                                         items="{contDataModel>/data}"
-                                    >
+                                     >
                                         <items>
                                             <DisplayListItem
                                                 label="{contDataModel>Clause_Code}"
@@ -223,6 +224,7 @@
                                 valueFormat="{ YYYY-MM-dd }"
                                 minDate="{}"
                                 liveChange="onSelectedDate"
+                                 change="onSelectedGasDay"
                             />
                         </contentRight>
                     </Bar>
@@ -242,16 +244,18 @@
                                 id="IdDelCummDNQ"
                                 text="Total. DNQ"
                                 design="Bold"
+                                visible="false"
                             />
                             <Input
                                 id="IdDelCummDNQInput"
                                 value="{localModel>/dpCummDNQ}"
                                 width="150px"
                                 editable="false"
+                                visible="false"
                             />
                             
                         </contentMiddle>
-                        <contentRight>
+                        <!-- <contentRight>
                             <Button
                                 id="IdPubNomAddBtnForDelv"
                                 icon="sap-icon://add"
@@ -264,13 +268,13 @@
                                 type="Reject"
                                 press="onDeleteRowDlvPress"
                             />
-                        </contentRight>
+                        </contentRight> -->
                     </Bar>
                     <Table
                         id="IdPubNomDelPointTable"
                         items="{DelvModelData>/DeliveryPoints}"
                         visible="false"
-                    >
+                     >
                         <columns>
                             <Column id="IdPubNomDelvPointCol">
                                 <Text
@@ -347,9 +351,12 @@
                                 />
                                 <Select
                                     id="IdPubNomEventSelect"
-                                    selectedItem="{}"
+                                   
                                     forceSelection="false"
                                     width="200px"
+                                     selectedKey="{DelvModelData>Event}"
+                                    selectedItem="{DelvModelData>Event}"
+                                    change="DpEventSelected"
                                 >
                                                                     <core:ListItem id="IdPubNmNoneEvent" key="" text=""/>
     
@@ -388,6 +395,7 @@
                                 id="IdCummDNQ"
                                 text="Total. DNQ"
                                 design="Bold"
+                                visible="false"
                             />
                             <!-- <Input
                                 id="IdCummDNQInput"
@@ -400,9 +408,10 @@
                                 value="{localModel>/rdpCummDNQ}"
                                 width="150px"
                                 editable="false"
+                                visible="false"
                             />
                         </contentMiddle>
-                        <contentRight>
+                        <!-- <contentRight >
                             <Button
                                 id="IdPubNomAddBtnForRedlv"
                                 icon="sap-icon://add"
@@ -416,7 +425,7 @@
                                 type="Reject"
                                 press="onDeletePress"
                             />
-                        </contentRight>
+                        </contentRight> -->
                     </Bar>
                     <Table
                         id="IdPubNomRedPointTable"
@@ -502,7 +511,8 @@
                                     id="IdPubNomEventSelect2"
                                     selectedKey="{RedlvModelData>Event}"
                                     selectedItem="{RedlvModelData>Event}"
-                                >
+                                    change="RDPeventSelected"
+                                 >
                                     <core:ListItem id="IdPubNomNoneEvent" key="" text=""/>
                                     <core:ListItem
                                         id="IdPubNomReNoEventItem"
@@ -569,7 +579,7 @@
                     >
                         <Table
                             id="IdPubNomPastNomTable"
-                            items="{modelData>/PastNominations}"
+                            items="{path: 'pastNomModel>/'}"
                             sticky="ColumnHeaders"
                         >
                             <layoutData>
@@ -604,15 +614,15 @@
                                     <cells>
                                         <Text
                                             id="IdPubNomPastNomGasDayValue"
-                                            text="{modelData>Gasday}"
+                                            text="{pastNomModel>Gasday}"
                                         />
                                         <Text
                                             id="IdPubNomPastNomApprovedDNQValue"
-                                            text="{modelData>Adnq}"
+                                            text="{pastNomModel>Adnq}"
                                         />
                                         <Text
                                             id="IdPubNomPastNomUOMValue"
-                                            text="{modelData>Uom4}"
+                                            text="{pastNomModel>Uom}"
                                         />
                                     </cells>
                                 </ColumnListItem>
@@ -636,7 +646,7 @@
                     <Panel>
                         <VBox
                             id="IdPubNomChartContainer"
-                            height="320px"
+                            height="500px"
                             class="chartContainer"
                         />
                     </Panel>
@@ -644,4 +654,5 @@
             </l:PaneContainer>
         </l:PaneContainer>
     </l:ResponsiveSplitter>
+    </Page>
 </mvc:View>

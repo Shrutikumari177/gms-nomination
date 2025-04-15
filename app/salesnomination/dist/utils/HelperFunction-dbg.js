@@ -42,29 +42,67 @@ sap.ui.define(["sap/ui/core/Fragment","sap/ui/model/Filter","sap/ui/model/Filter
     
 
       // code is using for searching the item
-       _valueHelpLiveSearch: function (oEvent, filterField, id,oControl) {
+    //    _valueHelpLiveSearch: function (oEvent, filterField, id,oControl) {
+    //     let sValue = oEvent.getParameter("value") || oEvent.getParameter("query") || oEvent.getParameter("newValue");
+    //     let oBinding = oEvent.getSource().getBinding("items");
+    //     if (sValue) {
+    //         let oFilter = new sap.ui.model.Filter(filterField, FilterOperator.Contains, sValue);
+    //         oBinding.filter([oFilter]);
+    //     } else {
+    //         oBinding.filter([]);
+    //     }
+    //     if(id && oControl){
+    //     let oValueHelp = oControl.getView().byId(id);
+    //     if (oValueHelp) {
+    //         oBinding.attachEventOnce("dataReceived", function (oData) {
+    //             let aItems = oBinding.getCurrentContexts();
+    //             if (!aItems || aItems.length === 0) {
+    //                 oValueHelp.setNoDataText("No Data");
+    //             } else {
+    //                 oValueHelp.setNoDataText(""); 
+    //             }
+    //         });
+    //     }
+    //   }
+    // },
+    _valueHelpLiveSearch: function (oEvent, filterFields, id, oControl) {
         let sValue = oEvent.getParameter("value") || oEvent.getParameter("query") || oEvent.getParameter("newValue");
         let oBinding = oEvent.getSource().getBinding("items");
+    
         if (sValue) {
-            let oFilter = new sap.ui.model.Filter(filterField, FilterOperator.Contains, sValue);
-            oBinding.filter([oFilter]);
+            let aFilters = [];
+    
+            // Support both single field and array of fields
+            if (Array.isArray(filterFields)) {
+                filterFields.forEach(function (field) {
+                    aFilters.push(new sap.ui.model.Filter(field, sap.ui.model.FilterOperator.Contains, sValue));
+                });
+            } else {
+                aFilters.push(new sap.ui.model.Filter(filterFields, sap.ui.model.FilterOperator.Contains, sValue));
+            }
+    
+            let oCombinedFilter = new sap.ui.model.Filter({
+                filters: aFilters,
+                and: false // OR condition
+            });
+    
+            oBinding.filter([oCombinedFilter]);
         } else {
             oBinding.filter([]);
         }
-        if(id && oControl){
-        let oValueHelp = oControl.getView().byId(id);
-        if (oValueHelp) {
-            oBinding.attachEventOnce("dataReceived", function (oData) {
-                let aItems = oBinding.getCurrentContexts();
-                if (!aItems || aItems.length === 0) {
-                    oValueHelp.setNoDataText("No Data");
-                } else {
-                    oValueHelp.setNoDataText(""); 
-                }
-            });
+    
+        // Optional: noDataText handling
+        if (id && oControl) {
+            let oValueHelp = oControl.getView().byId(id);
+            if (oValueHelp) {
+                oBinding.attachEventOnce("dataReceived", function () {
+                    let aItems = oBinding.getCurrentContexts();
+                    oValueHelp.setNoDataText(aItems && aItems.length ? "" : "No Data");
+                });
+            }
         }
-      }
     },
+    
     
 
     // read data based on property 
@@ -82,82 +120,132 @@ sap.ui.define(["sap/ui/core/Fragment","sap/ui/model/Filter","sap/ui/model/Filter
         console.log(`Error occurred while reading data from the '${url}' entity : `, error)
        }
     },
-    validateDNQ: async function (oView, valueMap, customerNo) {
+   
+  
+    validateDNQ1: async function (oView, valueMap, customerValue,profile, bRelaxValidation) {
+       
         try {
             const oModel = oView.getModel();
             if (!oModel) {
                 throw new Error("OData model not found on the view.");
             }
+            const oFilters = new sap.ui.model.Filter({
+                filters: [
+                    new sap.ui.model.Filter("CustomerNo", sap.ui.model.FilterOperator.EQ, customerValue),
+                    new sap.ui.model.Filter("ServiceProfile", sap.ui.model.FilterOperator.EQ, profile)
+                ],
+                and: true 
+            });
     
-            const oFilter = new sap.ui.model.Filter("CustomerNo", sap.ui.model.FilterOperator.EQ, customerNo);
-            const oBindList = oModel.bindList("/Nominationlogic", null, null, [oFilter]);
-            
+            const oBindList = oModel.bindList("/Nominationlogic", null, null, [oFilters]);
             const oContext = await oBindList.requestContexts(0, Infinity);
             const customerRules = oContext.map((context) => context.getObject());
     
+            
+    
             if (!customerRules.length) {
-                console.info(`No rules found for CustomerNo: ${customerNo}`);
-                return true; // No rules, so no validation errors
+                console.info("No rules found for customer.");
+                return true;
             }
     
-            const groupedRules = customerRules.reduce((groups, rule) => {
-                const key = rule.logic || "NONE"; 
-                (groups[key] ||= []).push(rule); 
-                return groups;
-            }, {});
-            
-            let validationFailed = false; 
+            let validationFailed = false;
     
-            Object.entries(groupedRules).forEach(([logic, rules]) => {
-                let isValid = logic === "AND";
+            customerRules.forEach((rule) => {
+                const value1 = valueMap[rule.SP1];
+                const value2 = valueMap[rule.SP2];
     
-                rules.forEach((rule) => {
-                    const value1 = valueMap[rule.SP1];
-                    const value2 = valueMap[rule.SP2];
+                if (value1 === undefined || value2 === undefined) {
+                    console.warn(`Values missing for SP1: ${rule.SP1} or SP2: ${rule.SP2}`);
+                    return;
+                }
+                console.log("rules ",rule.SP2);
+                
     
-                    if (value1 === undefined || value2 === undefined) {
-                        console.warn(`Values missing for SP1: ${rule.SP1} or SP2: ${rule.SP2}`);
-                        return;
-                    }
+                if (bRelaxValidation && (rule.SP2 === "Min RDP DCQ" || rule.SP2 === "Min DP DCQ")) {
+                    return;
+                }
+                
     
-                    const operatorChecks = {
-                        "<=": value1 <= value2,
-                        ">=": value1 >= value2,
-                        "=": value1 === value2,
-                        "!=": value1 !== value2
-                    };
+                const operatorChecks = {
+                    "<=": value1 <= value2,
+                    ">=": value1 >= value2,
+                    "=": value1 === value2,
+                    "!=": value1 !== value2
+                };
     
-                    const conditionMet = operatorChecks[rule.logicaloperator];
-    
-                    // Validate with dynamic error messages
-                    if (logic === "AND") {
-                        isValid = isValid && conditionMet;
-                    } else if (logic === "OR") {
-                        isValid = isValid || conditionMet;
-                    } else if (!conditionMet) { 
-                        MessageBox.error(rule.message || `${rule.SP1} validation failed against ${rule.SP2}`);
-                        validationFailed = true;
-                    }
-                });
-    
-                // Group-level error messages
-                if ((logic === "AND" && !isValid) || (logic === "OR" && !isValid)) {
-                    const groupErrorMsg = rules.map((rule) => rule.message || `${rule.SP1} validation failed`).join("\n");
-                    MessageBox.error(groupErrorMsg);
+                if (!operatorChecks[rule.logicaloperator]) {
+                    MessageBox.error(rule.message || `${rule.SP1} validation failed`);
                     validationFailed = true;
                 }
             });
     
-            return !validationFailed; 
-    
+            return !validationFailed;
         } catch (error) {
             console.error("Validation error:", error);
             MessageBox.error("An error occurred during validation.");
             return false;
         }
     },
+    validateDNQ: async function (oView, valueMap, customerValue, profile, bRelaxValidation) {
+        try {
+            const oModel = oView.getModel();
+            if (!oModel) {
+                throw new Error("OData model not found on the view.");
+            }
     
- 
+            const oFilters = new sap.ui.model.Filter({
+                filters: [
+                    new sap.ui.model.Filter("CustomerNo", sap.ui.model.FilterOperator.EQ, customerValue),
+                    new sap.ui.model.Filter("ServiceProfile", sap.ui.model.FilterOperator.EQ, profile)
+                ],
+                and: true
+            });
+    
+            const oBindList = oModel.bindList("/Nominationlogic", null, null, [oFilters]);
+            const oContext = await oBindList.requestContexts(0, Infinity);
+            const customerRules = oContext.map((context) => context.getObject());
+    
+            if (!customerRules.length) {
+                console.info("No rules found for customer.");
+                return { isValid: true };
+            }
+    
+            for (let rule of customerRules) {
+                const value1 = valueMap[rule.SP1];
+                const value2 = valueMap[rule.SP2];
+    
+                if (value1 === undefined || value2 === undefined) {
+                    console.warn(`Values missing for SP1: ${rule.SP1} or SP2: ${rule.SP2}`);
+                    continue;
+                }
+    
+                if (bRelaxValidation && (rule.SP2 === "Min RDP DCQ" || rule.SP2 === "Min DP DCQ")) {
+                    continue;
+                }
+    
+                const operatorChecks = {
+                    "<=": value1 <= value2,
+                    ">=": value1 >= value2,
+                    "=": value1 === value2,
+                    "!=": value1 !== value2
+                };
+    
+                if (!operatorChecks[rule.logicaloperator]) {
+                    return {
+                        isValid: false,
+                        message: rule.message || `${rule.SP1} validation failed`
+                    };
+                }
+            }
+    
+            return { isValid: true };
+        } catch (error) {
+            console.error("Validation error:", error);
+            return { isValid: false, message: "An error occurred during validation." };
+        }
+    },
+    
+    
     
     
     

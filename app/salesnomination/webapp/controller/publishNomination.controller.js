@@ -12,11 +12,12 @@ sap.ui.define([
 	"sap/m/MessageBox",
 	"sap/m/MessageToast",
 	"external/ChartJSAdapterDateFns",
-	"external/ChartJS"
+	"external/ChartJS",
+	"sap/chart/Chart"
 
 
 
-], function (Device, Fragment, Controller, JSONModel, HelperFunction, Popover, Button, mobileLibrary, FeedItem, FlattenedDataset, MessageBox, MessageToast, ChartJSAdapterDateFns, ChartJS) {
+], function (Device, Fragment, Controller, JSONModel, HelperFunction, Popover, Button, mobileLibrary, FeedItem, FlattenedDataset, MessageBox, MessageToast, ChartJSAdapterDateFns, ChartJS,Chart) {
 	"use strict";
 
 	let material;
@@ -612,6 +613,10 @@ sap.ui.define([
 				}
 			});
 		},
+	
+		
+		
+		
 		
 		
 		
