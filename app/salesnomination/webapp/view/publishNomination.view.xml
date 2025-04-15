@@ -578,7 +578,7 @@
                     >
                         <Table
                             id="IdPubNomPastNomTable"
-                            items="{modelData>/PastNominations}"
+                            items="{path: 'pastNomModel>/'}"
                             sticky="ColumnHeaders"
                         >
                             <layoutData>
@@ -613,15 +613,15 @@
                                     <cells>
                                         <Text
                                             id="IdPubNomPastNomGasDayValue"
-                                            text="{modelData>Gasday}"
+                                            text="{pastNomModel>Gasday}"
                                         />
                                         <Text
                                             id="IdPubNomPastNomApprovedDNQValue"
-                                            text="{modelData>Adnq}"
+                                            text="{pastNomModel>Adnq}"
                                         />
                                         <Text
                                             id="IdPubNomPastNomUOMValue"
-                                            text="{modelData>Uom4}"
+                                            text="{pastNomModel>Uom}"
                                         />
                                     </cells>
                                 </ColumnListItem>

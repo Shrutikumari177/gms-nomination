@@ -27,6 +27,7 @@ service nominationServices {
     function getContractMatDetailsByGasday(Gasday : Date, DocNo : String)                                             returns array of String;
     function getRenominationContractData(DocNo : String, Material : String, Redelivery_Point : String, Gasday : Date) returns array of String;
     function getContractsByCustomerNDocType(SoldToParty : String, DocTyp : String)                                    returns array of String;
+    function getPastNominationdata(DocNo : String, Material : String)  returns array of String;
 
 
     type NominationDataType {

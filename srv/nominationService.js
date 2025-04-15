@@ -127,34 +127,7 @@ module.exports = cds.service.impl(async (srv) => {
     });
 
 
-    srv.on('getContractDetailsAndPastNom', async (req) => {
-        const { DocNo } = req.data;
-
-        const query = SELECT.from('xGMSxFETCHNOMINATION')
-            .columns('DocNo', 'Material', 'Redelivery_Point', 'Delivery_Point', 'Item')
-            .where({ DocNo });
-
-        const resultRes = await GMSNOMINATIONS_SRV.run(query);
-
-        if (!resultRes || resultRes.length === 0) {
-            return null;
-        }
-
-        // Filter out duplicates based on Material and Redelivery_Point
-        const uniqueEntries = [];
-        const seenKeys = new Set();
-
-        for (const entry of resultRes) {
-            const key = `${entry.Material}-${entry.Redelivery_Point}`;
-            if (!seenKeys.has(key)) {
-                seenKeys.add(key);
-                uniqueEntries.push(entry);
-            }
-        }
-
-        return uniqueEntries;
-    });
-
+   
 
 
 
@@ -255,6 +228,51 @@ module.exports = cds.service.impl(async (srv) => {
             return req.error(500, error);
         }
     });
+
+    srv.on('getContractDetailsAndPastNom', async (req) => {
+        const { DocNo } = req.data;
+
+        const query = SELECT.from('xGMSxFETCHNOMINATION')
+            .columns('DocNo', 'Material', 'Redelivery_Point', 'Delivery_Point', 'Item')
+            .where({ DocNo });
+
+        const resultRes = await GMSNOMINATIONS_SRV.run(query);
+
+        if (!resultRes || resultRes.length === 0) {
+            return null;
+        }
+
+        // Filter out duplicates based on Material and Redelivery_Point
+        const uniqueEntries = [];
+        const seenKeys = new Set();
+
+        for (const entry of resultRes) {
+            const key = `${entry.Material}-${entry.Redelivery_Point}`;
+            if (!seenKeys.has(key)) {
+                seenKeys.add(key);
+                uniqueEntries.push(entry);
+            }
+        }
+
+        return uniqueEntries;
+    });
+    srv.on('getPastNominationdata', async (req) => {
+        const { DocNo, Material } = req.data;
+
+        const query = SELECT.from('xGMSxnewpast_nom')
+            .columns('Vbeln', 'Gasday', 'Adnq', 'Uom', 'Material','Material_Description')
+            .where({ Vbeln:DocNo,Material });
+
+        const resultRes = await GMSNOMINATIONS_SRV.run(query);
+
+        if (!resultRes || resultRes.length === 0) {
+            return null;
+        }
+
+        
+        return resultRes;
+    });
+    
     
     
 

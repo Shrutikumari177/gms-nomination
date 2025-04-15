@@ -1,4 +1,4 @@
-/* checksum : 334e2c53d1a772265db62bae5368d128 */
+/* checksum : 0b26fb05a2b927c15af125709c2474e4 */
 @cds.external : true
 @m.IsDefaultEntityContainer : 'true'
 @sap.message.scope.supported : 'true'
@@ -689,6 +689,50 @@ entity GMSNOMINATIONS_SRV.xGMSxFETCHNOMINATION {
   @sap.display.format : 'UpperCase'
   @sap.label : 'Sold-To Party'
   SoldToParty : String(10);
+};
+
+@cds.external : true
+@cds.persistence.skip : true
+@sap.creatable : 'false'
+@sap.updatable : 'false'
+@sap.deletable : 'false'
+@sap.content.version : '1'
+@sap.label : 'Past nom for new nomdata table'
+entity GMSNOMINATIONS_SRV.xGMSxnewpast_nom {
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Sales document'
+  @sap.quickinfo : 'Sales Document'
+  key Vbeln : String(10) not null;
+  @sap.display.format : 'Date'
+  @sap.label : 'Gas Day'
+  @sap.quickinfo : 'Gas Day Date'
+  key Gasday : Date not null;
+  @sap.display.format : 'NonNegative'
+  @sap.label : 'Sales Document Item'
+  key item_no : String(6) not null;
+  Versn : String(3);
+  @sap.unit : 'Uom'
+  @sap.label : 'Approved DNQ'
+  Adnq : Decimal(13, 3);
+  @sap.display.format : 'UpperCase'
+  @sap.label : 'Nomination key'
+  @sap.quickinfo : 'Nomination (technical) Key'
+  Nomtk : String(20);
+  @sap.label : 'Unit of Measure'
+  @sap.quickinfo : 'Unit of Measurement'
+  @sap.semantics : 'unit-of-measure'
+  Uom : String(3);
+  @sap.display.format : 'UpperCase'
+  @sap.text : 'Material_Description'
+  @sap.label : 'Material'
+  @sap.quickinfo : 'Material Number'
+  Material : String(40);
+  @sap.label : 'Material description'
+  Material_Description : String(40);
+  @sap.unit : 'Uom'
+  @sap.label : 'RePublish DNQ'
+  @sap.quickinfo : 'Re-Publish DNQ'
+  Rpdnq : Decimal(13, 3);
 };
 
 @cds.external : true

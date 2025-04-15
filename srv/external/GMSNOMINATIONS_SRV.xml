@@ -183,6 +183,23 @@
                 <Property Name="Clause_Code" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Service Parameter"/>
                 <Property Name="SoldToParty" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Sold-To Party"/>
             </EntityType>
+            <EntityType Name="xGMSxnewpast_nomType" sap:label="Past nom for new nomdata table" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Vbeln"/>
+                    <PropertyRef Name="Gasday"/>
+                    <PropertyRef Name="item_no"/>
+                </Key>
+                <Property Name="Vbeln" Type="Edm.String" Nullable="false" MaxLength="10" sap:display-format="UpperCase" sap:label="Sales document" sap:quickinfo="Sales Document"/>
+                <Property Name="Gasday" Type="Edm.DateTime" Nullable="false" Precision="0" sap:display-format="Date" sap:label="Gas Day" sap:quickinfo="Gas Day Date"/>
+                <Property Name="item_no" Type="Edm.String" Nullable="false" MaxLength="6" sap:display-format="NonNegative" sap:label="Sales Document Item"/>
+                <Property Name="Versn" Type="Edm.String" MaxLength="3"/>
+                <Property Name="Adnq" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="Uom" sap:label="Approved DNQ"/>
+                <Property Name="Nomtk" Type="Edm.String" MaxLength="20" sap:display-format="UpperCase" sap:label="Nomination key" sap:quickinfo="Nomination (technical) Key"/>
+                <Property Name="Uom" Type="Edm.String" MaxLength="3" sap:label="Unit of Measure" sap:quickinfo="Unit of Measurement" sap:semantics="unit-of-measure"/>
+                <Property Name="Material" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:text="Material_Description" sap:label="Material" sap:quickinfo="Material Number"/>
+                <Property Name="Material_Description" Type="Edm.String" MaxLength="40" sap:label="Material description"/>
+                <Property Name="Rpdnq" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="Uom" sap:label="RePublish DNQ" sap:quickinfo="Re-Publish DNQ"/>
+            </EntityType>
             <EntityType Name="xGMSxNOMDETAILSType" sap:label="FETCH FOR NOM DETAIL API" sap:content-version="1">
                 <Key>
                     <PropertyRef Name="Vbeln"/>
@@ -244,6 +261,7 @@
             <EntityContainer Name="GMS_NOMINATIONS_SRV_Entities" m:IsDefaultEntityContainer="true" sap:message-scope-supported="true" sap:supported-formats="atom json xlsx">
                 <EntitySet Name="xGMSxCREATENOMINATION" EntityType="GMS.NOMINATIONS_SRV.xGMSxCREATENOMINATIONType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
                 <EntitySet Name="xGMSxFETCHNOMINATION" EntityType="GMS.NOMINATIONS_SRV.xGMSxFETCHNOMINATIONType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                <EntitySet Name="xGMSxnewpast_nom" EntityType="GMS.NOMINATIONS_SRV.xGMSxnewpast_nomType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
                 <EntitySet Name="xGMSxNOMDETAILS" EntityType="GMS.NOMINATIONS_SRV.xGMSxNOMDETAILSType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
                 <EntitySet Name="xGMSxSERVPROFILE" EntityType="GMS.NOMINATIONS_SRV.xGMSxSERVPROFILEType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
                 <EntitySet Name="Nom_DetailSet" EntityType="GMS.NOMINATIONS_SRV.Nom_Detail" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:content-version="1"/>

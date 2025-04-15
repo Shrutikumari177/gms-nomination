@@ -677,6 +677,7 @@ sap.ui.define([
 							: 0.000,
 						Event: oModelDataDelv.DeliveryPoints[0]?.Event || "",
 						Adnq: 0.000,
+						Nomtk:"",
 						Znomtk: "",
 						Src: "",
 						Remarks: "",
@@ -707,6 +708,7 @@ sap.ui.define([
 						Uom1: oModelDataRedlv.RedeliveryPoints[0]?.UOM || "",
 						Event: oModelDataRedlv.RedeliveryPoints[0]?.Event || "",
 						Adnq: 0.000,
+						Nomtk:"",
 						Pdnq: oModelDataRedlv.RedeliveryPoints[0]?.DNQ
 							&& !isNaN(oModelDataRedlv.RedeliveryPoints[0]?.DNQ)
 							? parseFloat(oModelDataRedlv.RedeliveryPoints[0]?.DNQ)
@@ -741,6 +743,7 @@ sap.ui.define([
 						Uom1: oModelDataRedlv.RedeliveryPoints[0]?.UOM || "",
 						Event: oModelDataRedlv.RedeliveryPoints[0]?.Event || "",
 						Adnq: 0.000,
+						Nomtk:"",
 						Pdnq: oModelDataRedlv.RedeliveryPoints[0]?.DNQ
 							&& !isNaN(oModelDataRedlv.RedeliveryPoints[0]?.DNQ)
 							? parseFloat(oModelDataRedlv.RedeliveryPoints[0]?.DNQ)

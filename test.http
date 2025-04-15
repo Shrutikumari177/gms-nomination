@@ -34,6 +34,12 @@ GET http://localhost:4004/odata/v4/nomination-services/getContractDetailsAndPast
 
 ####
 GET http://localhost:4004/odata/v4/nomination-services/getContractDetail?DocNo='40001065'&Material='2000000068'&Redelivery_Point='C1100003'
+
+
+####
+
+GET http://localhost:4004/odata/v4/nomination-services/getPastNominationdata?DocNo='40001070'&Material='2000000068'
+
 ###
 
 GET http://localhost:4004/odata/v4/nomination-services/getMinMaxDCQByGasDate?DocNo='40001065'&Material='2000000068'&Redelivery_Point='C1100003'&Gasday=2025-04-18

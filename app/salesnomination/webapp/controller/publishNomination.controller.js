@@ -220,10 +220,15 @@ sap.ui.define([
 			const oMaterialWiseModelData = this.getView().getModel("contDataModel");
 			const oReDelvNomDCQTableData = this.getView().getModel("RedlvModelData");
 			const oDelvNomDCQTableData = this.getView().getModel("DelvModelData");
+			const OPastNominationData =this.getView().getModel("pastNomModel");
 
 			if (oMaterialWiseModelData) {
 				oMaterialWiseModelData.setData({});
 			}
+			if (OPastNominationData) {
+				OPastNominationData.setData({});
+			}
+			
 
 			if (oReDelvNomDCQTableData) {
 				oReDelvNomDCQTableData.setProperty("/RedeliveryPoints", [{
@@ -362,6 +367,7 @@ sap.ui.define([
 		
 				this._updateRedeliveryData(oData.value[0]);
 				this._updateDeliveryData(oData.value[0]);
+				this.fetchPastNominationData(sDocNo, material);
 		
 			} catch (error) {
 				console.error("Error fetching contract details:", error);
@@ -435,6 +441,26 @@ sap.ui.define([
 			
 			}
 		},
+		fetchPastNominationData: async function(sDocNo, material) {
+			let sPastNomPath = `/getPastNominationdata?DocNo='${encodeURIComponent(sDocNo)}'&Material='${encodeURIComponent(material)}'`;
+			console.log("Fetching past nomination data from:", sPastNomPath);
+		
+			let oModel = this.getOwnerComponent().getModel();
+			let oBinding = oModel.bindContext(sPastNomPath, null, {});
+		
+			try {
+				const oPastData = await oBinding.requestObject();
+				console.log("Past Nomination Data:", oPastData.value);
+		
+				let oPastNomModel = new sap.ui.model.json.JSONModel(oPastData.value || []);
+				this.getView().setModel(oPastNomModel, "pastNomModel");
+		
+			} catch (err) {
+				console.error("Error fetching past nomination data:", err);
+				sap.m.MessageToast.show("Failed to load past nomination data.");
+			}
+		},
+		
 		
 		
 		
@@ -721,6 +747,7 @@ sap.ui.define([
 						Pdnq: oModelDataDelv.DeliveryPoints[0].DNQ,
 						Event: oModelDataDelv.DeliveryPoints[0].Event,
 						Adnq: "0.000",
+						Nomtk:"0.000",
 						Znomtk: "",
 						Src: "",
 						Remarks: Remarks,
@@ -752,6 +779,7 @@ sap.ui.define([
 						Uom1: oModelDataRedlv.RedeliveryPoints[0].UOM,
 						Event: oModelDataRedlv.RedeliveryPoints[0].Event,
 						Adnq: "0.000",
+						Nomtk:"0.000",
 						Pdnq: oModelDataRedlv.RedeliveryPoints[0].DNQ,
 						Znomtk: "",
 						Src: "",
@@ -785,6 +813,7 @@ sap.ui.define([
 						Uom1: oModelDataRedlv.RedeliveryPoints[0].UOM,
 						Event: oModelDataRedlv.RedeliveryPoints[0].Event,
 						Adnq: "0.000",
+						Nomtk:"0.000",
 						Pdnq: oModelDataRedlv.RedeliveryPoints[0].DNQ,
 						Znomtk: "",
 						Src: "",
